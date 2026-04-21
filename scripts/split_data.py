@@ -100,7 +100,24 @@ def execute_split(
             if dry_run:
                 print(f"  [DRY RUN] {src_path.name} → {split_name}/")
             else:
+                # Skip if source and dest are the same file
+                if src_path.resolve() == dst_path.resolve():
+                    continue
                 shutil.copy2(src_path, dst_path)
+
+    # Remove source files that were copied to different splits
+    if not dry_run:
+        for split_name, items in splits.items():
+            split_dir = DATA_DIR / split_name
+            for src_path, data in items:
+                dst_path = split_dir / f"{data['id']}.json"
+                if src_path.resolve() != dst_path.resolve() and src_path.exists():
+                    src_path.unlink()
+
+    # Clean up by_category and by_difficulty before recreating
+    for view_dir in [DATA_DIR / "by_category", DATA_DIR / "by_difficulty"]:
+        if view_dir.exists():
+            shutil.rmtree(view_dir)
 
     # Create by_category views (symlinks to split files)
     for cat in CATEGORIES:
