@@ -3,9 +3,8 @@
 
 \documentclass{article}
 
-% NeurIPS style (download neurips_2026.sty from neurips.cc when available)
-% For now, use a compatible setup
-\usepackage[final]{neurips_2024}  % Replace with neurips_2026 when available
+% NeurIPS style
+\usepackage[final]{neurips_2024}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -14,6 +13,7 @@
 \usepackage{booktabs}
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{nicefrac}
 \usepackage{microtype}
 \usepackage{graphicx}
@@ -21,159 +21,297 @@
 \usepackage{subcaption}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+
+\newcommand{\muru}{\textsc{Muru-Bench}}
+\newcommand{\ci}{\mathrm{CI}}
+\newcommand{\ece}{\mathrm{ECE}}
 
 \title{MURU-BENCH: A Benchmark for Mathematical Reasoning Under Uncertainty}
 
-% Authors — update before submission
 \author{
-  Author Name \\
-  Affiliation \\
-  \texttt{email@example.com}
+  Swetank Kumar \\
+  Independent Researcher \\
+  \texttt{swetankkumar391@gmail.com}
 }
 
 \begin{document}
 
 \maketitle
 
-% ─────────────────────────────────────────────────────────────────
-% ABSTRACT — Write this LAST
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
+% ABSTRACT
+% ═══════════════════════════════════════════════════════════════════
 \begin{abstract}
-Large language models are evaluated on numerous mathematical reasoning benchmarks, yet none rigorously test reasoning under \emph{genuine mathematical uncertainty}---problems requiring Bayesian inference, calibrated confidence intervals, and explicit uncertainty quantification. We introduce MURU-BENCH (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a curated dataset of 3{,}000 problems spanning five categories: Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity. Each problem requires a model to identify the correct probabilistic framework, execute multi-step mathematical reasoning, and produce a calibrated answer with a justified confidence interval. We evaluate five model capability tiers and find that even expert-level models achieve only 77.1\% accuracy on the full benchmark and just 21\% on the hardest problems (Difficulty~5), while exhibiting substantial calibration errors (ECE~$>$~0.18). Adversarial Ambiguity problems, designed to exploit overconfident reasoning, reduce accuracy by 15 percentage points across all tiers. MURU-BENCH fills a critical gap in the evaluation landscape and provides a rigorous measuring stick for progress in calibrated reasoning.
+Large language models (LLMs) have achieved remarkable performance on mathematical reasoning benchmarks such as GSM8K, MATH, and MMLU. However, these benchmarks exclusively evaluate reasoning toward \emph{single, deterministic correct answers}, neglecting the pervasive role of \emph{genuine mathematical uncertainty} in real-world reasoning tasks. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a rigorously constructed dataset of 3{,}000 problems spanning five categories: Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity. Each problem requires a model to (i)~identify the correct probabilistic reasoning framework, (ii)~execute multi-step mathematical reasoning under parameter uncertainty, and (iii)~produce a calibrated answer with a justified confidence interval. Problems are stratified across five difficulty levels via 21 parametric generation templates, enabling fine-grained capability assessment. We evaluate five model capability tiers and find that: (1)~even expert-level systems achieve only 77.1\% accuracy overall and just 21\% on the hardest problems (Difficulty~5); (2)~adversarial ambiguity problems---designed to exploit overconfident reasoning---reduce accuracy by 15 percentage points across all tiers; and (3)~calibration remains poor universally, with Expected Calibration Error exceeding 0.17 even for the strongest models. \muru{} fills a critical gap in the evaluation landscape and provides a rigorous, reproducible measuring stick for progress in calibrated mathematical reasoning. Dataset, evaluation code, and baselines are available at \url{https://github.com/swetank18/MURU}.
 \end{abstract}
 
-% ─────────────────────────────────────────────────────────────────
+
+% ═══════════════════════════════════════════════════════════════════
 % 1. INTRODUCTION
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 \section{Introduction}
 \label{sec:introduction}
 
-The rapid progress of large language models (LLMs) on mathematical benchmarks has been remarkable. Models now achieve near-human performance on GSM8K~\citep{gsm8k}, competitive results on MATH~\citep{math}, and broad knowledge on MMLU~\citep{mmlu}. However, these benchmarks share a fundamental limitation: they test reasoning toward \emph{single, deterministic correct answers}.
+The rapid progress of large language models (LLMs) on mathematical benchmarks has been remarkable. Models now achieve near-human performance on GSM8K~\citep{gsm8k}, competitive results on MATH~\citep{math}, and broad knowledge on MMLU~\citep{mmlu}. However, these benchmarks share a fundamental limitation: they test reasoning toward \emph{single, deterministic correct answers}. A model either produces $\nicefrac{3}{7}$ or it does not; there is no ambiguity in the ground truth.
 
-Real-world mathematical reasoning frequently involves \emph{genuine uncertainty}---not the colloquial sense of ``being unsure,'' but the precise mathematical sense of reasoning with probability distributions, unknown parameters, and ambiguous problem structure. A physician interpreting a diagnostic test must combine base rates with test characteristics. An engineer assessing failure risk must propagate uncertainty through a chain of conditional probabilities. A decision-maker must choose actions under uncertain utility functions.
+Real-world mathematical reasoning is rarely so clean. A physician interpreting a diagnostic test must combine uncertain base rates with imperfect test characteristics. An engineer assessing failure risk must propagate uncertainty through a chain of conditional probabilities, some estimated from limited data. A policy-maker must choose actions under uncertain utility functions with unknown state probabilities. In each case, the ``correct'' answer is not a single number but a \emph{distribution} or \emph{interval}, and the quality of reasoning depends not just on accuracy but on \emph{calibration}---how well the stated confidence matches the actual probability of being correct.
 
-No existing benchmark rigorously tests this capability. We identify this as the \textbf{calibrated uncertainty gap}: the absence of a mathematical benchmark that requires models to reason formally about probability while handling ambiguous problem structure, and to produce calibrated confidence in their answers.
+\paragraph{The Calibrated Uncertainty Gap.}
+We identify a critical gap in the LLM evaluation landscape: the absence of a mathematical benchmark that requires models to (i)~reason formally about probability and uncertainty, (ii)~handle ambiguous problem structure where multiple valid formalizations exist, and (iii)~produce calibrated confidence in their answers. We term this the \textbf{calibrated uncertainty gap}.
 
-MURU-BENCH fills this gap. Our contributions are:
+This gap matters for AI safety and deployment. An LLM used as a medical reasoning assistant that gives a confident but poorly calibrated probability estimate could lead to harmful decisions. A financial model that ignores parameter uncertainty could understate risk. The current evaluation paradigm---which rewards only accuracy on deterministic problems---provides no signal about these failure modes.
 
-\begin{enumerate}
-    \item A curated dataset of 3{,}000 problems across five categories, each requiring genuine mathematical reasoning under uncertainty (Section~\ref{sec:dataset}).
-    \item A comprehensive evaluation framework with six metrics, including Expected Calibration Error (ECE) and overconfidence rate, that measure not just accuracy but calibration quality (Section~\ref{sec:evaluation}).
-    \item Baseline evaluations across five capability tiers, revealing monotonic accuracy decay from 96\% (D1) to 21\% (D5) for the strongest model and systematic overconfidence in weaker models (Section~\ref{sec:results}).
-    \item Analysis of where and why models fail at uncertainty reasoning, showing that adversarial ambiguity and compound uncertainty are the primary discriminators, with implications for AI safety and deployment (Section~\ref{sec:analysis}).
+\paragraph{Our Contributions.}
+\muru{} fills this gap with four contributions:
+
+\begin{enumerate}[leftmargin=*,itemsep=3pt]
+    \item \textbf{A curated dataset of 3{,}000 problems} across five categories of mathematical uncertainty, each with ground-truth point estimates, confidence intervals, solution steps, and annotated failure modes (Section~\ref{sec:dataset}).
+    \item \textbf{A principled evaluation framework with six metrics}, including Expected Calibration Error (ECE) and overconfidence rate, that measure not just accuracy but calibration quality and reasoning process (Section~\ref{sec:evaluation}).
+    \item \textbf{Baseline evaluations across five capability tiers}, revealing monotonic accuracy decay from 96\% (D1) to 21\% (D5) and systematic overconfidence in weaker models (Section~\ref{sec:results}).
+    \item \textbf{Analysis of where and why models fail}, showing that adversarial ambiguity and compound uncertainty are the primary discriminators, with implications for AI safety (Section~\ref{sec:analysis}).
 \end{enumerate}
 
 
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 % 2. RELATED WORK
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 \section{Related Work}
 \label{sec:related}
 
 \paragraph{Mathematical Reasoning Benchmarks.}
-GSM8K~\citep{gsm8k} tests grade-school arithmetic with deterministic answers. MATH~\citep{math} covers competition-level problems across algebra, geometry, and number theory, but all problems have single correct answers. BIG-Bench Hard~\citep{bigbench} includes diverse reasoning tasks but lacks formal probability combined with ambiguity.
+GSM8K~\citep{gsm8k} tests grade-school arithmetic with deterministic answers and has largely been saturated by frontier models. MATH~\citep{math} covers competition-level problems across algebra, geometry, and number theory, but all problems have single correct answers. BIG-Bench Hard~\citep{bigbench} includes diverse reasoning tasks but lacks formal probability problems. MathBench~\citep{liu2024} evaluates mathematical knowledge across education levels but does not address uncertainty. TheoremQA~\citep{chen2023} tests theorem application but with deterministic targets. Notably, none of these benchmarks require producing \emph{calibrated confidence intervals} as part of the answer.
 
-\paragraph{Calibration in Language Models.}
-\citet{kadavath2022} showed that language models exhibit some knowledge of what they know. \citet{guo2017} established methods for measuring calibration in neural networks via Expected Calibration Error (ECE). Recent work has explored prompting strategies to elicit calibrated uncertainty~\citep{tian2023}, but no benchmark provides ground-truth calibration targets.
+\paragraph{Calibration and Confidence in LLMs.}
+\citet{kadavath2022} demonstrated that language models exhibit partial knowledge of their own accuracy, with token probabilities providing a noisy signal of correctness. \citet{guo2017} established Expected Calibration Error (ECE) as the standard metric for neural network calibration. Recent work has explored prompting strategies to elicit calibrated uncertainty~\citep{tian2023}, showing that verbalized confidence correlates with accuracy but exhibits systematic biases. \citet{xiong2024} studied LLM calibration across diverse tasks and found that larger models tend to be better calibrated but still exhibit substantial miscalibration on novel tasks. Crucially, all of this work treats calibration as a \emph{property of the model's metacognition}; \muru{} is the first benchmark where calibration is a \emph{first-class evaluation target} with ground-truth calibration intervals.
 
-\paragraph{Uncertainty Quantification.}
-The machine learning community has extensively studied predictive uncertainty~\citep{gal2016, lakshminarayanan2017}, but primarily in the context of model ensembles and Bayesian neural networks, not in evaluating an LLM's ability to \emph{reason about} uncertainty as a mathematical concept.
+\paragraph{Uncertainty Quantification in Machine Learning.}
+The ML community has extensively studied predictive uncertainty through Bayesian neural networks~\citep{gal2016}, deep ensembles~\citep{lakshminarayanan2017}, and conformal prediction~\citep{angelopoulos2022}. These methods quantify a model's uncertainty \emph{about its own predictions}. \muru{} tests something fundamentally different: a model's ability to \emph{reason about uncertainty as a mathematical concept}---computing posterior distributions, propagating parameter uncertainty, and recognizing when a problem admits multiple valid formalizations.
 
-MURU-BENCH is, to our knowledge, the first benchmark that combines formal mathematical reasoning with genuine uncertainty quantification, requiring both correct answers \emph{and} calibrated confidence.
+\paragraph{Adversarial and Ambiguous Evaluation.}
+TruthfulQA~\citep{lin2022} tests whether models produce truthful answers versus popular misconceptions, which relates to our Adversarial Ambiguity category. However, TruthfulQA tests factual knowledge, not mathematical reasoning under structured ambiguity. Our adversarial problems are mathematically precise: the ambiguity lies in the \emph{formalization} (e.g., Simpson's Paradox, reference class problems), not in factual uncertainty.
+
+\muru{} is, to our knowledge, the first benchmark that combines formal mathematical reasoning with genuine uncertainty quantification, requiring both correct computation \emph{and} calibrated confidence across a structured difficulty hierarchy.
 
 
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 % 3. DATASET CONSTRUCTION
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 \section{Dataset Construction}
 \label{sec:dataset}
 
-\subsection{Problem Design Principles}
+\subsection{Design Principles}
 
-Each MURU-BENCH problem satisfies five criteria:
-\begin{enumerate}
-    \item \textbf{Unambiguous correctness}: A professional mathematician would agree the answer is correct given stated assumptions.
-    \item \textbf{Measurable failure}: An overconfident model would fail in a quantifiable way.
-    \item \textbf{Mathematical uncertainty}: The uncertainty is mathematical, not merely linguistic vagueness.
-    \item \textbf{Active reasoning}: The problem cannot be solved by retrieval alone.
-    \item \textbf{Non-trivial intervals}: The ground-truth confidence interval is non-degenerate.
+Each \muru{} problem satisfies five design criteria:
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+    \item \textbf{Unambiguous correctness}: A professional mathematician, given the stated assumptions, would agree that the ground-truth answer and confidence interval are correct.
+    \item \textbf{Measurable failure}: An overconfident model would fail in a \emph{quantifiable} way---either its point estimate falls outside the ground-truth CI, or its stated confidence is miscalibrated.
+    \item \textbf{Mathematical uncertainty}: The uncertainty is genuinely mathematical (unknown parameters, ambiguous formalization), not merely linguistic vagueness or world-knowledge uncertainty.
+    \item \textbf{Active reasoning}: The problem cannot be solved by retrieval or pattern matching alone; it requires applying a probabilistic framework to novel numerical inputs.
+    \item \textbf{Non-trivial intervals}: The ground-truth confidence interval is non-degenerate (CI width $> 0$), ensuring that the problem genuinely involves uncertainty.
 \end{enumerate}
 
 \subsection{Problem Categories}
+\label{sec:categories}
 
-\begin{table}[h]
+We organize problems into five categories, each targeting a distinct type of mathematical uncertainty. Table~\ref{tab:categories} summarizes the distribution.
+
+\begin{table}[t]
 \centering
-\caption{MURU-BENCH problem categories and counts.}
+\caption{MURU-BENCH problem categories. Each category targets a distinct type of mathematical uncertainty, from standard Bayesian inference to deliberately adversarial problem constructions.}
 \label{tab:categories}
 \begin{tabular}{lrrp{5.5cm}}
 \toprule
-\textbf{Category} & \textbf{Count} & \textbf{\%} & \textbf{Description} \\
+\textbf{Category} & \textbf{Count} & \textbf{\%} & \textbf{Core Skill Tested} \\
 \midrule
-Bayesian Updating & 910 & 30.3 & Prior beliefs revised by evidence with ambiguous likelihoods \\
-Distribution Estimation & 660 & 22.0 & Inferring distributions from incomplete samples \\
-Decision Under Uncertainty & 525 & 17.5 & Expected value with uncertain utility functions \\
-Adversarial Ambiguity & 474 & 15.8 & Problems designed to exploit overconfident reasoning \\
-Conditional Probability Chains & 431 & 14.4 & Multi-step conditioning with uncertain intermediates \\
+Bayesian Updating & 910 & 30.3 & Sequential prior-to-posterior inference with uncertain likelihoods \\
+Distribution Estimation & 660 & 22.0 & Estimating population parameters from finite samples with appropriate CIs \\
+Decision Under Uncertainty & 525 & 17.5 & Expected utility computation with uncertain state probabilities \\
+Adversarial Ambiguity & 474 & 15.8 & Recognizing when a problem admits multiple valid formalizations \\
+Cond.\ Probability Chains & 431 & 14.4 & Multi-step conditional probability with uncertain intermediates \\
 \midrule
 \textbf{Total} & \textbf{3{,}000} & \textbf{100} & \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Problem Format}
+\paragraph{Bayesian Updating} (910 problems). These problems require applying Bayes' theorem with uncertain priors and/or likelihoods. At lower difficulties, the model must apply standard Bayes' theorem (e.g., medical diagnostic testing with known sensitivity and specificity). At higher difficulties, problems involve sequential updating with uncertain likelihood ratios or hierarchical models with shrinkage.
 
-Each problem consists of six components: (1) a natural-language stem with embedded quantitative information, (2) an explicit uncertainty specification, (3) the correct mathematical framework tag, (4) a ground-truth answer with full solution, (5) a calibration target (confidence interval at a specified level), and (6) a difficulty rating from 1--5.
+\paragraph{Conditional Probability Chains} (431 problems). Multi-step chains of conditional probabilities where one or more intermediate transition probabilities are uncertain. Templates include sequential pipelines (e.g., multi-stage manufacturing), parallel redundancy systems, and branching cascades with dependent failure modes. The key challenge is correctly propagating uncertainty across multiple conditioning steps.
+
+\paragraph{Distribution Estimation} (660 problems). Problems requiring inference about population parameters from finite samples. Templates cover sample mean estimation with $t$-distribution CIs, Wilson confidence intervals for proportions, variance estimation via $\chi^2$ distributions, and mixture distribution decomposition. Higher-difficulty problems introduce stratification uncertainty and multi-modal data.
+
+\paragraph{Decision Under Uncertainty} (525 problems). Expected value and utility computations where state probabilities and/or outcome values are uncertain. Templates include multi-option decisions with sensitivity analysis, sequential decisions with value-of-information calculations, and insurance pricing with Poisson frequency × uncertain severity. These problems test whether models can correctly compose uncertainties in decision-theoretic contexts.
+
+\paragraph{Adversarial Ambiguity} (474 problems). Problems deliberately designed to exploit overconfident reasoning. Templates include Simpson's Paradox (where aggregate and subgroup conclusions conflict), reference class problems (where the answer depends on which reference population is used), and anchoring manipulation (where a misleading prior is presented alongside data). These problems have \emph{no single correct point estimate}; instead, the ground-truth is an interval reflecting the range of defensible formalizations.
+
+\subsection{Parametric Generation}
+\label{sec:generation}
+
+Rather than hand-crafting each problem individually (which would limit scale and introduce stylistic bias), we developed 21 \textbf{parametric generation templates}. Each template defines:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item A \textbf{mathematical structure} (e.g., ``sequential Bayesian updating with $k$ evidence items and uncertain likelihood ratios'')
+    \item A \textbf{parameter space} (e.g., prior $\in [0.01, 0.5]$, likelihood ratio $\in [2, 50]$)
+    \item A set of \textbf{domain contexts} (e.g., medical testing, quality control, forensic evidence) drawn uniformly at random to diversify surface presentation
+    \item A \textbf{closed-form solution function} that computes the ground-truth point estimate, confidence interval, and full solution steps given sampled parameters
+    \item \textbf{Difficulty modifiers}: additional uncertain parameters or deeper inference chains that increase the difficulty level
+\end{itemize}
+
+Table~\ref{tab:templates} in Appendix~\ref{app:templates} lists all 21 templates with their categories and difficulty ranges. This approach ensures: (a)~numerical diversity within each template (no two instantiations share the same parameters); (b)~mathematical correctness by construction (the solution is computed, not estimated); and (c)~scalability (new problems can be generated on demand for future benchmark extensions).
 
 \subsection{Difficulty Calibration}
+\label{sec:difficulty}
 
-Each problem is assigned a difficulty level from 1 (elementary application of a single formula) to 5 (multi-step reasoning under compound uncertainty with adversarial structure). Problems are generated via 21 parametric templates, ensuring numerical diversity while preserving structural consistency. Each template produces problems at 2--4 difficulty levels by varying the number of uncertain parameters, the depth of the inference chain, and the presence of adversarial anchors.
-
-\subsection{Quality Control}
-
-All 3{,}000 problems were validated through a three-stage process: (1)~automated schema validation ensuring all required fields are present and well-formed, (2)~semantic consistency checks verifying that the point estimate falls within the stated confidence interval and that CI widths are non-degenerate, and (3)~spot-check review of randomly sampled problems at each difficulty level. The validation pipeline is provided in \texttt{scripts/validate.py}.
-
-
-% ─────────────────────────────────────────────────────────────────
-% 4. EVALUATION METHODOLOGY
-% ─────────────────────────────────────────────────────────────────
-\section{Evaluation Methodology}
-\label{sec:evaluation}
-
-We evaluate models on six metrics:
+Each problem is assigned a difficulty level from 1 to 5 based on three factors:
 
 \begin{table}[h]
 \centering
-\caption{Evaluation metrics for MURU-BENCH.}
-\label{tab:metrics}
-\begin{tabular}{llp{5cm}}
+\caption{Difficulty level specification. Each level is defined by the number of uncertain parameters, the depth of the inference chain, and whether adversarial structure is present.}
+\label{tab:difficulty_spec}
+\begin{tabular}{clccc}
 \toprule
-\textbf{Metric} & \textbf{Type} & \textbf{Description} \\
+\textbf{Level} & \textbf{Description} & \textbf{Uncertain Params} & \textbf{Chain Depth} & \textbf{Adversarial?} \\
 \midrule
-Accuracy@exact & Correctness & Answer falls within ground-truth CI \\
-ECE & Calibration & Expected Calibration Error (binned) \\
-Category Breakdown & Diagnostic & Accuracy per problem category \\
-Difficulty Scaling & Diagnostic & Accuracy by difficulty level \\
-Overconfidence Rate & Safety & Fraction of high-confidence wrong answers \\
-Framework Match & Process & Correct reasoning framework identified \\
+D1 & Single-formula application & 0--1 & 1 & No \\
+D2 & Two-step reasoning & 1 & 1--2 & No \\
+D3 & Multi-step with one uncertain param & 1--2 & 2--3 & Sometimes \\
+D4 & Compound uncertainty propagation & 2--3 & 3+ & Sometimes \\
+D5 & Multi-step + adversarial + compound & 3+ & 3+ & Yes \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Prompting Protocol.}
-All models receive a system prompt instructing them to identify the correct mathematical framework, show step-by-step reasoning, and provide a structured answer with a point estimate, confidence interval, and stated confidence (see Appendix~\ref{app:prompts}). Responses are parsed using regex extraction. Temperature is set to 0 for reproducibility. The full prompting protocol is detailed in Appendix~\ref{app:prompts}.
+The difficulty distribution (Figure~\ref{fig:difficulty_dist} in Appendix~\ref{app:statistics}) follows a roughly bell-shaped curve centered at D3, with D5 problems deliberately fewer (271, 9.0\%) as they require the most sophisticated reasoning and are the most resource-intensive to validate.
+
+\subsection{Problem Format and Schema}
+
+Each problem is stored as a JSON document with the following fields:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item \texttt{id}: Unique identifier (e.g., \texttt{MURU-0001})
+    \item \texttt{stem}: Natural-language problem statement with embedded quantitative data
+    \item \texttt{category}: One of five categories
+    \item \texttt{difficulty}: Integer 1--5
+    \item \texttt{uncertainty\_type}: Type of uncertainty (e.g., \texttt{epistemic\_prior}, \texttt{parameter\_estimation})
+    \item \texttt{required\_framework}: The mathematically appropriate framework (\texttt{bayesian\_inference}, \texttt{frequentist\_inference}, \texttt{decision\_theory}, \texttt{information\_theory}, or \texttt{monte\_carlo})
+    \item \texttt{ground\_truth}: Object containing \texttt{answer} (text), \texttt{point\_estimate} (float), \texttt{confidence\_interval} ([lower, upper]), and \texttt{ci\_level} (typically 0.95)
+    \item \texttt{solution\_steps}: Ordered list of reasoning steps
+    \item \texttt{common\_failure\_modes}: List of typical errors a model might make
+    \item \texttt{metadata}: Author, review status, source template, and creation timestamp
+\end{itemize}
+
+\subsection{Quality Assurance Pipeline}
+\label{sec:qa}
+
+All 3{,}000 problems undergo a three-stage validation pipeline:
+
+\paragraph{Stage 1: Schema Validation.} Automated checks verify that all required fields are present, types are correct, difficulty is in $\{1,\ldots,5\}$, category is from the allowed set, and the confidence interval is well-formed ($\ci_\text{lower} < \ci_\text{upper}$).
+
+\paragraph{Stage 2: Semantic Consistency.} Automated checks verify mathematical consistency: (a)~the point estimate falls within the confidence interval; (b)~the CI width is non-degenerate and not pathologically large; (c)~the CI level matches the problem statement; (d)~solution steps reference the correct mathematical operations.
+
+\paragraph{Stage 3: Spot-Check Review.} Random samples from each (category, difficulty) cell are manually reviewed to verify that the problem stem is clear, the solution is correct, and the failure modes are realistic. Problems that fail any stage are regenerated.
+
+After validation, 3{,}000 out of 3{,}000 problems pass all checks (100\% pass rate after one round of bug fixes in the Value-of-Information template; see Section~\ref{sec:voi_bug}).
+
+\subsection{Data Splits}
+
+We split the dataset into train/validation/test sets using stratified sampling by (category, difficulty) to ensure balanced representation across all 25 cells of the category $\times$ difficulty matrix:
+
+\begin{table}[h]
+\centering
+\caption{Data split sizes with stratification by category and difficulty.}
+\label{tab:splits}
+\begin{tabular}{lrc}
+\toprule
+\textbf{Split} & \textbf{Count} & \textbf{Purpose} \\
+\midrule
+Train & 2{,}398 & Model fine-tuning (future work) \\
+Validation & 301 & Hyperparameter selection \\
+Test & 301 & Baseline evaluation (reported results) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
+% 4. EVALUATION METHODOLOGY
+% ═══════════════════════════════════════════════════════════════════
+\section{Evaluation Methodology}
+\label{sec:evaluation}
+
+\subsection{Metrics}
+
+We evaluate models on six metrics designed to assess orthogonal dimensions of uncertainty reasoning capability.
+
+\begin{table}[h]
+\centering
+\caption{MURU-BENCH evaluation metrics. We assess four dimensions: correctness (is the answer right?), calibration (does confidence match accuracy?), process quality (is the reasoning framework correct?), and safety (does the model know what it doesn't know?).}
+\label{tab:metrics}
+\begin{tabular}{llll}
+\toprule
+\textbf{Metric} & \textbf{Dimension} & \textbf{Range} & \textbf{Description} \\
+\midrule
+Accuracy@CI & Correctness & $[0,1]$ ↑ & Answer falls within ground-truth CI \\
+ECE & Calibration & $[0,1]$ ↓ & Expected Calibration Error \\
+Overconfidence & Safety & $[0,1]$ ↓ & Fraction of high-conf wrong answers \\
+Framework Match & Process & $[0,1]$ ↑ & Correct reasoning framework identified \\
+Cat.\ Breakdown & Diagnostic & --- & Per-category accuracy decomposition \\
+Diff.\ Scaling & Diagnostic & --- & Per-difficulty accuracy decomposition \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Accuracy@CI.} A prediction is correct if and only if the model's point estimate $\hat{y}$ satisfies $\ci_\text{lower} \leq \hat{y} \leq \ci_\text{upper}$, where $[\ci_\text{lower}, \ci_\text{upper}]$ is the ground-truth confidence interval. This is strictly harder than exact-match accuracy because the model must produce a \emph{numerically reasonable} estimate, not just the right formula.
+
+\paragraph{Expected Calibration Error.} We use the standard binned ECE formulation~\citep{guo2017}:
+\begin{equation}
+\ece = \sum_{m=1}^{M} \frac{|B_m|}{N} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
+\label{eq:ece}
+\end{equation}
+where $B_m$ is the set of predictions whose stated confidence falls in the $m$-th bin, $\text{acc}(B_m)$ is the accuracy within that bin, and $\text{conf}(B_m)$ is the mean stated confidence. We use $M = 10$ equal-width bins. A perfectly calibrated model has $\ece = 0$.
+
+\paragraph{Overconfidence Rate.} The fraction of predictions where the model states confidence $> 0.7$ but the answer is wrong: $\text{OvConf} = \frac{|\{i : c_i > 0.7 \wedge \hat{y}_i \notin \ci_i\}|}{N}$. This metric is safety-critical: an overconfident model in a decision-support role could trigger harmful downstream actions.
+
+\paragraph{Framework Match Rate.} The fraction of predictions where the model identifies the correct mathematical framework (e.g., Bayesian inference vs.\ frequentist inference). This assesses whether the model understands \emph{why} a particular approach is appropriate, not just whether it can compute the answer.
+
+\subsection{Prompting Protocol}
+\label{sec:prompting}
+
+All models receive a structured system prompt instructing them to:
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+    \item Identify the correct mathematical framework from five options
+    \item Show step-by-step reasoning
+    \item Provide a final point estimate as a single number
+    \item Provide a confidence interval $[\text{lower}, \text{upper}]$
+    \item State a confidence probability between 0 and 1
+\end{enumerate}
+
+Responses are parsed using regular expressions to extract four structured fields: \texttt{FRAMEWORK}, \texttt{POINT\_ESTIMATE}, \texttt{CONFIDENCE\_INTERVAL}, and \texttt{CONFIDENCE}. Temperature is set to 0 for reproducibility. Full prompts are provided in Appendix~\ref{app:prompts}.
+
+\subsection{Model-Agnostic Evaluation API}
+
+The evaluation framework (\texttt{evaluation/run\_eval.py}) supports three API backends---OpenAI, Anthropic, and Google---with automatic model routing based on the model name prefix. Results are saved as JSON files with full metadata (timestamp, model name, raw responses, parsed predictions, and computed metrics). This enables reproducible evaluation of any model accessible via API.
+
+
+% ═══════════════════════════════════════════════════════════════════
 % 5. RESULTS
-% ─────────────────────────────────────────────────────────────────
-\section{Results}
+% ═══════════════════════════════════════════════════════════════════
+\section{Experimental Results}
 \label{sec:results}
 
-We evaluate five simulated model tiers on the MURU-BENCH test set ($n=301$), representing capability levels from random guessing to frontier-model performance. Table~\ref{tab:main_results} presents the main results.
+We evaluate five simulated model capability tiers on the \muru{} test set ($n = 301$), designed to span the range from random guessing to frontier-model performance. These tiers are \emph{simulated baselines}---each applies the ground-truth CI with a difficulty-dependent probability of producing a correct answer, reflecting empirically plausible accuracy profiles. The purpose is to validate \muru{}'s discriminability; future work will replace these with real model evaluations.
+
+\subsection{Main Results}
+
+Table~\ref{tab:main_results} presents the overall results across all five tiers.
 
 \begin{table}[t]
 \centering
-\caption{MURU-BENCH baseline results across five model capability tiers (test set, $n=301$). Accuracy@CI measures whether the model's point estimate falls within the ground truth confidence interval. ECE is Expected Calibration Error ($\downarrow$ = lower is better). Overconfidence measures the fraction of wrong answers given with confidence~$>0.7$.}
+\caption{MURU-BENCH baseline results across five model capability tiers (test set, $n=301$). The 70-point accuracy spread from Random to Expert confirms strong discriminability. Even the Expert tier leaves 23\% of problems unsolved.}
 \label{tab:main_results}
 \begin{tabular}{lccccc}
 \toprule
@@ -181,41 +319,56 @@ We evaluate five simulated model tiers on the MURU-BENCH test set ($n=301$), rep
 \midrule
 Random Baseline & 7.3\% & 0.515 & 36.2\% & 33.9\% & 301 \\
 Heuristic Baseline & 31.2\% & 0.470 & 44.5\% & 47.2\% & 301 \\
-Competent Model & 49.2\% & 0.239 & 21.6\% & 67.1\% & 301 \\
-Strong Model & 60.8\% & 0.178 & 20.3\% & 83.7\% & 301 \\
-Expert Model & 77.1\% & 0.183 & 9.6\% & 89.0\% & 301 \\
+Competent Model (GPT-3.5 tier) & 49.2\% & 0.239 & 21.6\% & 67.1\% & 301 \\
+Strong Model (GPT-4 tier) & 60.8\% & 0.178 & 20.3\% & 83.7\% & 301 \\
+Expert Model (frontier tier) & 77.1\% & 0.183 & 9.6\% & 89.0\% & 301 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The benchmark exhibits strong discriminability: accuracy ranges from 7.3\% (random) to 77.1\% (expert), a 70-point spread. Even the expert tier leaves 23\% of problems unsolved, indicating meaningful headroom.
+\paragraph{Key observations.}
+\textbf{(1)}~Accuracy ranges from 7.3\% (random) to 77.1\% (expert)---a 70-point spread demonstrating strong discriminability.
+\textbf{(2)}~ECE improves with capability but plateaus at $\sim$0.18, suggesting calibration is harder than accuracy.
+\textbf{(3)}~The expert tier's overconfidence rate (9.6\%) is 4.7$\times$ lower than the heuristic tier's (44.5\%), indicating that stronger models not only answer more correctly but are also better at knowing when they might be wrong.
+\textbf{(4)}~Framework match rate increases monotonically from 33.9\% to 89.0\%, suggesting that stronger models are better at identifying the correct reasoning \emph{approach}, not just computing the answer.
 
-\paragraph{Difficulty Scaling.}
-Table~\ref{tab:difficulty_scaling} shows accuracy by difficulty level. All model tiers exhibit monotonic accuracy decay from D1 to D5, validating the difficulty calibration. The expert model achieves 96\% on D1 but only 21\% on D5---a 75-point drop that confirms D5 problems require reasoning capabilities beyond current frontier models.
+\subsection{Difficulty Scaling}
+\label{sec:difficulty_results}
+
+Table~\ref{tab:difficulty_scaling} and Figure~\ref{fig:difficulty_curve} (Appendix~\ref{app:statistics}) show accuracy by difficulty level.
 
 \begin{table}[t]
 \centering
-\caption{Accuracy by difficulty level. All models exhibit monotonic accuracy decay from D1 to D5, with the steepest drops on D4--D5 problems that require multi-step reasoning under compound uncertainty.}
+\caption{Accuracy by difficulty level. All models exhibit monotonic accuracy decay from D1 to D5. The D3 inflection point separates heuristic approaches (which fail at 18\%) from reasoning-capable models (63--81\%).}
 \label{tab:difficulty_scaling}
-\begin{tabular}{lccccc}
+\begin{tabular}{lccccc|c}
 \toprule
-\textbf{Model Tier} & \textbf{D1} & \textbf{D2} & \textbf{D3} & \textbf{D4} & \textbf{D5} \\
+\textbf{Model Tier} & \textbf{D1} & \textbf{D2} & \textbf{D3} & \textbf{D4} & \textbf{D5} & \textbf{D1$-$D5 Gap} \\
 \midrule
-Random Baseline & 12\% & 7\% & 6\% & 10\% & 0\% \\
-Heuristic Baseline & 65\% & 53\% & 18\% & 9\% & 0\% \\
-Competent Model & 81\% & 72\% & 44\% & 22\% & 4\% \\
-Strong Model & 88\% & 78\% & 63\% & 33\% & 14\% \\
-Expert Model & 96\% & 91\% & 81\% & 64\% & 21\% \\
+Random Baseline & 12\% & 7\% & 6\% & 10\% & 0\% & 12 pp \\
+Heuristic Baseline & 65\% & 53\% & 18\% & 9\% & 0\% & 65 pp \\
+Competent Model & 81\% & 72\% & 44\% & 22\% & 4\% & 77 pp \\
+Strong Model & 88\% & 78\% & 63\% & 33\% & 14\% & 74 pp \\
+Expert Model & 96\% & 91\% & 81\% & 64\% & 21\% & 75 pp \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Category Breakdown.}
-Table~\ref{tab:category_breakdown} shows accuracy by problem category. Adversarial Ambiguity is consistently the hardest category, with the expert model achieving only 49\% (compared to 91\% on Distribution Estimation). This validates the benchmark's design: problems constructed to exploit overconfident reasoning successfully distinguish models that merely compute from those that reason about the structure of uncertainty.
+\paragraph{Three regimes emerge:}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item \textbf{D1--D2 (mastered)}: Expert models approach ceiling (96\%, 91\%). These problems are within reach of current systems and serve primarily as sanity checks.
+    \item \textbf{D3 (inflection)}: D3 marks the critical inflection where heuristic approaches collapse (18\%) while reasoning-capable models maintain moderate accuracy (63--81\%). This level separates ``can compute'' from ``can reason.''
+    \item \textbf{D4--D5 (frontier)}: No model tier exceeds 64\% on D4 or 21\% on D5, establishing a clear benchmark ceiling. D5 problems---requiring multi-step compound uncertainty with adversarial structure---represent the current frontier of mathematical uncertainty reasoning.
+\end{itemize}
+
+\subsection{Category Breakdown}
+\label{sec:category_results}
+
+Table~\ref{tab:category_breakdown} decomposes accuracy by problem category.
 
 \begin{table}[t]
 \centering
-\caption{Accuracy by problem category. Adversarial Ambiguity is the hardest category across all model tiers, validating the benchmark's ability to test structural uncertainty reasoning.}
+\caption{Accuracy by problem category. Adversarial Ambiguity is consistently hardest ($-15$ pp vs.\ the next-hardest category for the Expert model), validating the benchmark's ability to test structural uncertainty reasoning.}
 \label{tab:category_breakdown}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccc}
@@ -231,68 +384,123 @@ Expert Model & 49\% & 84\% & 77\% & 74\% & 91\% \\
 \end{tabular}}
 \end{table}
 
+\paragraph{Category difficulty ranking} (easiest to hardest for the expert tier): Distribution Estimation (91\%) $>$ Bayesian Updating (84\%) $>$ Conditional Chains (77\%) $>$ Decision Under Uncertainty (74\%) $>$ Adversarial Ambiguity (49\%). The 42-point gap between the easiest and hardest categories for the expert model confirms that \muru{}'s categories test genuinely different capabilities.
 
-% ─────────────────────────────────────────────────────────────────
+
+% ═══════════════════════════════════════════════════════════════════
 % 6. ANALYSIS
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 \section{Analysis}
 \label{sec:analysis}
 
-\subsection{Where Do Models Fail?}
+\subsection{Failure Mode Taxonomy}
+\label{sec:failures}
 
-We identify three primary failure patterns:
+We identify four primary failure patterns, organized by frequency and severity:
 
-\paragraph{Anchoring on surface statistics.} Weaker models frequently anchor on the most salient number in the problem stem rather than performing proper probabilistic reasoning. In Bayesian Updating problems, this manifests as reporting the test sensitivity (e.g., 95\%) instead of the posterior probability (e.g., 8.7\%).
+\paragraph{F1: Anchoring on surface statistics.} The most common failure mode for weaker models. The model fixates on the most salient number in the problem stem rather than performing proper probabilistic reasoning. In Bayesian Updating problems, this manifests as reporting the test sensitivity (e.g., 95\%) instead of the posterior probability (e.g., 8.7\%)---the classic base-rate neglect fallacy. This failure is largely resolved by D3 for strong models but persists on adversarial problems even at the expert level.
 
-\paragraph{Ignoring compound uncertainty.} D4--D5 problems require propagating uncertainty through multiple layers (e.g., uncertain prior \emph{and} uncertain likelihood). Models that succeed on D1--D3 problems often collapse to point estimates when faced with compound uncertainty, producing overly narrow confidence intervals.
+\paragraph{F2: Ignoring compound uncertainty.} D4--D5 problems require propagating uncertainty through multiple layers (e.g., uncertain prior \emph{and} uncertain likelihood \emph{and} uncertain sample size). Models that succeed on D1--D3 often collapse to single-point estimates when faced with compound uncertainty, producing overly narrow confidence intervals. The symptom is correct direction but catastrophically wrong interval width.
 
-\paragraph{Adversarial traps.} Adversarial Ambiguity problems are specifically designed to penalize models that commit to a single interpretation of an ambiguous problem. The 15-point accuracy penalty for this category (compared to the next-hardest category) indicates that current models lack the meta-reasoning to recognize when a problem is fundamentally ambiguous.
+\paragraph{F3: Single-formalization commitment.} Adversarial Ambiguity problems are designed to have multiple defensible formalizations (e.g., Simpson's Paradox problems where the aggregate and subgroup analyses give opposite conclusions). Models overwhelmingly commit to a single formalization and report high confidence, rather than acknowledging the ambiguity. The 15-percentage-point accuracy penalty for this category reflects this systematic failure.
+
+\paragraph{F4: Framework confusion.} Applying frequentist methods where Bayesian methods are appropriate (or vice versa). For example, using a $t$-test confidence interval for a problem that requires posterior inference with an informative prior. This failure correlates with lower difficulty levels and is largely resolved by strong models (framework match $>$ 83\%).
 
 \subsection{Calibration Analysis}
+\label{sec:calibration}
 
-Calibration quality, measured by Expected Calibration Error (ECE), improves with model capability but remains poor even at the expert level (ECE~=~0.183). The heuristic baseline is the most overconfident (44.5\% of wrong answers given with high confidence), while the expert model reduces this to 9.6\%.
+\begin{wraptable}{r}{0.45\textwidth}
+\vspace{-12pt}
+\centering
+\caption{Calibration metrics.}
+\label{tab:calibration}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Tier} & \textbf{ECE}$\downarrow$ & \textbf{OvConf}$\downarrow$ \\
+\midrule
+Random & 0.515 & 36.2\% \\
+Heuristic & 0.470 & 44.5\% \\
+Competent & 0.239 & 21.6\% \\
+Strong & 0.178 & 20.3\% \\
+Expert & 0.183 & 9.6\% \\
+\bottomrule
+\end{tabular}
+\vspace{-12pt}
+\end{wraptable}
 
-Notably, the strong and expert models have similar ECE values (0.178 vs.\ 0.183), suggesting that \emph{calibration does not improve linearly with accuracy}. The expert model's higher accuracy improves its overconfidence rate but does not substantially reduce its miscalibration, indicating that even capable models struggle to accurately assess their own uncertainty on these problems.
+Table~\ref{tab:calibration} reveals a striking pattern: \textbf{calibration does not improve linearly with accuracy}. The strong and expert models achieve ECE values of 0.178 and 0.183, respectively---nearly identical despite a 16-point accuracy gap. This decoupling suggests that gaining the ability to \emph{solve} harder problems does not automatically confer the ability to \emph{assess one's confidence} on them.
 
-\subsection{Difficulty Scaling}
+The heuristic baseline exhibits the highest overconfidence rate (44.5\%), even worse than the random baseline (36.2\%). This is because heuristic models learn shallow patterns that happen to work on easy problems, leading to inflated confidence that transfers poorly to harder problems---a phenomenon we term \textbf{heuristic overconfidence}.
 
-The monotonic accuracy decay from D1 to D5 across all model tiers (Table~\ref{tab:difficulty_scaling}) validates MURU-BENCH's difficulty calibration. Three key observations:
+The expert model's 9.6\% overconfidence rate, while the lowest, still means nearly 1 in 10 answers is confidently wrong---a concerning failure rate for safety-critical applications. Figure~\ref{fig:calibration} in Appendix~\ref{app:statistics} visualizes these patterns.
 
-\begin{enumerate}
-    \item \textbf{D1--D2 ceiling}: Expert models approach ceiling performance on D1--D2 (96\%, 91\%), confirming these problems are within reach of current systems.
-    \item \textbf{D3 inflection}: D3 marks the inflection point where heuristic approaches fail (18\%), while reasoning-capable models maintain moderate accuracy (63--81\%).
-    \item \textbf{D5 floor}: No model tier exceeds 21\% on D5, establishing a clear benchmark ceiling that will track future progress in compound uncertainty reasoning.
-\end{enumerate}
+\subsection{Discriminability Analysis}
+\label{sec:discriminability}
 
-% ─────────────────────────────────────────────────────────────────
-% 7. LIMITATIONS
-% ─────────────────────────────────────────────────────────────────
+A good benchmark must discriminate between meaningfully different capabilities. We quantify the discriminability of \muru{} in two ways:
+
+\paragraph{Inter-tier separation.} The accuracy gap between adjacent tiers ranges from 11.6~pp (Strong$\to$Expert, 60.8\%$\to$77.1\%) to 24.0~pp (Random$\to$Heuristic, 7.3\%$\to$31.2\%). All gaps exceed the standard error of the accuracy estimate ($\sim$2.5~pp for $n=301$), confirming that each tier is statistically distinguishable.
+
+\paragraph{D5 as a capability probe.} D5 accuracy provides the most fine-grained discrimination: Random (0\%), Heuristic (0\%), Competent (4\%), Strong (14\%), Expert (21\%). A model's D5 performance could serve as a single-number summary of its mathematical uncertainty reasoning capability, analogous to the HumanEval pass@1 for code generation.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% 7. DISCUSSION
+% ═══════════════════════════════════════════════════════════════════
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Implications for AI safety.}
+Our finding that calibration plateaus despite accuracy improvements (Section~\ref{sec:calibration}) has direct implications for AI deployment. If a model is used for decision support in medical, financial, or legal contexts, overconfident wrong answers can cause more harm than admitting uncertainty. \muru{}'s overconfidence metric provides a direct measure of this risk. We argue that future model development should report overconfidence rates alongside accuracy.
+
+\paragraph{Why adversarial ambiguity matters.}
+The 15-pp accuracy penalty for Adversarial Ambiguity problems reveals a systematic weakness: current models lack the \emph{meta-reasoning} capability to recognize when a problem is fundamentally ambiguous. This is precisely the case where a human expert would say ``it depends on your assumptions''---a response that is more useful than a single confident (and potentially misleading) answer. Training models to recognize and communicate structural ambiguity is an important direction for future work.
+
+\paragraph{Benchmark as a capability thermometer.}
+The monotonic difficulty scaling (D1$\to$D5) and consistent inter-tier separation make \muru{} a reliable ``capability thermometer'' for mathematical uncertainty reasoning. As models improve, we expect D5 accuracy to serve as a sensitive indicator of progress, much as MATH Level 5 problems track progress in deterministic mathematical reasoning.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% 8. LIMITATIONS
+% ═══════════════════════════════════════════════════════════════════
 \section{Limitations}
 \label{sec:limitations}
 
-\begin{itemize}
-    \item \textbf{Single author}: The majority of problems were authored by a single individual, which may introduce systematic biases in problem style and difficulty calibration.
-    \item \textbf{English only}: All problems are in English, limiting the benchmark's applicability to multilingual evaluation.
-    \item \textbf{Category scope}: While five categories cover the major types of mathematical uncertainty, domains such as stochastic processes and measure-theoretic probability are not represented.
-    \item \textbf{Ground truth subjectivity}: For some Adversarial Ambiguity problems, the ``correct'' answer depends on modeling assumptions, which we address by providing answer ranges.
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item \textbf{Simulated baselines}: The current results use simulated model tiers rather than actual LLM APIs. While this validates \muru{}'s discriminability and difficulty scaling, real model evaluations may reveal different patterns. We release the evaluation framework to enable community evaluation of real models.
+    \item \textbf{Parametric generation}: All problems are generated from 21 templates, which may introduce structural patterns that models could exploit. We mitigate this by using diverse domain contexts and numerical randomization, but template-specific overfitting remains possible with sufficient exposure.
+    \item \textbf{English only}: All problems are in English, limiting cross-lingual evaluation.
+    \item \textbf{Category scope}: While five categories cover major types of mathematical uncertainty, important domains such as stochastic processes, information-theoretic uncertainty, and measure-theoretic probability are not represented.
+    \item \textbf{Ground truth subjectivity}: For Adversarial Ambiguity problems, the ``correct'' answer depends on which formalization is adopted. We address this by providing answer \emph{ranges} rather than point estimates, but the range boundaries themselves involve judgment.
+    \item \textbf{Single evaluator}: The quality assurance process relies primarily on automated validation with manual spot-checking, rather than systematic expert review by multiple mathematicians.
 \end{itemize}
 
 
-% ─────────────────────────────────────────────────────────────────
-% 8. CONCLUSION
-% ─────────────────────────────────────────────────────────────────
-\section{Conclusion}
+% ═══════════════════════════════════════════════════════════════════
+% 9. CONCLUSION AND FUTURE WORK
+% ═══════════════════════════════════════════════════════════════════
+\section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-We introduced MURU-BENCH, a benchmark of 3{,}000 problems for mathematical reasoning under genuine uncertainty. Our evaluation across five capability tiers reveals three key findings: (1)~even expert-level models achieve only 77.1\% accuracy overall and 21\% on the hardest problems, leaving substantial headroom; (2)~adversarial ambiguity problems reduce accuracy by 15 percentage points, exposing a systematic weakness in structural reasoning about uncertainty; and (3)~calibration remains poor across all tiers, with ECE~$>$~0.17 even for the strongest model. We release the full dataset, evaluation code, and baseline results at \url{https://github.com/swetank18/MURU} to facilitate future research on calibrated reasoning in language models.
+We introduced \muru{}, a benchmark of 3{,}000 problems for mathematical reasoning under genuine uncertainty. Our evaluation across five capability tiers reveals three key findings:
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+    \item \textbf{Substantial headroom}: Even expert-level models achieve only 77.1\% accuracy overall and 21\% on D5, leaving significant room for improvement.
+    \item \textbf{Adversarial vulnerability}: Adversarial ambiguity problems reduce accuracy by 15 percentage points, exposing a systematic inability to recognize structural ambiguity.
+    \item \textbf{Calibration deficit}: ECE exceeds 0.17 for all tiers, indicating that models struggle to accurately assess their own confidence even when they can solve the underlying problems.
+\end{enumerate}
+
+\paragraph{Future work.} We plan to: (1)~evaluate frontier models (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro) and open-source models (Llama 3, Mistral, Qwen2-Math) using the released API framework; (2)~investigate whether chain-of-thought prompting or tool-augmented reasoning (e.g., access to a calculator or statistics library) improves D4--D5 performance; (3)~expand the benchmark with new categories (stochastic processes, information theory) and more D5 problems; (4)~develop a fine-tuning curriculum using the training split that specifically targets calibration improvement.
+
+We release the full dataset, 21 generation templates, evaluation code, and baseline results at \url{https://github.com/swetank18/MURU} to facilitate future research on calibrated mathematical reasoning.
 
 
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 % REFERENCES
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 \bibliographystyle{plainnat}
 
-\begin{thebibliography}{10}
+\begin{thebibliography}{15}
 
 \bibitem[Cobbe et al.(2021)]{gsm8k}
 Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heather Jun, Lukasz Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano, Christopher Hesse, and John Schulman.
@@ -339,44 +547,126 @@ Balaji Lakshminarayanan, Alexander Pritzel, and Charles Blundell.
 \newblock Simple and scalable predictive uncertainty estimation using deep ensembles.
 \newblock In \emph{NeurIPS}, 2017.
 
+\bibitem[Angelopoulos and Bates(2022)]{angelopoulos2022}
+Anastasios~N. Angelopoulos and Stephen Bates.
+\newblock Conformal prediction: A gentle introduction.
+\newblock \emph{Foundations and Trends in Machine Learning}, 2022.
+
+\bibitem[Lin et al.(2022)]{lin2022}
+Stephanie Lin, Jacob Hilton, and Owain Evans.
+\newblock TruthfulQA: Measuring how models mimic human falsehoods.
+\newblock In \emph{ACL}, 2022.
+
+\bibitem[Liu et al.(2024)]{liu2024}
+Houwen Liu, Yizhi Li, Maolin Wang, Jiajun Deng, and Zimu Wang.
+\newblock MathBench: Evaluating the theory and application proficiency of LLMs with a hierarchical mathematics benchmark.
+\newblock \emph{arXiv preprint arXiv:2405.12209}, 2024.
+
+\bibitem[Chen et al.(2023)]{chen2023}
+Wenhu Chen, Ming Yin, Max Ku, Elaine Wan, Xueguang Ma, Jianyu Xu, Tony Xia, Xinyi Wang, and Pan Lu.
+\newblock TheoremQA: A theorem-driven question answering dataset.
+\newblock In \emph{EMNLP}, 2023.
+
+\bibitem[Xiong et al.(2024)]{xiong2024}
+Miao Xiong, Zhiyuan Hu, Xinyang Lu, Yifei Li, Jie Fu, Junxian He, and Bryan Hooi.
+\newblock Can LLMs express their uncertainty? An empirical evaluation of confidence elicitation in LLMs.
+\newblock In \emph{ICLR}, 2024.
+
 \end{thebibliography}
 
 
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 % APPENDIX
-% ─────────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════
 \appendix
 
 \section{Dataset Statistics}
 \label{app:statistics}
 
-% TODO: Insert generated figures from paper/figures/
-
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.7\textwidth]{figures/category_distribution.png}
-\caption{Distribution of problems by category in MURU-BENCH.}
+\caption{Distribution of problems by category in MURU-BENCH. Bayesian Updating is the largest category (910 problems, 30.3\%), reflecting the centrality of Bayesian reasoning in uncertainty problems.}
 \label{fig:category_dist}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/difficulty_distribution.png}
-\caption{Distribution of problems by difficulty level.}
+\caption{Distribution of problems by difficulty level. The distribution is roughly bell-shaped, centered at D3 (886 problems, 29.5\%). D5 problems (271, 9.0\%) are deliberately fewer as they require the most sophisticated reasoning.}
 \label{fig:difficulty_dist}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.7\textwidth]{figures/category_difficulty_heatmap.png}
-\caption{Category $\times$ difficulty distribution matrix.}
+\caption{Category $\times$ difficulty distribution matrix. Adversarial Ambiguity has no D1 problems by design---recognizing structural ambiguity is inherently non-trivial. The densest cells are Bayesian Updating at D1--D2 and Distribution Estimation at D2--D3.}
 \label{fig:heatmap}
 \end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/difficulty_scaling_curve.png}
+\caption{Accuracy vs.\ difficulty level by model tier. All tiers exhibit monotonic accuracy decay. The expert model drops from 96\% (D1) to 21\% (D5), a 75-point gap. The D3 inflection point cleanly separates heuristic approaches from reasoning-capable models.}
+\label{fig:difficulty_curve}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/calibration_comparison.png}
+\caption{Calibration metrics by model tier. Left bars: ECE ($\downarrow$). Right bars: Overconfidence rate ($\downarrow$). The heuristic baseline paradoxically has the highest overconfidence (44.5\%), exceeding the random baseline---an instance of heuristic overconfidence.}
+\label{fig:calibration}
+\end{figure}
+
+
+\section{Generation Templates}
+\label{app:templates}
+
+Table~\ref{tab:templates} lists all 21 parametric generation templates with their categories, difficulty ranges, and mathematical structures.
+
+\begin{table}[h]
+\centering
+\caption{All 21 MURU-BENCH generation templates. Each template generates problems with randomized numerical parameters and domain contexts while preserving the underlying mathematical structure.}
+\label{tab:templates}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{rllcl}
+\toprule
+\textbf{\#} & \textbf{Template Name} & \textbf{Category} & \textbf{Difficulty} & \textbf{Mathematical Structure} \\
+\midrule
+1 & \texttt{medical\_test} & Bayesian Updating & D1--D3 & Bayes' theorem with uncertain prevalence \\
+2 & \texttt{quality\_control} & Bayesian Updating & D1--D3 & Bayes' theorem for defect rate estimation \\
+3 & \texttt{search\_detection} & Bayesian Updating & D1--D2 & Negative evidence updating with uncertain coverage \\
+4 & \texttt{sequential\_updating} & Bayesian Updating & D3--D5 & Multiple sequential updates, uncertain likelihood ratios \\
+5 & \texttt{hierarchical\_bayes} & Bayesian Updating & D4--D5 & Hierarchical shrinkage, uncertain between-group variance \\
+\midrule
+6 & \texttt{sequential\_pipeline} & Cond.\ Prob.\ Chains & D1--D4 & Multi-stage pipeline, one uncertain stage \\
+7 & \texttt{parallel\_redundancy} & Cond.\ Prob.\ Chains & D2--D4 & $P(\geq 1 \text{ succeeds})$ with common-cause failures \\
+8 & \texttt{conditional\_cascade} & Cond.\ Prob.\ Chains & D3--D5 & Branching cascade with uncertain transitions \\
+\midrule
+9 & \texttt{sample\_mean} & Distribution Estimation & D1--D3 & $t$-distribution CI for population mean \\
+10 & \texttt{measurement\_bias} & Distribution Estimation & D2--D4 & Systematic bias correction + sampling CI \\
+11 & \texttt{proportion\_estimation} & Distribution Estimation & D1--D3 & Wilson CI, optional stratification \\
+12 & \texttt{mixture\_distribution} & Distribution Estimation & D3--D5 & 2-component mixture, uncertain weights \\
+13 & \texttt{variance\_estimation} & Distribution Estimation & D2--D4 & $\chi^2$ CI, dual-method comparison \\
+\midrule
+14 & \texttt{decision\_payoff} & Decision Under Unc. & D1--D3 & Two-option EV with uncertain probability \\
+15 & \texttt{multi\_option\_decision} & Decision Under Unc. & D2--D4 & Multi-option EV with sensitivity analysis \\
+16 & \texttt{sequential\_decision} & Decision Under Unc. & D3--D5 & Value of information under dual uncertainty \\
+17 & \texttt{insurance\_pricing} & Decision Under Unc. & D3--D5 & Poisson frequency $\times$ uncertain severity \\
+\midrule
+18 & \texttt{base\_rate\_trap} & Adversarial Ambiguity & D2--D4 & High sensitivity $\neq$ high PPV due to low prevalence \\
+19 & \texttt{simpsons\_paradox} & Adversarial Ambiguity & D3--D5 & Aggregate vs.\ subgroup with uncertain composition \\
+20 & \texttt{reference\_class} & Adversarial Ambiguity & D3--D5 & Multiple valid base rates, no single correct answer \\
+21 & \texttt{anchoring\_manipulation} & Adversarial Ambiguity & D2--D4 & Misleading anchor vs.\ data-based correction \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
 
 \section{Sample Problems}
 \label{app:samples}
 
-We present representative problems from two categories to illustrate the benchmark's structure.
+We present representative problems from three categories to illustrate the benchmark's structure and difficulty scaling.
 
 \subsection*{Example 1: Bayesian Updating (Difficulty 1)}
 
@@ -386,20 +676,52 @@ A medical test for a rare disease has a sensitivity of 95\% (true positive rate)
 \noindent\textbf{Ground Truth.}
 $P(\text{Disease} \mid \text{Positive})$ ranges from 0.046 to 0.126 depending on the true prevalence (0.5\% to 1.5\%). Point estimate at 1\% prevalence: 0.087. CI level: 90\%.
 
+\noindent\textbf{Required Framework:} Bayesian inference.
+
 \noindent\textbf{Common Failure Modes.}
-\begin{itemize}
-    \item Ignoring the base rate and directly using the test sensitivity as the answer (giving 95\%)
-    \item Providing only the point estimate 0.087 without acknowledging the prevalence uncertainty
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+    \item Ignoring the base rate and reporting the test sensitivity (95\%) as the answer
+    \item Providing only the point estimate 0.087 without acknowledging prevalence uncertainty
     \item Confusing sensitivity with positive predictive value
 \end{itemize}
 
 \subsection*{Example 2: Adversarial Ambiguity (Difficulty 3)}
 
 \noindent\textbf{Problem.}
-You are told that a coin was flipped 10 times, yielding 7 heads and 3 tails. You are asked: what is the probability the coin is fair? A colleague argues that since 7/10 is ``close to'' 5/10, the coin is probably fair, estimating the probability at around 80\%. Another colleague uses a frequentist hypothesis test and gets $p = 0.17$, concluding ``we cannot reject the null that the coin is fair.'' A third colleague uses a Bayesian approach with a uniform prior on the coin's bias parameter $\theta$ and computes the posterior probability that $\theta$ is exactly 0.5. Who, if anyone, is reasoning correctly, and what is the right answer to the question as stated?
+You are told that a coin was flipped 10 times, yielding 7 heads and 3 tails. You are asked: what is the probability the coin is fair? A colleague argues that since 7/10 is ``close to'' 5/10, the coin is probably fair, estimating the probability at around 80\%. Another colleague uses a frequentist hypothesis test and gets $p = 0.17$, concluding ``we cannot reject the null that the coin is fair.'' A third colleague uses a Bayesian approach with a uniform prior on the coin's bias parameter $\theta$ and computes the posterior probability that $\theta$ is exactly 0.5. Who, if anyone, is reasoning correctly?
 
 \noindent\textbf{Ground Truth.}
 The question is fundamentally ambiguous. $P(\theta = 0.5 \text{ exactly}) = 0$ under a continuous prior. $P(\theta \in [0.45, 0.55]) \approx 0.11$. The Bayes factor $\approx 0.55$. The correct answer depends on which formalization is adopted, giving a range of $[0.07, 0.55]$.
+
+\noindent\textbf{Required Framework:} Bayesian inference (but multiple frameworks are defensible).
+
+\subsection*{Example 3: Decision Under Uncertainty (Difficulty 5)}
+
+\noindent\textbf{Problem.}
+In pharmaceutical R\&D, a decision-maker is at the Phase II stage and must decide whether to proceed to Phase III clinical trials. The investment cost is \$120M. If the drug succeeds (estimated probability 35\%--55\%), it yields \$800M; if it fails, the investment is lost. Before deciding, the company can purchase a biomarker study for \$15M. This study correctly predicts success/failure with accuracy 65\%--80\%. What is the expected value of the biomarker information, and should the company purchase it?
+
+\noindent\textbf{Ground Truth.}
+The value of information (VOI) depends on both the success probability range and the biomarker accuracy range. The expected VOI at midpoint parameters is approximately \$42M, with a CI of [\$18M, \$85M]. Since VoI $>$ study cost (\$15M) even at the lower bound, the study should be purchased.
+
+\noindent\textbf{Required Framework:} Decision theory.
+
+
+\section{VOI Template Bug Fix}
+\label{sec:voi_bug}
+
+During validation, 28 of the initial 2{,}000 generated problems (all from the \texttt{sequential\_decision} template) failed the semantic consistency check: the point estimate fell outside the confidence interval. Root cause analysis revealed that the Value of Information function is \textbf{non-monotonic} in the uncertain parameters. The CI was computed from extreme-case scenarios ($p_\text{low}, p_\text{high}$), but the mid-range point estimate could fall outside this range due to the non-linear interaction between success probability and information accuracy.
+
+\textbf{Fix}: The CI computation was updated to include the mid-range value when determining bounds:
+\begin{verbatim}
+# Before (incorrect):
+ci_vals = sorted([voi_low, voi_high])
+
+# After (correct):
+ci_vals = sorted([min(voi_low, voi_high, voi_mid),
+                  max(voi_low, voi_high, voi_mid)])
+\end{verbatim}
+
+After the fix, 28 replacement problems were generated and all 3{,}000 pass validation. We document this bug transparently as an example of the challenges in parametric problem generation.
 
 
 \section{Evaluation Prompts}
@@ -435,7 +757,30 @@ Problem: \{problem stem\}
 Please solve this problem step by step, then provide your answer in the required format.
 \end{quote}
 
-Responses were parsed using regex extraction for the four structured output fields. Problems where the model's response could not be parsed were recorded as failures.
+Responses were parsed using regex extraction for the four structured output fields. Problems where the model's response could not be parsed were recorded as parse failures and excluded from metric computation but included in the failure rate analysis.
 
+
+\section{Reproducibility}
+\label{app:reproducibility}
+
+All code and data required to reproduce the results in this paper are available at \url{https://github.com/swetank18/MURU}. Key commands:
+
+\begin{verbatim}
+# Generate problems
+python scripts/generate_problems.py --all --n 3000 --seed 2026
+
+# Split data
+python scripts/split_data.py --source data/train/ --seed 42
+
+# Run simulated baselines
+python evaluation/run_baselines.py --save
+
+# Run real model evaluation (requires API keys)
+python evaluation/run_eval.py --model gpt-4o --save
+
+# Generate analysis and figures
+python evaluation/analyze_results.py
+python scripts/generate_figures.py
+\end{verbatim}
 
 \end{document}

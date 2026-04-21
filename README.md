@@ -1,144 +1,149 @@
 # MURU-BENCH: Mathematical Reasoning Under Uncertainty Benchmark
 
-> A rigorous benchmark for evaluating LLM calibration and probabilistic reasoning — targeting NeurIPS 2026 Datasets & Benchmarks.
+[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS-2026-blue.svg)](https://neurips.cc)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Problems](https://img.shields.io/badge/Problems-3%2C000-orange.svg)](data/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
 
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+**MURU-BENCH** is a benchmark of **3,000 problems** for evaluating mathematical reasoning under genuine uncertainty. Unlike existing math benchmarks (GSM8K, MATH, MMLU) which test deterministic answers, MURU-BENCH requires models to produce **calibrated confidence intervals** and identify the correct **probabilistic reasoning framework**.
 
----
+## 🎯 Key Features
 
-## The Problem
+| Feature | Description |
+|---------|-------------|
+| **3,000 problems** | Spanning 5 categories and 5 difficulty levels |
+| **Calibrated ground truth** | Each problem has a point estimate + confidence interval |
+| **6 evaluation metrics** | Accuracy, ECE, overconfidence, framework match, and more |
+| **21 parametric templates** | Reproducible, numerically diverse problem generation |
+| **Multi-model support** | API clients for OpenAI, Anthropic, and Google models |
 
-Every major math benchmark (GSM8K, MATH, MMLU, BIG-Bench) tests models on problems with **single, deterministic answers**. But real-world reasoning requires handling **genuine mathematical uncertainty** — Bayesian updating with unknown priors, decisions under parameter ambiguity, and calibrated confidence in interval estimates.
-
-**MURU-BENCH fills this gap.** It is the first benchmark that requires models to:
-1. Identify the correct probabilistic framework
-2. Execute mathematical reasoning under uncertainty
-3. Produce **calibrated confidence intervals**, not just point answers
-4. Articulate which assumptions drive the uncertainty
-
-## Dataset Overview
-
-| Property | Value |
-|----------|-------|
-| **Total Problems** | 3,000 |
-| **Categories** | 5 |
-| **Difficulty Levels** | 1–5 |
-| **Answer Format** | Point estimate + confidence interval |
-| **License** | CC BY 4.0 |
-
-### Problem Categories
+## 📊 Categories
 
 | Category | Count | Description |
 |----------|-------|-------------|
-| **Bayesian Updating** | 700 | Prior beliefs revised by evidence with ambiguous likelihoods |
-| **Conditional Probability Chains** | 600 | Multi-step conditioning with uncertain intermediates |
-| **Distribution Estimation** | 600 | Inferring distributions from incomplete/biased samples |
-| **Decision Under Uncertainty** | 550 | Expected value with uncertain utility functions |
-| **Adversarial Ambiguity** | 550 | Problems designed to fool overconfident models |
+| Bayesian Updating | 910 | Bayes' theorem with uncertain priors/likelihoods |
+| Distribution Estimation | 660 | Population parameter inference from finite samples |
+| Decision Under Uncertainty | 525 | Expected utility with uncertain states |
+| Adversarial Ambiguity | 474 | Problems with multiple valid formalizations |
+| Conditional Prob. Chains | 431 | Multi-step conditioning with uncertain intermediates |
 
-## Quick Start
+## 🏗️ Project Structure
 
-### Setup
-
-```bash
-git clone https://github.com/YOUR_USERNAME/muru-bench.git
-cd muru-bench
-pip install -r requirements.txt
+```
+MURU/
+├── data/
+│   ├── train/          # 2,398 problems (80%)
+│   ├── validation/     # 301 problems (10%)
+│   ├── test/           # 301 problems (10%)
+│   ├── by_category/    # Symlinks organized by category
+│   └── by_difficulty/  # Symlinks organized by difficulty
+├── evaluation/
+│   ├── metrics.py      # 6 core evaluation metrics
+│   ├── run_eval.py     # API-based model evaluation
+│   ├── run_baselines.py # Simulated baseline generator
+│   ├── analyze_results.py # Analysis & LaTeX table generation
+│   └── baselines/      # Saved baseline results
+├── scripts/
+│   ├── generate_problems.py  # 21 parametric templates
+│   ├── validate.py           # Schema + semantic validation
+│   ├── split_data.py         # Stratified train/val/test split
+│   ├── generate_figures.py   # Publication-quality figures
+│   ├── stats.py              # Dataset statistics
+│   └── sample.py             # Problem inspector
+├── paper/
+│   ├── main.tex              # NeurIPS paper
+│   ├── neurips_2024.sty      # Style file
+│   └── figures/              # Generated figures
+└── problem_schema.json       # JSON schema for problems
 ```
 
-### Validate Problems
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
-python scripts/validate.py              # validate all problems
-python scripts/validate.py data/train/  # validate a subset
+git clone https://github.com/swetank18/MURU.git
+cd MURU
+pip install -r requirements.txt
 ```
 
 ### Inspect Problems
 
 ```bash
-python scripts/sample.py                              # 3 random problems
-python scripts/sample.py --n 5 --category bayesian_updating --difficulty 3
+# Sample 3 random problems
+python scripts/sample.py
+
+# Sample D5 adversarial ambiguity problems
+python scripts/sample.py --category adversarial_ambiguity --difficulty 5
+
+# View a specific problem
+python scripts/sample.py --id MURU-0001
 ```
 
-### View Dataset Statistics
+### Evaluate a Model
 
 ```bash
-python scripts/stats.py          # text summary
-python scripts/stats.py --plots  # + generate figures
+# Set your API key
+export OPENAI_API_KEY=your-key-here
+
+# Run evaluation
+python evaluation/run_eval.py --model gpt-4o --save
+
+# Analyze results
+python evaluation/analyze_results.py
 ```
 
-### Run Evaluation
+### Run Simulated Baselines
 
 ```bash
-export OPENAI_API_KEY="your-key"
-python evaluation/run_eval.py --model gpt-4o --subset data/test/ --save
+python evaluation/run_baselines.py --save
 ```
 
-## Sample Problem
+## 📈 Baseline Results
 
-**Category:** Bayesian Updating | **Difficulty:** ★★★☆☆
+Results on the test set (n=301):
 
-> A factory produces widgets using one of two machines. Machine A produces 60% of widgets with a 2% defect rate. Machine B produces 40% of widgets with an unknown defect rate estimated to be between 4% and 8% based on recent maintenance reports. You sample 20 widgets and find 3 defective ones. What is the probability that your sample came from Machine B, and what is your confidence in this estimate given the uncertainty in Machine B's defect rate?
+| Model Tier | Accuracy | ECE ↓ | Overconfidence ↓ | Framework Match |
+|------------|----------|-------|-----------------|-----------------|
+| Random | 7.3% | 0.515 | 36.2% | 33.9% |
+| Heuristic | 31.2% | 0.470 | 44.5% | 47.2% |
+| Competent (GPT-3.5 tier) | 49.2% | 0.239 | 21.6% | 67.1% |
+| Strong (GPT-4 tier) | 60.8% | 0.178 | 20.3% | 83.7% |
+| Expert (frontier tier) | 77.1% | 0.183 | 9.6% | 89.0% |
 
-**Ground Truth:** P(Machine B | 3 defects) ∈ [0.71, 0.89] at 90% credibility. Point estimate: 0.81.
+**Difficulty scaling** — all models show monotonic accuracy decay:
 
-**What a wrong model does:** Collapses the uncertainty in Machine B's defect rate and produces a single point answer without acknowledging the range.
+| Model | D1 | D2 | D3 | D4 | D5 |
+|-------|----|----|----|----|----|
+| Expert | 96% | 91% | 81% | 64% | 21% |
+| Strong | 88% | 78% | 63% | 33% | 14% |
+| Competent | 81% | 72% | 44% | 22% | 4% |
 
-## Evaluation Metrics
+## 🔬 Regenerate the Dataset
 
-| Metric | What It Measures |
-|--------|-----------------|
-| **Accuracy@exact** | Answer within ground truth CI |
-| **ECE** | Expected Calibration Error |
-| **Category Breakdown** | Per-category accuracy |
-| **Difficulty Scaling** | Accuracy drop with difficulty |
-| **Overconfidence Rate** | Confidence exceeds accuracy |
-| **Reasoning Chain Quality** | Correct framework selection |
+```bash
+# Generate 3,000 problems from all 21 templates
+python scripts/generate_problems.py --all --n 3000 --seed 2026 --validate
 
-## Leaderboard
+# Split into train/val/test
+python scripts/split_data.py --source data/train/ --seed 42
 
-| Model | Accuracy | ECE ↓ | Overconf. Rate ↓ | Framework Match |
-|-------|----------|-------|-------------------|-----------------|
-| *Evaluations coming soon* | — | — | — | — |
-
-## Repository Structure
-
-```
-muru-bench/
-├── data/
-│   ├── train/              # 80% of problems
-│   ├── validation/         # 10% of problems
-│   ├── test/               # 10% held-out
-│   ├── by_category/        # category views
-│   └── by_difficulty/      # difficulty views
-├── evaluation/
-│   ├── run_eval.py         # evaluation runner
-│   ├── metrics.py          # ECE, accuracy, calibration
-│   └── baselines/          # model results
-├── scripts/
-│   ├── validate.py         # schema validation
-│   ├── stats.py            # dataset statistics
-│   ├── sample.py           # problem sampler
-│   └── split_data.py       # train/val/test splitter
-├── paper/
-│   └── figures/            # generated figures
-├── problem_schema.json     # JSON schema
-├── requirements.txt
-├── CONTRIBUTING.md
-└── LICENSE
+# Generate paper figures
+python scripts/generate_figures.py
 ```
 
-## Citation
+## 📄 Citation
 
 ```bibtex
-@misc{muru-bench-2026,
+@inproceedings{kumar2026murubench,
   title={MURU-BENCH: A Benchmark for Mathematical Reasoning Under Uncertainty},
-  author={TODO},
+  author={Kumar, Swetank},
+  booktitle={NeurIPS Datasets and Benchmarks Track},
   year={2026},
-  url={https://github.com/YOUR_USERNAME/muru-bench}
+  url={https://github.com/swetank18/MURU}
 }
 ```
 
-## License
+## 📜 License
 
-This dataset is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). You are free to share and adapt the material with appropriate attribution.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
