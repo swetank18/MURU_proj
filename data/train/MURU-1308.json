@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1308",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A astronomy dataset contains 80 observations of apparent magnitude. The data is believed to come from a mixture of two populations: foreground stars (mean \u2248 22.9 mag, SD \u2248 3.2) and background galaxies (mean \u2248 54.0 mag, SD \u2248 7.4). The proportion of foreground stars in the sample is uncertain, estimated between 49% and 60%. The observed overall mean is 37.2 mag with SD = 16.5. Estimate the true population mean of apparent magnitude, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d722.9 + (1-w)\u00d754.0. As w varies from 0.49 to 0.6, the mixture mean ranges from 35.3 to 38.8. With sampling variability, CI = [31.7, 42.4]. Point estimate at w=0.54: 37.2 mag.",
+    "point_estimate": 37.2,
+    "confidence_interval": [
+      31.7,
+      42.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.54: \u03bc_mix = 0.54\u00d722.9 + 0.46\u00d754.0 = 37.2.",
+    "At w=0.49: \u03bc_mix = 38.8 (more of background galaxies).",
+    "At w=0.6: \u03bc_mix = 35.3 (more of foreground stars).",
+    "Mixture SD \u2248 16.5. SE = 16.5/\u221a80 = 1.84.",
+    "Combined interval [31.7, 42.4] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (16.5) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

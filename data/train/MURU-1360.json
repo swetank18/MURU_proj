@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1360",
+  "category": "conditional_probability_chains",
+  "difficulty": 1,
+  "stem": "A release enters the software release pipeline. The probability of passing code review is 95%. If the previous stage is passed, the probability of passing unit testing is between 69% and 81% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing integration testing is 91%. What is the overall probability that the release is deployed without incidents?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(deployed without incidents) ranges from 0.597 to 0.7 as the unit testing pass rate varies from 69% to 81%. Point estimate: 0.648.",
+    "point_estimate": 0.648,
+    "confidence_interval": [
+      0.597,
+      0.7
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The release must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.95 \u00d7 0.75 \u00d7 0.91 = 0.648.",
+    "At lower bound: P(success) = 0.95 \u00d7 0.69 \u00d7 0.91 = 0.597.",
+    "At upper bound: P(success) = 0.95 \u00d7 0.81 \u00d7 0.91 = 0.7.",
+    "The uncertainty in the unit testing stage creates a 10.3 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the unit testing rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

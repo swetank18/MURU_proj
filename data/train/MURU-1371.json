@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1371",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A biology dataset contains 80 observations of cell size. The data is believed to come from a mixture of two populations: healthy cells (mean \u2248 78.8 \u00b5m, SD \u2248 16.4) and abnormal cells (mean \u2248 125.8 \u00b5m, SD \u2248 18.6). The proportion of healthy cells in the sample is uncertain, estimated between 49% and 61%. The observed overall mean is 99.9 \u00b5m with SD = 29.2. Estimate the true population mean of cell size, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d778.8 + (1-w)\u00d7125.8. As w varies from 0.49 to 0.61, the mixture mean ranges from 97.1 to 102.8. With sampling variability, CI = [90.7, 109.2]. Point estimate at w=0.55: 99.9 \u00b5m.",
+    "point_estimate": 99.9,
+    "confidence_interval": [
+      90.7,
+      109.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.55: \u03bc_mix = 0.55\u00d778.8 + 0.45\u00d7125.8 = 99.9.",
+    "At w=0.49: \u03bc_mix = 102.8 (more of abnormal cells).",
+    "At w=0.61: \u03bc_mix = 97.1 (more of healthy cells).",
+    "Mixture SD \u2248 29.2. SE = 29.2/\u221a80 = 3.26.",
+    "Combined interval [90.7, 109.2] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (29.2) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

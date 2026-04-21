@@ -1,0 +1,33 @@
+{
+  "id": "MURU-2290",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "In a quality assurance scenario, a researcher begins with a prior probability of 57% that the production line is defective, based on inspection results. After shift inspection 1, contradicting evidence arrives with a likelihood ratio estimated between 0.47 and 0.77. After shift inspection 2, contradicting evidence arrives with a likelihood ratio estimated between 0.36 and 0.54. What is the posterior probability that the production line is defective after all 2 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 2 sequential Bayesian updates, P(the production line is defective) ranges from 0.183 to 0.355. Point estimate: 0.27.",
+    "point_estimate": 0.27,
+    "confidence_interval": [
+      0.183,
+      0.355
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.57/0.43 = 1.326.",
+    "Update 1: multiply odds by LR \u2208 [0.47, 0.77] (mid: 0.62, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.36, 0.54] (mid: 0.45, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.183, 0.355], point estimate: 0.27."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

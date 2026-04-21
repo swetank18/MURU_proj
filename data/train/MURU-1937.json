@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1937",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A software testing study surveys 20 test cases and observes 7 positive outcomes out of 20 (35.0%). The sample contains two subgroups: Group A (10 observations, rate = 30.0%) and Group B (10 observations, rate = 40.0%). The true population composition is uncertain: Group A makes up between 36% and 51% of the population. Estimate the true software bug rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Simple pooled estimate: 0.35. Weighted estimate (stratified): 0.3368 (range [0.325, 0.3471]). Combined CI accounting for stratification uncertainty: [0.1812, 0.5671]. Point estimate: 0.3368.",
+    "point_estimate": 0.3368,
+    "confidence_interval": [
+      0.1812,
+      0.5671
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 7/20 = 0.35.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.3742.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.193.",
+    "95% CI: [0.1812, 0.5671].",
+    "Stratified estimate: weighted by population composition. At w_A=0.43: 0.43\u00d70.253 + 0.57\u00d70.4 = 0.3368."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate",
+    "Not recognizing that with n=20, the normal approximation may be poor",
+    "Ignoring the population composition uncertainty and using the simple pooled rate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

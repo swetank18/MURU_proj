@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2610",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A traffic analysis dataset contains 50 observations of page load time. The data is believed to come from a mixture of two populations: mobile users (mean \u2248 86.7 ms, SD \u2248 9.6) and desktop users (mean \u2248 131.7 ms, SD \u2248 27.4). The proportion of mobile users in the sample is uncertain, estimated between 42% and 61%. The observed overall mean is 108.3 ms with SD = 30.2. Estimate the true population mean of page load time, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d786.7 + (1-w)\u00d7131.7. As w varies from 0.42 to 0.61, the mixture mean ranges from 104.2 to 112.8. With sampling variability, CI = [95.8, 121.2]. Point estimate at w=0.52: 108.3 ms.",
+    "point_estimate": 108.3,
+    "confidence_interval": [
+      95.8,
+      121.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.52: \u03bc_mix = 0.52\u00d786.7 + 0.48\u00d7131.7 = 108.3.",
+    "At w=0.42: \u03bc_mix = 112.8 (more of desktop users).",
+    "At w=0.61: \u03bc_mix = 104.2 (more of mobile users).",
+    "Mixture SD \u2248 30.2. SE = 30.2/\u221a50 = 4.27.",
+    "Combined interval [95.8, 121.2] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (30.2) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

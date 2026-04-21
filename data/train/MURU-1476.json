@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1476",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A income study dataset contains 50 observations of monthly income. The data is believed to come from a mixture of two populations: part-time workers (mean \u2248 57.7 $, SD \u2248 9.4) and full-time workers (mean \u2248 123.7 $, SD \u2248 25.6). The proportion of part-time workers in the sample is uncertain, estimated between 32% and 43%. The observed overall mean is 98.6 $ with SD = 38.3. Estimate the true population mean of monthly income, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d757.7 + (1-w)\u00d7123.7. As w varies from 0.32 to 0.43, the mixture mean ranges from 95.3 to 102.6. With sampling variability, CI = [84.7, 113.2]. Point estimate at w=0.38: 98.6 $.",
+    "point_estimate": 98.6,
+    "confidence_interval": [
+      84.7,
+      113.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.38: \u03bc_mix = 0.38\u00d757.7 + 0.62\u00d7123.7 = 98.6.",
+    "At w=0.32: \u03bc_mix = 102.6 (more of full-time workers).",
+    "At w=0.43: \u03bc_mix = 95.3 (more of part-time workers).",
+    "Mixture SD \u2248 38.3. SE = 38.3/\u221a50 = 5.42.",
+    "Combined interval [84.7, 113.2] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (38.3) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

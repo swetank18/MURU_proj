@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1067",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A archaeology team is looking for a buried artifact. Based on initial analysis, they estimate a 45% probability that a buried artifact is in Dig Site North and a 55% probability it is in Dig Site South. They search Dig Site North first and do not find a buried artifact. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in Dig Site North is between 60% and 81%. Given they did not find a buried artifact in Dig Site North, what is the updated probability that a buried artifact is in Dig Site South?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Dig Site South | not found in Dig Site North) ranges from 0.753 to 0.865 as detection probability varies from 60% to 81%. Point estimate at 71% detection: 0.808.",
+    "point_estimate": 0.808,
+    "confidence_interval": [
+      0.753,
+      0.865
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.45 + 1\u00d70.55.",
+    "At detection 71%: P(B|\u00acfound) = 0.55 / (0.29\u00d70.45 + 0.55) \u2248 0.808.",
+    "At detection 60%: P(B|\u00acfound) \u2248 0.753.",
+    "At detection 81%: P(B|\u00acfound) \u2248 0.865."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in Dig Site North means it is definitely in Dig Site South",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

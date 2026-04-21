@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0824",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "A company claims its employee screening test identifies high performers with 90% accuracy. The test also has a specificity of 90% (correctly identifying negatives). A colleague presents this data and concludes: 'Since the test is 96% accurate, when it flags someone, there's a 96% chance they're actually high performer.' The base rate of high performers among applicants in this job applicants pool is estimated between 1.70% and 5.20%. Is your colleague's reasoning correct? What is the actual probability that a flagged job applicant is truly high performer? How does the uncertain base rate affect your answer?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The colleague is wrong \u2014 this is the base rate fallacy. P(high performer | flagged) ranges from 0.142 to 0.345 (NOT 96%). The vast majority of flagged cases are false positives because the base rate is so low. Point estimate at 3.50%: 0.258.",
+    "point_estimate": 0.258,
+    "confidence_interval": [
+      0.142,
+      0.345
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The colleague confuses P(flagged | high performer) = 0.96 with P(high performer | flagged).",
+    "Apply Bayes' theorem: PPV = sensitivity \u00d7 base_rate / (sensitivity \u00d7 base_rate + (1-specificity) \u00d7 (1-base_rate)).",
+    "At base rate 3.50%: PPV = 0.96\u00d70.035 / (0.96\u00d70.035 + 0.1\u00d70.965) \u2248 0.258.",
+    "At base rate 1.70%: PPV \u2248 0.142.",
+    "At base rate 5.20%: PPV \u2248 0.345.",
+    "The true PPV (0.258) is dramatically lower than the naive estimate (0.96) because when the base rate is low, false positives dominate."
+  ],
+  "common_failure_modes": [
+    "Agreeing with the colleague that the probability is 96% (the base rate fallacy)",
+    "Confusing test accuracy (sensitivity) with positive predictive value (PPV)",
+    "Not recognizing that low base rates make most positive flags false positives",
+    "Providing a single PPV without accounting for uncertainty in the base rate"
+  ],
+  "metadata": {
+    "author": "generator_base_rate_trap",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

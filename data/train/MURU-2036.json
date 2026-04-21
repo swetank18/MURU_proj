@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2036",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "An engineer takes 30 measurements of PM2.5 concentration using an air quality sensor. The measurements have a mean of 99.8 \u00b5g/m\u00b3 and a standard deviation of 12.8 \u00b5g/m\u00b3. However, calibration tests reveal that an air quality sensor systematically overestimates the true value by between 1.6% and 5.9%. Estimate the true PM2.5 concentration and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 99.8 \u00b5g/m\u00b3. After correcting for the 3.8% bias: \u2248 96.1 \u00b5g/m\u00b3. Full interval accounting for bias uncertainty (1.6%-5.9%) and sampling variability: [89.5, 102.9]. Point estimate: 96.1 \u00b5g/m\u00b3.",
+    "point_estimate": 96.1,
+    "confidence_interval": [
+      89.5,
+      102.9
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 99.8 \u00b5g/m\u00b3 (n=30, s=12.8).",
+    "Sampling SE: 12.8/\u221a30 = 2.34. Sampling margin \u2248 \u00b14.7.",
+    "Bias correction: instrument overestimates by 1.6%-5.9%.",
+    "At 3.8% correction: true value \u2248 96.1 \u00b5g/m\u00b3.",
+    "At 1.6% correction: true value \u2248 98.2 \u00b5g/m\u00b3.",
+    "At 5.9% correction: true value \u2248 94.2 \u00b5g/m\u00b3.",
+    "Combined interval (bias range + sampling): [89.5, 102.9]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

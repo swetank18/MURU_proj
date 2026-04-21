@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0403",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A drug candidate enters the drug development pipeline. The probability of passing preclinical testing is 77%. If the previous stage is passed, the probability of passing Phase I trial is 94%. If the previous stage is passed, the probability of passing Phase II trial is 79%. If the previous stage is passed, the probability of passing FDA review is between 56% and 67% (uncertain due to evaluator variability). What is the overall probability that the drug candidate is approved for market?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(approved for market) ranges from 0.32 to 0.383 as the FDA review pass rate varies from 56% to 67%. Point estimate: 0.349.",
+    "point_estimate": 0.349,
+    "confidence_interval": [
+      0.32,
+      0.383
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The drug candidate must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.77 \u00d7 0.94 \u00d7 0.79 \u00d7 0.61 = 0.349.",
+    "At lower bound: P(success) = 0.77 \u00d7 0.94 \u00d7 0.79 \u00d7 0.56 = 0.32.",
+    "At upper bound: P(success) = 0.77 \u00d7 0.94 \u00d7 0.79 \u00d7 0.67 = 0.383.",
+    "The uncertainty in the FDA review stage creates a 6.3 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the FDA review rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

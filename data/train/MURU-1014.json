@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1014",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A customer analytics dataset contains 80 observations of purchase amount. The data is believed to come from a mixture of two populations: casual buyers (mean \u2248 79.8 $, SD \u2248 12.9) and power users (mean \u2248 155.6 $, SD \u2248 15.9). The proportion of casual buyers in the sample is uncertain, estimated between 30% and 49%. The observed overall mean is 125.3 $ with SD = 40.0. Estimate the true population mean of purchase amount, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d779.8 + (1-w)\u00d7155.6. As w varies from 0.3 to 0.49, the mixture mean ranges from 118.5 to 132.9. With sampling variability, CI = [109.7, 141.7]. Point estimate at w=0.4: 125.3 $.",
+    "point_estimate": 125.3,
+    "confidence_interval": [
+      109.7,
+      141.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.4: \u03bc_mix = 0.4\u00d779.8 + 0.6\u00d7155.6 = 125.3.",
+    "At w=0.3: \u03bc_mix = 132.9 (more of power users).",
+    "At w=0.49: \u03bc_mix = 118.5 (more of casual buyers).",
+    "Mixture SD \u2248 40.0. SE = 40.0/\u221a80 = 4.47.",
+    "Combined interval [109.7, 141.7] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (40.0) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

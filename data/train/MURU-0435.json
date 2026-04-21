@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0435",
+  "category": "conditional_probability_chains",
+  "difficulty": 3,
+  "stem": "A proposal enters the grant application pipeline. The probability of passing departmental review is 80%. If the previous stage is passed, the probability of passing external peer review is 96%. If the previous stage is passed, the probability of passing panel discussion is between 61% and 75% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing funding decision is 71%. What is the overall probability that the proposal is funded?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(funded) ranges from 0.333 to 0.409 as the panel discussion pass rate varies from 61% to 75%. Point estimate: 0.371.",
+    "point_estimate": 0.371,
+    "confidence_interval": [
+      0.333,
+      0.409
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The proposal must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.8 \u00d7 0.96 \u00d7 0.68 \u00d7 0.71 = 0.371.",
+    "At lower bound: P(success) = 0.8 \u00d7 0.96 \u00d7 0.61 \u00d7 0.71 = 0.333.",
+    "At upper bound: P(success) = 0.8 \u00d7 0.96 \u00d7 0.75 \u00d7 0.71 = 0.409.",
+    "The uncertainty in the panel discussion stage creates a 7.6 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the panel discussion rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

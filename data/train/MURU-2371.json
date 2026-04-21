@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2371",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A healthcare operations study measures the wait time (minutes) for a sample of 30 emergency room visitors. The sample mean is 239.8 min with a sample standard deviation of 43.2 min. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 239.8 min. 95% CI = [223.7, 255.9]. Point estimate: 239.8 min.",
+    "point_estimate": 239.8,
+    "confidence_interval": [
+      223.7,
+      255.9
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 43.2/\u221a30 = 7.89.",
+    "Degrees of freedom: df = 30 - 1 = 29.",
+    "t-critical value: t(29, 0.025) \u2248 2.045.",
+    "Margin of error: 2.045 \u00d7 7.89 = 16.14.",
+    "95% CI: 239.8 \u00b1 16.14 = [223.7, 255.9]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 43.2/n instead of 43.2/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

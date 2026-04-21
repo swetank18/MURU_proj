@@ -1,0 +1,37 @@
+{
+  "id": "MURU-0471",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "An engineer takes 25 measurements of noise level using a noise meter. The measurements have a mean of 99.4 dB and a standard deviation of 11.3 dB. However, calibration tests reveal that a noise meter systematically underestimates the true value by between 4.1% and 7.2%. Estimate the true noise level and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 99.4 dB. After correcting for the 5.7% bias: \u2248 105.4 dB. Full interval accounting for bias uncertainty (4.1%-7.2%) and sampling variability: [99.1, 111.6]. Point estimate: 105.4 dB.",
+    "point_estimate": 105.4,
+    "confidence_interval": [
+      99.1,
+      111.6
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 99.4 dB (n=25, s=11.3).",
+    "Sampling SE: 11.3/\u221a25 = 2.26. Sampling margin \u2248 \u00b14.5.",
+    "Bias correction: instrument underestimates by 4.1%-7.2%.",
+    "At 5.7% correction: true value \u2248 105.4 dB.",
+    "At 4.1% correction: true value \u2248 103.6 dB.",
+    "At 7.2% correction: true value \u2248 107.1 dB.",
+    "Combined interval (bias range + sampling): [99.1, 111.6]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

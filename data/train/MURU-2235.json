@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2235",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "In movie production, a decision-maker is at the script development stage and must decide whether to proceed to greenlighting. The investment cost is $163K. If the project succeeds (estimated probability 36%-57%), it yields $951K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a test screening for $22K. This test screening correctly predicts success/failure with accuracy 66%-80%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $274.5K. EV with info at mid-range: $218.8K. Value of information: $-55.7K. VOI range: [$-55.8K, $-49.6K]. Information may not be worth the cost.",
+    "point_estimate": -55.7,
+    "confidence_interval": [
+      -55.8,
+      -49.6
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$951K - $163K).",
+    "At P=0.46: EV_no_info = max(0, 0.46\u00d7951 - 163) = $274.5K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d7951 - 163) - 22.",
+    "At mid-range: EV_with_info = $218.8K.",
+    "VOI = EV_with_info - EV_no_info = $-55.7K.",
+    "Range across uncertain parameters: [$-55.8K, $-49.6K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

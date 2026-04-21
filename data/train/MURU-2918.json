@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2918",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "An engineer takes 30 measurements of body weight using a bathroom scale. The measurements have a mean of 159.4 kg and a standard deviation of 18.4 kg. However, calibration tests reveal that a bathroom scale systematically underestimates the true value by between 3.8% and 8.2%. Estimate the true body weight and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 159.4 kg. After correcting for the 6.0% bias: \u2248 169.6 kg. Full interval accounting for bias uncertainty (3.8%-8.2%) and sampling variability: [159.0, 180.3]. Point estimate: 169.6 kg.",
+    "point_estimate": 169.6,
+    "confidence_interval": [
+      159.0,
+      180.3
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 159.4 kg (n=30, s=18.4).",
+    "Sampling SE: 18.4/\u221a30 = 3.36. Sampling margin \u2248 \u00b16.7.",
+    "Bias correction: instrument underestimates by 3.8%-8.2%.",
+    "At 6.0% correction: true value \u2248 169.6 kg.",
+    "At 3.8% correction: true value \u2248 165.7 kg.",
+    "At 8.2% correction: true value \u2248 173.6 kg.",
+    "Combined interval (bias range + sampling): [159.0, 180.3]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

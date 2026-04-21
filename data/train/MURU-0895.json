@@ -1,0 +1,37 @@
+{
+  "id": "MURU-0895",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "An engineer takes 25 measurements of room temperature using a thermometer. The measurements have a mean of 30.0 \u00b0C and a standard deviation of 3.3 \u00b0C. However, calibration tests reveal that a thermometer systematically overestimates the true value by between 1.9% and 4.5%. Estimate the true room temperature and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 30.0 \u00b0C. After correcting for the 3.2% bias: \u2248 29.1 \u00b0C. Full interval accounting for bias uncertainty (1.9%-4.5%) and sampling variability: [27.4, 30.7]. Point estimate: 29.1 \u00b0C.",
+    "point_estimate": 29.1,
+    "confidence_interval": [
+      27.4,
+      30.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 30.0 \u00b0C (n=25, s=3.3).",
+    "Sampling SE: 3.3/\u221a25 = 0.66. Sampling margin \u2248 \u00b11.3.",
+    "Bias correction: instrument overestimates by 1.9%-4.5%.",
+    "At 3.2% correction: true value \u2248 29.1 \u00b0C.",
+    "At 1.9% correction: true value \u2248 29.4 \u00b0C.",
+    "At 4.5% correction: true value \u2248 28.7 \u00b0C.",
+    "Combined interval (bias range + sampling): [27.4, 30.7]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

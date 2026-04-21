@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2707",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A food manufacturing study measures the weight (grams) for a sample of 15 cereal boxes. The sample mean is 222.8 g with a sample standard deviation of 63.7 g. However, 3 of the 15 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 12 observations have a mean of 211.1 g and standard deviation of 43.9 g. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 222.8, 95% CI = [187.5, 258.1]. Without outliers: mean = 211.1, 95% CI = [185.8, 236.4]. Combined interval accounting for analytic uncertainty: [185.8, 258.1]. Point estimate: 216.9 g.",
+    "point_estimate": 216.9,
+    "confidence_interval": [
+      185.8,
+      258.1
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=15): SE = 63.7/\u221a15 = 16.45. Margin = t(14,0.025) \u00d7 16.45 = 2.145 \u00d7 16.45 \u2248 35.29.",
+    "Full sample 95% CI: 222.8 \u00b1 35.29 = [187.5, 258.1].",
+    "With trimmed sample (n=12): SE = 43.9/\u221a12 = 12.67. Margin = 2.0 \u00d7 12.67 \u2248 25.34.",
+    "Trimmed 95% CI: 211.1 \u00b1 25.34 = [185.8, 236.4].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [185.8, 258.1]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

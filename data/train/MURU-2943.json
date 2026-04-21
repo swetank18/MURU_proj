@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2943",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A IT operations data backup uses 3 parallel storage devices for redundancy. The data recoverable requires at least one storage device to function. storage device 1 has a reliability of 89%. storage device 2 has a reliability of 91%. storage device 3 has a reliability between 62% and 75% (uncertain due to limited operational data). Additionally, there is a common-cause failure probability (e.g., power outage, shared software bug) that could disable all storage devices simultaneously, estimated between 2.0% and 4.6%. What is the overall probability that the data recoverable?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(data recoverable) ranges from 0.9504 to 0.9776. Point estimate: 0.964.",
+    "point_estimate": 0.964,
+    "confidence_interval": [
+      0.9504,
+      0.9776
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 3 storage devices fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2) \u00d7 (1-R_3).",
+    "At mid-range: P(all fail) = 0.11 \u00d7 0.09 \u00d7 0.31 = 0.0031. P(works) = 0.9969.",
+    "At lower bound: P(all fail) = 0.11 \u00d7 0.09 \u00d7 0.38 = 0.0038. P(works) = 0.9962.",
+    "At upper bound: P(all fail) = 0.11 \u00d7 0.09 \u00d7 0.25 = 0.0025. P(works) = 0.9975.",
+    "With common-cause failure (2.0%-4.6%): P(works) = (1-P_cc) \u00d7 P(independent works). Range: [0.9504, 0.9776]."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)",
+    "Ignoring common-cause failures that can disable all paths simultaneously"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

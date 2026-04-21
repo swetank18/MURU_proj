@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2182",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A clinical study study measures the diastolic blood pressure (mmHg) for a sample of 30 patients. The sample mean is 203.3 mmHg with a sample standard deviation of 29.7 mmHg. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 203.3 mmHg. 95% CI = [192.2, 214.4]. Point estimate: 203.3 mmHg.",
+    "point_estimate": 203.3,
+    "confidence_interval": [
+      192.2,
+      214.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 29.7/\u221a30 = 5.42.",
+    "Degrees of freedom: df = 30 - 1 = 29.",
+    "t-critical value: t(29, 0.025) \u2248 2.045.",
+    "Margin of error: 2.045 \u00d7 5.42 = 11.08.",
+    "95% CI: 203.3 \u00b1 11.08 = [192.2, 214.4]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 29.7/n instead of 29.7/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

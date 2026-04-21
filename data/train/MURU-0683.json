@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0683",
+  "category": "conditional_probability_chains",
+  "difficulty": 1,
+  "stem": "A candidate enters the hiring pipeline. The probability of passing resume screening is between 58% and 74% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing phone interview is 75%. If the previous stage is passed, the probability of passing onsite interview is 81%. What is the overall probability that the candidate is hired?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(hired) ranges from 0.352 to 0.45 as the resume screening pass rate varies from 58% to 74%. Point estimate: 0.401.",
+    "point_estimate": 0.401,
+    "confidence_interval": [
+      0.352,
+      0.45
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The candidate must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.66 \u00d7 0.75 \u00d7 0.81 = 0.401.",
+    "At lower bound: P(success) = 0.58 \u00d7 0.75 \u00d7 0.81 = 0.352.",
+    "At upper bound: P(success) = 0.74 \u00d7 0.75 \u00d7 0.81 = 0.45.",
+    "The uncertainty in the resume screening stage creates a 9.8 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the resume screening rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

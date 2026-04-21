@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2324",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses a tTG-IgA antibody test to screen for celiac disease. The test has a sensitivity of 80% and a specificity of 81%. The prevalence of celiac disease in the patient population is estimated to be between 9.7% and 20.0%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has celiac disease? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(celiac disease | positive test) ranges from 0.311 to 0.513 as prevalence varies from 9.7% to 20.0%. Point estimate at 14.9% prevalence: 0.424.",
+    "point_estimate": 0.424,
+    "confidence_interval": [
+      0.311,
+      0.513
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.19.",
+    "At prevalence 14.9%: P(D|+) = 0.8\u00d70.149 / (0.8\u00d70.149 + 0.19\u00d70.851) \u2248 0.424.",
+    "At prevalence 9.7%: P(D|+) = 0.8\u00d70.097 / (0.8\u00d70.097 + 0.19\u00d70.903) \u2248 0.311.",
+    "At prevalence 20.0%: P(D|+) = 0.8\u00d70.2 / (0.8\u00d70.2 + 0.19\u00d70.8) \u2248 0.513.",
+    "The confidence interval [0.311, 0.513] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (80%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

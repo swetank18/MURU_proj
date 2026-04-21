@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1688",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose among 4 energy source options. The probability of favorable regional climate data is uncertain, estimated between 45% and 59%. The payoffs (in $K) for each option are: solar: $79K in good regional climate data, $10K in bad regional climate data. wind: $280K in good regional climate data, $65K in bad regional climate data. natural gas: $271K in good regional climate data, $146K in bad regional climate data. geothermal: $82K in good regional climate data, $24K in bad regional climate data. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.52: best option is natural gas with EV=$211.0K. natural gas is optimal across the entire uncertainty range. EV range of best option: [202.2, 219.8].",
+    "point_estimate": 211.0,
+    "confidence_interval": [
+      202.2,
+      219.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "solar: EV = 0.52\u00d779 + 0.48\u00d710 = $45.9K.",
+    "wind: EV = 0.52\u00d7280 + 0.48\u00d765 = $176.8K.",
+    "natural gas: EV = 0.52\u00d7271 + 0.48\u00d7146 = $211.0K.",
+    "geothermal: EV = 0.52\u00d782 + 0.48\u00d724 = $54.2K.",
+    "Best at mid-range: natural gas ($211.0K).",
+    "Sensitivity: check endpoints P(good)=0.45 and 0.59.",
+    "natural gas is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1250",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In a medical treatment study comparing Drug X vs. Drug Y: Overall, Treatment Y has a higher recovery rate (65.6% vs 62.0%). However, when stratified by disease severity: In mild cases (n_X=20, n_Y=120): Treatment X achieves 78% vs Treatment Y's 70%. In severe cases (n_X=80, n_Y=40): Treatment X achieves 58% vs Treatment Y's 52%. The true population proportion of mild cases is uncertain, estimated between 34% and 50%. Which treatment is actually better, and by how much?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to severe cases (harder cases). Adjusted difference (X - Y): [0.067, 0.07], point estimate: 0.068. Treatment X is genuinely better by 6.8 percentage points.",
+    "point_estimate": 0.068,
+    "confidence_interval": [
+      0.067,
+      0.07
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=62.0%, Y=65.6% (Y appears better).",
+    "Stratified: In mild cases: X=78% > Y=70%. In severe cases: X=58% > Y=52%.",
+    "X is better in BOTH subgroups \u2014 this is Simpson's Paradox.",
+    "The paradox arises because Drug X is applied more to severe cases (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A\u00d70.78 + (1-w_A)\u00d70.58.",
+    "Population-adjusted rate for Y: w_A\u00d70.7 + (1-w_A)\u00d70.52.",
+    "Difference X-Y at w_A=0.42: 0.068. Range: [0.067, 0.07]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

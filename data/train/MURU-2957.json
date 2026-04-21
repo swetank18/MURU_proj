@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2957",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A search and rescue team is looking for a missing person. Based on initial analysis, they estimate a 62% probability that a missing person is in the forest zone and a 38% probability it is in the mountain zone. They search the forest zone first and do not find a missing person. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in the forest zone is between 65% and 82%. Given they did not find a missing person in the forest zone, what is the updated probability that a missing person is in the mountain zone?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(the mountain zone | not found in the forest zone) ranges from 0.637 to 0.773 as detection probability varies from 65% to 82%. Point estimate at 73% detection: 0.694.",
+    "point_estimate": 0.694,
+    "confidence_interval": [
+      0.637,
+      0.773
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.62 + 1\u00d70.38.",
+    "At detection 73%: P(B|\u00acfound) = 0.38 / (0.27\u00d70.62 + 0.38) \u2248 0.694.",
+    "At detection 65%: P(B|\u00acfound) \u2248 0.637.",
+    "At detection 82%: P(B|\u00acfound) \u2248 0.773."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in the forest zone means it is definitely in the mountain zone",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

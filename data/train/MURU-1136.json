@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1136",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A manufacturing study measures defect rate across 5 factorys, each containing multiple production lines. factory A has 10 observations with mean 69.1 % (within-factory SD = 5.2). factory B has 15 observations with mean 40.8 % (within-factory SD = 4.2). factory C has 15 observations with mean 65.2 % (within-factory SD = 9.8). factory D has 5 observations with mean 69.8 % (within-factory SD = 7.5). factory E has 15 observations with mean 65.7 % (within-factory SD = 8.6). The between-factory standard deviation is uncertain, estimated between 7.7 and 19.4 %. Using a hierarchical Bayesian model, estimate the true defect rate for factory B, accounting for shrinkage toward the grand mean and the uncertainty in the between-factory variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for factory B: 40.9 % (shrunk from raw 40.8). Range [40.9, 41.2] as between-factory SD varies from 7.7 to 19.4. Pooled mean: 60.3.",
+    "point_estimate": 40.9,
+    "confidence_interval": [
+      40.9,
+      41.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 60.3 % (weighted average of 5 factory means).",
+    "Shrinkage factor for factory B: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/15). At \u03c3_between=12.9: B = 0.993.",
+    "Shrunk estimate = B \u00d7 40.8 + (1-B) \u00d7 60.3 = 40.9.",
+    "At \u03c3_between=7.7: more shrinkage \u2192 estimate = 41.2.",
+    "At \u03c3_between=19.4: less shrinkage \u2192 estimate = 40.9.",
+    "Interval [40.9, 41.2] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (40.8) without shrinkage",
+    "Using only the grand mean (60.3) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

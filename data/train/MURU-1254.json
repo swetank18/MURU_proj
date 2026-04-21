@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1254",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A factory produces solar panels using two sources. Automated Line East handles 61% of production with a known defect rate of 4.7%. Automated Line West handles 39% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 6.1% and 8.3%, depending on raw material batch quality. A randomly selected solar panel is found to be defective. What is the probability it came from Automated Line West?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Automated Line West | defective) ranges from 0.453 to 0.53 as Automated Line West's defect rate varies from 6.1% to 8.3%. Point estimate at 7.2%: 0.495.",
+    "point_estimate": 0.495,
+    "confidence_interval": [
+      0.453,
+      0.53
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 7.2%: P(B|def) = 0.072\u00d70.39 / (0.047\u00d70.61 + 0.072\u00d70.39) \u2248 0.495.",
+    "At defect rate 6.1%: P(B|def) \u2248 0.453.",
+    "At defect rate 8.3%: P(B|def) \u2248 0.53.",
+    "The interval [0.453, 0.53] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (61/39 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

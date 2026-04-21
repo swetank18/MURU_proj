@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0547",
+  "category": "conditional_probability_chains",
+  "difficulty": 2,
+  "stem": "A loan application enters the loan processing pipeline. The probability of passing application review is 70%. If the previous stage is passed, the probability of passing credit check is between 58% and 76% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing underwriting is 70%. What is the overall probability that the loan application is approved?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(approved) ranges from 0.284 to 0.372 as the credit check pass rate varies from 58% to 76%. Point estimate: 0.328.",
+    "point_estimate": 0.328,
+    "confidence_interval": [
+      0.284,
+      0.372
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The loan application must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.7 \u00d7 0.67 \u00d7 0.7 = 0.328.",
+    "At lower bound: P(success) = 0.7 \u00d7 0.58 \u00d7 0.7 = 0.284.",
+    "At upper bound: P(success) = 0.7 \u00d7 0.76 \u00d7 0.7 = 0.372.",
+    "The uncertainty in the credit check stage creates a 8.8 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the credit check rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

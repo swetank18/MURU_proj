@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1612",
+  "category": "conditional_probability_chains",
+  "difficulty": 2,
+  "stem": "A drug candidate enters the drug development pipeline. The probability of passing preclinical testing is 80%. If the previous stage is passed, the probability of passing Phase I trial is between 56% and 74% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing Phase II trial is 81%. What is the overall probability that the drug candidate is approved for market?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(approved for market) ranges from 0.363 to 0.48 as the Phase I trial pass rate varies from 56% to 74%. Point estimate: 0.421.",
+    "point_estimate": 0.421,
+    "confidence_interval": [
+      0.363,
+      0.48
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The drug candidate must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.8 \u00d7 0.65 \u00d7 0.81 = 0.421.",
+    "At lower bound: P(success) = 0.8 \u00d7 0.56 \u00d7 0.81 = 0.363.",
+    "At upper bound: P(success) = 0.8 \u00d7 0.74 \u00d7 0.81 = 0.48.",
+    "The uncertainty in the Phase I trial stage creates a 11.7 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the Phase I trial rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

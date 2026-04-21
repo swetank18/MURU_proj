@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2710",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "In a A/B testing scenario, a researcher begins with a prior probability of 33% that variant B outperforms A, based on user conversion data. After day of data 1, contradicting evidence arrives with a likelihood ratio estimated between 0.26 and 0.4. After day of data 2, contradicting evidence arrives with a likelihood ratio estimated between 0.5 and 0.63. After day of data 3, supporting evidence arrives with a likelihood ratio estimated between 2.27 and 3.83. After day of data 4, supporting evidence arrives with a likelihood ratio estimated between 1.07 and 1.68. What is the posterior probability that variant B outperforms A after all 4 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 4 sequential Bayesian updates, P(variant B outperforms A) ranges from 0.135 to 0.444. Point estimate: 0.277.",
+    "point_estimate": 0.277,
+    "confidence_interval": [
+      0.135,
+      0.444
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.33/0.67 = 0.493.",
+    "Update 1: multiply odds by LR \u2208 [0.26, 0.4] (mid: 0.33, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.5, 0.63] (mid: 0.56, contradicting evidence).",
+    "Update 3: multiply odds by LR \u2208 [2.27, 3.83] (mid: 3.05, supporting evidence).",
+    "Update 4: multiply odds by LR \u2208 [1.07, 1.68] (mid: 1.38, supporting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.135, 0.444], point estimate: 0.277."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates",
+    "Failing to account for compounding uncertainty across multiple uncertain LRs"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

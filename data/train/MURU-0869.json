@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0869",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose between two options. Option A (the established treatment) yields a guaranteed return of $198K. Option B (the experimental treatment) depends on patient response rate: with probability 37-61% (uncertain), it yields $427K; otherwise it yields $59K. Compute the expected value of each option and determine which is better. How does the uncertainty in patient response rate affect the recommendation?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV(A) = $198K (fixed). EV(B) ranges from $195.2K to $283.5K. Point estimate: $239.3K. Option B is preferred at most assumptions (EV_B > EV_A when P(good) > 37.8%).",
+    "point_estimate": 239.3,
+    "confidence_interval": [
+      195.2,
+      283.5
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV(A) = $198K (guaranteed).",
+    "EV(B) = P(good)\u00d7$427K + (1-P(good))\u00d7$59K.",
+    "At P(good)=0.49: EV(B) = 0.49\u00d7427 + 0.51\u00d759 = $239.3K.",
+    "At P(good)=0.37: EV(B) = $195.2K.",
+    "At P(good)=0.61: EV(B) = $283.5K.",
+    "Breakeven probability: P(good) = (198-59) / (427-59) = 0.378.",
+    "The decision switches at P(good) = 37.8%, which falls within the uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Picking a single probability and giving a definitive recommendation without sensitivity analysis",
+    "Not computing the breakeven probability where the optimal decision switches",
+    "Ignoring the range of outcomes and focusing only on expected values (risk-neutral assumption)"
+  ],
+  "metadata": {
+    "author": "generator_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

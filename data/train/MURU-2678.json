@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2678",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In a university admissions study comparing Department A vs. Department B: Overall, Treatment Y has a higher acceptance rate (62.6% vs 55.0%). However, when stratified by applicant pool competitiveness: In less competitive applicants (n_X=40, n_Y=150): Treatment X achieves 78% vs Treatment Y's 70%. In highly competitive applicants (n_X=80, n_Y=40): Treatment X achieves 44% vs Treatment Y's 35%. The true population proportion of less competitive applicants is uncertain, estimated between 39% and 50%. Which treatment is actually better, and by how much?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to highly competitive applicants (harder cases). Adjusted difference (X - Y): [0.085, 0.087], point estimate: 0.085. Treatment X is genuinely better by 8.5 percentage points.",
+    "point_estimate": 0.085,
+    "confidence_interval": [
+      0.085,
+      0.087
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=55.0%, Y=62.6% (Y appears better).",
+    "Stratified: In less competitive applicants: X=78% > Y=70%. In highly competitive applicants: X=44% > Y=35%.",
+    "X is better in BOTH subgroups \u2014 this is Simpson's Paradox.",
+    "The paradox arises because Department A is applied more to highly competitive applicants (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A\u00d70.78 + (1-w_A)\u00d70.44.",
+    "Population-adjusted rate for Y: w_A\u00d70.7 + (1-w_A)\u00d70.35.",
+    "Difference X-Y at w_A=0.45: 0.085. Range: [0.085, 0.087]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

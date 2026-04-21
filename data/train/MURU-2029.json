@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2029",
+  "category": "adversarial_ambiguity",
+  "difficulty": 2,
+  "stem": "In market sizing, you are asked to estimate the total addressable market. You are first told that a venture capitalist's optimistic projection puts the value at 646.0 $M. You then collect your own data: bottom-up analysis from actual customer data based on 25 observations give a mean of 422.0 $M with SD = 73.0 $M. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (646.0 $M) likely overestimates the true value. Data-based estimate: 422.0 $M, CI = [393.4, 450.6]. If the anchor receives 0-33% weight, the estimate ranges from 462.3 to 495.9. Point estimate: 422.0 $M (data-only, unanchored).",
+    "point_estimate": 422.0,
+    "confidence_interval": [
+      393.4,
+      495.9
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 646.0 $M (from a venture capitalist's optimistic projection \u2014 potentially biased).",
+    "Data: mean = 422.0, SD = 73.0, n = 25. SE = 14.6.",
+    "Data-based 95% CI: [393.4, 450.6].",
+    "The anchor overestimates relative to the data by 224 $M (53%).",
+    "If we assign the anchor weight w \u2208 [0, 0.33]: estimate = w\u00d7646.0 + (1-w)\u00d7422.0.",
+    "At w=0.26: estimate = 480.2.",
+    "Best practice: the data-based estimate (422.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (646.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (646.0) and data (422.0) are substantially different, suggesting bias in the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

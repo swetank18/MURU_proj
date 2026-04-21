@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1016",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "A decision-maker must choose among 4 investment portfolio options. The probability of favorable market conditions is uncertain, estimated between 41% and 61%. The payoffs (in $K) for each option are: bonds: $217K in good market conditions, $86K in bad market conditions. index fund: $89K in good market conditions, $24K in bad market conditions. tech stocks: $196K in good market conditions, $93K in bad market conditions. real estate: $287K in good market conditions, $90K in bad market conditions. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.51: best option is real estate with EV=$190.5K. real estate is optimal across the entire uncertainty range. EV range of best option: [170.8, 210.2].",
+    "point_estimate": 190.5,
+    "confidence_interval": [
+      170.8,
+      210.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "bonds: EV = 0.51\u00d7217 + 0.49\u00d786 = $152.8K.",
+    "index fund: EV = 0.51\u00d789 + 0.49\u00d724 = $57.1K.",
+    "tech stocks: EV = 0.51\u00d7196 + 0.49\u00d793 = $145.5K.",
+    "real estate: EV = 0.51\u00d7287 + 0.49\u00d790 = $190.5K.",
+    "Best at mid-range: real estate ($190.5K).",
+    "Sensitivity: check endpoints P(good)=0.41 and 0.61.",
+    "real estate is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value",
+    "Not performing minimax regret analysis to find the most robust choice"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

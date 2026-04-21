@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2599",
+  "category": "conditional_probability_chains",
+  "difficulty": 3,
+  "stem": "A candidate enters the hiring pipeline. The probability of passing resume screening is 77%. If the previous stage is passed, the probability of passing phone interview is 84%. If the previous stage is passed, the probability of passing onsite interview is 98%. If the previous stage is passed, the probability of passing offer acceptance is between 66% and 82% (uncertain due to evaluator variability). What is the overall probability that the candidate is hired?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(hired) ranges from 0.418 to 0.52 as the offer acceptance pass rate varies from 66% to 82%. Point estimate: 0.469.",
+    "point_estimate": 0.469,
+    "confidence_interval": [
+      0.418,
+      0.52
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The candidate must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.77 \u00d7 0.84 \u00d7 0.98 \u00d7 0.74 = 0.469.",
+    "At lower bound: P(success) = 0.77 \u00d7 0.84 \u00d7 0.98 \u00d7 0.66 = 0.418.",
+    "At upper bound: P(success) = 0.77 \u00d7 0.84 \u00d7 0.98 \u00d7 0.82 = 0.52.",
+    "The uncertainty in the offer acceptance stage creates a 10.2 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the offer acceptance rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

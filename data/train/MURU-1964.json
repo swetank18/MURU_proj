@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1964",
+  "category": "adversarial_ambiguity",
+  "difficulty": 4,
+  "stem": "In a school performance study comparing School A vs. School B: Overall, Treatment Y has a higher test score improvement (65.8% vs 63.3%). However, when stratified by socioeconomic background: In affluent area students (n_X=20, n_Y=100): Treatment X achieves 78% vs Treatment Y's 68%. In lower-income area students (n_X=100, n_Y=20): Treatment X achieves 60% vs Treatment Y's 55%. The true population proportion of affluent area students is uncertain, estimated between 31% and 45%. Which treatment is actually better, and by how much?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to lower-income area students (harder cases). Adjusted difference (X - Y): [0.066, 0.072], point estimate: 0.069. Treatment X is genuinely better by 6.9 percentage points.",
+    "point_estimate": 0.069,
+    "confidence_interval": [
+      0.066,
+      0.072
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=63.3%, Y=65.8% (Y appears better).",
+    "Stratified: In affluent area students: X=78% > Y=68%. In lower-income area students: X=60% > Y=55%.",
+    "X is better in BOTH subgroups \u2014 this is Simpson's Paradox.",
+    "The paradox arises because School A is applied more to lower-income area students (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A\u00d70.78 + (1-w_A)\u00d70.6.",
+    "Population-adjusted rate for Y: w_A\u00d70.68 + (1-w_A)\u00d70.55.",
+    "Difference X-Y at w_A=0.38: 0.069. Range: [0.066, 0.072]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

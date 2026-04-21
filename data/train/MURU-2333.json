@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2333",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A manufacturing study measures defect rate across 3 factorys, each containing multiple production lines. factory A has 5 observations with mean 78.2 % (within-factory SD = 7.0). factory B has 10 observations with mean 70.4 % (within-factory SD = 3.8). factory C has 20 observations with mean 65.6 % (within-factory SD = 7.0). The between-factory standard deviation is uncertain, estimated between 7.4 and 18.5 %. Using a hierarchical Bayesian model, estimate the true defect rate for factory A, accounting for shrinkage toward the grand mean and the uncertainty in the between-factory variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for factory A: 77.6 % (shrunk from raw 78.2). Range [76.8, 77.9] as between-factory SD varies from 7.4 to 18.5. Pooled mean: 68.8.",
+    "point_estimate": 77.6,
+    "confidence_interval": [
+      76.8,
+      77.9
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 68.8 % (weighted average of 3 factory means).",
+    "Shrinkage factor for factory A: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/5). At \u03c3_between=12.3: B = 0.939.",
+    "Shrunk estimate = B \u00d7 78.2 + (1-B) \u00d7 68.8 = 77.6.",
+    "At \u03c3_between=7.4: more shrinkage \u2192 estimate = 76.8.",
+    "At \u03c3_between=18.5: less shrinkage \u2192 estimate = 77.9.",
+    "Interval [76.8, 77.9] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (78.2) without shrinkage",
+    "Using only the grand mean (68.8) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

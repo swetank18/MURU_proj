@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0914",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A factory produces aircraft rivets using two sources. Forge A handles 79% of production with a known defect rate of 4.4%. Forge B handles 21% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 5.7% and 10.0%, depending on raw material batch quality. A randomly selected aircraft rivet is found to be defective. What is the probability it came from Forge B?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Forge B | defective) ranges from 0.256 to 0.377 as Forge B's defect rate varies from 5.7% to 10.0%. Point estimate at 7.9%: 0.323.",
+    "point_estimate": 0.323,
+    "confidence_interval": [
+      0.256,
+      0.377
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 7.9%: P(B|def) = 0.079\u00d70.21 / (0.044\u00d70.79 + 0.079\u00d70.21) \u2248 0.323.",
+    "At defect rate 5.7%: P(B|def) \u2248 0.256.",
+    "At defect rate 10.0%: P(B|def) \u2248 0.377.",
+    "The interval [0.256, 0.377] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (79/21 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

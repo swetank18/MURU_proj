@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2043",
+  "category": "distribution_estimation",
+  "difficulty": 5,
+  "stem": "A biology dataset contains 150 observations of cell size. The data is believed to come from a mixture of two populations: healthy cells (mean \u2248 45.3 \u00b5m, SD \u2248 10.8) and abnormal cells (mean \u2248 103.2 \u00b5m, SD \u2248 15.9). The proportion of healthy cells in the sample is uncertain, estimated between 49% and 69%. The observed overall mean is 69.0 \u00b5m with SD = 31.4. Estimate the true population mean of cell size, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d745.3 + (1-w)\u00d7103.2. As w varies from 0.49 to 0.69, the mixture mean ranges from 63.2 to 74.8. With sampling variability, CI = [58.2, 79.8]. Point estimate at w=0.59: 69.0 \u00b5m.",
+    "point_estimate": 69.0,
+    "confidence_interval": [
+      58.2,
+      79.8
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.59: \u03bc_mix = 0.59\u00d745.3 + 0.41\u00d7103.2 = 69.0.",
+    "At w=0.49: \u03bc_mix = 74.8 (more of abnormal cells).",
+    "At w=0.69: \u03bc_mix = 63.2 (more of healthy cells).",
+    "Mixture SD \u2248 31.4. SE = 31.4/\u221a150 = 2.56.",
+    "Combined interval [58.2, 79.8] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (31.4) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation",
+    "Failing to propagate the uncertainty in mixing weights through to the final interval"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

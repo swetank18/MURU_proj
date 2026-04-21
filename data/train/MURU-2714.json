@@ -1,0 +1,32 @@
+{
+  "id": "MURU-2714",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A digital marketing study surveys 40 users shown the ad and observes 4 positive outcomes out of 40 (10.0%). Estimate the true click-through rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Sample proportion: 0.1. Wilson 95% CI: [0.0396, 0.2305]. Point estimate: 0.135.",
+    "point_estimate": 0.135,
+    "confidence_interval": [
+      0.0396,
+      0.2305
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 4/40 = 0.1.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.135.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.0955.",
+    "95% CI: [0.0396, 0.2305]."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

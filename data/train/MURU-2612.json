@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2612",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "A decision-maker must choose among 4 marketing channel options. The probability of favorable target demographic response is uncertain, estimated between 36% and 48%. The payoffs (in $K) for each option are: social media: $257K in good target demographic response, $128K in bad target demographic response. TV ads: $60K in good target demographic response, $26K in bad target demographic response. email: $102K in good target demographic response, $53K in bad target demographic response. influencer: $119K in good target demographic response, $69K in bad target demographic response. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.42: best option is social media with EV=$182.2K. social media is optimal across the entire uncertainty range. EV range of best option: [174.4, 189.9].",
+    "point_estimate": 182.2,
+    "confidence_interval": [
+      174.4,
+      189.9
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "social media: EV = 0.42\u00d7257 + 0.58\u00d7128 = $182.2K.",
+    "TV ads: EV = 0.42\u00d760 + 0.58\u00d726 = $40.3K.",
+    "email: EV = 0.42\u00d7102 + 0.58\u00d753 = $73.6K.",
+    "influencer: EV = 0.42\u00d7119 + 0.58\u00d769 = $90.0K.",
+    "Best at mid-range: social media ($182.2K).",
+    "Sensitivity: check endpoints P(good)=0.36 and 0.48.",
+    "social media is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value",
+    "Not performing minimax regret analysis to find the most robust choice"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

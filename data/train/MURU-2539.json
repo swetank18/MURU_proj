@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2539",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A automotive testing study measures the fuel consumption (L/100km) for a sample of 30 vehicles. The sample mean is 436.1 L/100km with a sample standard deviation of 113.6 L/100km. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 436.1 L/100km. 95% CI = [393.7, 478.5]. Point estimate: 436.1 L/100km.",
+    "point_estimate": 436.1,
+    "confidence_interval": [
+      393.7,
+      478.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 113.6/\u221a30 = 20.74.",
+    "Degrees of freedom: df = 30 - 1 = 29.",
+    "t-critical value: t(29, 0.025) \u2248 2.045.",
+    "Margin of error: 2.045 \u00d7 20.74 = 42.41.",
+    "95% CI: 436.1 \u00b1 42.41 = [393.7, 478.5]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 113.6/n instead of 113.6/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

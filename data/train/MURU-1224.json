@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1224",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A materials science dataset contains 100 observations of tensile strength. The data is believed to come from a mixture of two populations: bulk material (mean \u2248 88.3 MPa, SD \u2248 10.1) and surface-treated material (mean \u2248 178.8 MPa, SD \u2248 41.9). The proportion of bulk material in the sample is uncertain, estimated between 36% and 50%. The observed overall mean is 139.9 MPa with SD = 55.2. Estimate the true population mean of tensile strength, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d788.3 + (1-w)\u00d7178.8. As w varies from 0.36 to 0.5, the mixture mean ranges from 133.6 to 146.2. With sampling variability, CI = [122.8, 157.0]. Point estimate at w=0.43: 139.9 MPa.",
+    "point_estimate": 139.9,
+    "confidence_interval": [
+      122.8,
+      157.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.43: \u03bc_mix = 0.43\u00d788.3 + 0.57\u00d7178.8 = 139.9.",
+    "At w=0.36: \u03bc_mix = 146.2 (more of surface-treated material).",
+    "At w=0.5: \u03bc_mix = 133.6 (more of bulk material).",
+    "Mixture SD \u2248 55.2. SE = 55.2/\u221a100 = 5.52.",
+    "Combined interval [122.8, 157.0] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (55.2) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1602",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A astronomy dataset contains 50 observations of apparent magnitude. The data is believed to come from a mixture of two populations: foreground stars (mean \u2248 55.3 mag, SD \u2248 8.8) and background galaxies (mean \u2248 132.2 mag, SD \u2248 14.1). The proportion of foreground stars in the sample is uncertain, estimated between 38% and 56%. The observed overall mean is 96.1 mag with SD = 40.2. Estimate the true population mean of apparent magnitude, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d755.3 + (1-w)\u00d7132.2. As w varies from 0.38 to 0.56, the mixture mean ranges from 89.1 to 103.0. With sampling variability, CI = [77.9, 114.2]. Point estimate at w=0.47: 96.1 mag.",
+    "point_estimate": 96.1,
+    "confidence_interval": [
+      77.9,
+      114.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.47: \u03bc_mix = 0.47\u00d755.3 + 0.53\u00d7132.2 = 96.1.",
+    "At w=0.38: \u03bc_mix = 103.0 (more of background galaxies).",
+    "At w=0.56: \u03bc_mix = 89.1 (more of foreground stars).",
+    "Mixture SD \u2248 40.2. SE = 40.2/\u221a50 = 5.69.",
+    "Combined interval [77.9, 114.2] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (40.2) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

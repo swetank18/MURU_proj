@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1536",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A cloud computing server cluster uses 4 parallel nodes for redundancy. The request served requires at least one node to function. node 1 has a reliability of 79%. node 2 has a reliability of 89%. node 3 has a reliability of 90%. node 4 has a reliability between 76% and 91% (uncertain due to limited operational data). Additionally, there is a common-cause failure probability (e.g., power outage, shared software bug) that could disable all nodes simultaneously, estimated between 3.8% and 8.4%. What is the overall probability that the request served?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(request served) ranges from 0.9155 to 0.9618. Point estimate: 0.9386.",
+    "point_estimate": 0.9386,
+    "confidence_interval": [
+      0.9155,
+      0.9618
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 4 nodes fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2) \u00d7 (1-R_3) \u00d7 (1-R_4).",
+    "At mid-range: P(all fail) = 0.21 \u00d7 0.11 \u00d7 0.1 \u00d7 0.17 = 0.0004. P(works) = 0.9996.",
+    "At lower bound: P(all fail) = 0.21 \u00d7 0.11 \u00d7 0.1 \u00d7 0.24 = 0.0006. P(works) = 0.9994.",
+    "At upper bound: P(all fail) = 0.21 \u00d7 0.11 \u00d7 0.1 \u00d7 0.09 = 0.0002. P(works) = 0.9998.",
+    "With common-cause failure (3.8%-8.4%): P(works) = (1-P_cc) \u00d7 P(independent works). Range: [0.9155, 0.9618]."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)",
+    "Ignoring common-cause failures that can disable all paths simultaneously"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

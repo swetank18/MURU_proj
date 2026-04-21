@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2494",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A candidate enters the hiring pipeline. The probability of passing resume screening is 71%. If the previous stage is passed, the probability of passing phone interview is between 56% and 68% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing onsite interview is 80%. If the previous stage is passed, the probability of passing offer acceptance is 93%. What is the overall probability that the candidate is hired?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(hired) ranges from 0.296 to 0.359 as the phone interview pass rate varies from 56% to 68%. Point estimate: 0.328.",
+    "point_estimate": 0.328,
+    "confidence_interval": [
+      0.296,
+      0.359
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The candidate must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.71 \u00d7 0.62 \u00d7 0.8 \u00d7 0.93 = 0.328.",
+    "At lower bound: P(success) = 0.71 \u00d7 0.56 \u00d7 0.8 \u00d7 0.93 = 0.296.",
+    "At upper bound: P(success) = 0.71 \u00d7 0.68 \u00d7 0.8 \u00d7 0.93 = 0.359.",
+    "The uncertainty in the phone interview stage creates a 6.3 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the phone interview rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

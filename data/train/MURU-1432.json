@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1432",
+  "category": "conditional_probability_chains",
+  "difficulty": 5,
+  "stem": "In a insurance claim, a policyholder begins at 'incident report'. At the first stage, 53% of cases take Path A (the claims fast track) and 47% take Path B (the standard route). In Path A, the probability of advancing to the next stage is uncertain, estimated between 66% and 83%. In Path B, the advancement probability is 79%. At the final stage, regardless of path, the probability of full payout is between 69% and 79% (uncertain due to evaluator variability). What is the overall probability of full payout?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(full payout) = P(A)\u00d7P(advance|A)\u00d7P(final) + P(B)\u00d7P(advance|B)\u00d7P(final). Range: [0.498, 0.641]. Point estimate: 0.565.",
+    "point_estimate": 0.565,
+    "confidence_interval": [
+      0.498,
+      0.641
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Total probability via law of total probability over the two paths.",
+    "Path A contribution: 0.53 \u00d7 P(advance|A) \u00d7 P(final).",
+    "Path B contribution: 0.47 \u00d7 0.79 \u00d7 P(final).",
+    "At mid-range estimates: 0.53 \u00d7 0.74 \u00d7 0.74 + 0.47 \u00d7 0.79 \u00d7 0.74 = 0.565.",
+    "At lower bounds: 0.53 \u00d7 0.66 \u00d7 0.69 + 0.47 \u00d7 0.79 \u00d7 0.69 = 0.498.",
+    "At upper bounds: 0.53 \u00d7 0.83 \u00d7 0.79 + 0.47 \u00d7 0.79 \u00d7 0.79 = 0.641.",
+    "The two sources of uncertainty (Path A advancement and final stage) compound to create the interval [0.498, 0.641]."
+  ],
+  "common_failure_modes": [
+    "Computing only one path's probability instead of summing over all paths",
+    "Not weighting each path by its probability of being taken",
+    "Using a single rate for uncertain stages without computing the range",
+    "Assuming the paths are independent when they share a common final stage uncertainty",
+    "Not recognizing the multiplicative uncertainty compounding across multiple levels"
+  ],
+  "metadata": {
+    "author": "generator_conditional_cascade",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

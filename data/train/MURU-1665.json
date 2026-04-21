@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1665",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A customer analytics dataset contains 100 observations of purchase amount. The data is believed to come from a mixture of two populations: casual buyers (mean \u2248 32.9 $, SD \u2248 3.4) and power users (mean \u2248 57.8 $, SD \u2248 6.9). The proportion of casual buyers in the sample is uncertain, estimated between 32% and 55%. The observed overall mean is 46.8 $ with SD = 13.6. Estimate the true population mean of purchase amount, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d732.9 + (1-w)\u00d757.8. As w varies from 0.32 to 0.55, the mixture mean ranges from 44.1 to 49.8. With sampling variability, CI = [41.4, 52.5]. Point estimate at w=0.44: 46.8 $.",
+    "point_estimate": 46.8,
+    "confidence_interval": [
+      41.4,
+      52.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.44: \u03bc_mix = 0.44\u00d732.9 + 0.56\u00d757.8 = 46.8.",
+    "At w=0.32: \u03bc_mix = 49.8 (more of power users).",
+    "At w=0.55: \u03bc_mix = 44.1 (more of casual buyers).",
+    "Mixture SD \u2248 13.6. SE = 13.6/\u221a100 = 1.36.",
+    "Combined interval [41.4, 52.5] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (13.6) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

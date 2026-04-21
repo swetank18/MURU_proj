@@ -1,0 +1,39 @@
+{
+  "id": "MURU-3016",
+  "category": "decision_under_uncertainty",
+  "difficulty": 5,
+  "stem": "In clinical trials, a decision-maker is at the Phase I stage and must decide whether to proceed to Phase II decision. The investment cost is $263K. If the project succeeds (estimated probability 30%-53%), it yields $1008K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a Phase I results for $23K. This Phase I results correctly predicts success/failure with accuracy 66%-78%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $160.4K. EV with info at mid-range: $159.6K. Value of information: $-0.8K. VOI range: [$-13.4K, $22.5K]. Information may not be worth the cost.",
+    "point_estimate": -0.8,
+    "confidence_interval": [
+      -13.4,
+      22.5
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$1008K - $263K).",
+    "At P=0.42: EV_no_info = max(0, 0.42\u00d71008 - 263) = $160.4K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d71008 - 263) - 23.",
+    "At mid-range: EV_with_info = $159.6K.",
+    "VOI = EV_with_info - EV_no_info = $-0.8K.",
+    "Range across uncertain parameters: [$-13.4K, $22.5K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy",
+    "Not recognizing the option value: negative EV without info doesn't mean info is worthless"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

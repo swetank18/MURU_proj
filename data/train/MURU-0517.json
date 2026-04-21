@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0517",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose between two options. Option A (planting wheat) yields a guaranteed return of $101K. Option B (planting corn) depends on rainfall: with probability 35-58% (uncertain), it yields $189K; otherwise it yields $12K. Compute the expected value of each option and determine which is better. How does the uncertainty in rainfall affect the recommendation?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV(A) = $101K (fixed). EV(B) ranges from $73.9K to $114.7K. Point estimate: $93.4K. Option A is preferred at most assumptions (EV_A > EV_B when P(good) < 50.3%).",
+    "point_estimate": 93.4,
+    "confidence_interval": [
+      73.9,
+      114.7
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV(A) = $101K (guaranteed).",
+    "EV(B) = P(good)\u00d7$189K + (1-P(good))\u00d7$12K.",
+    "At P(good)=0.46: EV(B) = 0.46\u00d7189 + 0.54\u00d712 = $93.4K.",
+    "At P(good)=0.35: EV(B) = $73.9K.",
+    "At P(good)=0.58: EV(B) = $114.7K.",
+    "Breakeven probability: P(good) = (101-12) / (189-12) = 0.503.",
+    "The decision switches at P(good) = 50.3%, which falls within the uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Picking a single probability and giving a definitive recommendation without sensitivity analysis",
+    "Not computing the breakeven probability where the optimal decision switches",
+    "Ignoring the range of outcomes and focusing only on expected values (risk-neutral assumption)"
+  ],
+  "metadata": {
+    "author": "generator_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

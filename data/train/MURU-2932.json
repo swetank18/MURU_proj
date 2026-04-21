@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2932",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In market sizing, you are asked to estimate the total addressable market. You are first told that a venture capitalist's optimistic projection puts the value at 123.0 $M. You then collect your own data: bottom-up analysis from actual customer data based on 25 observations give a mean of 217.0 $M with SD = 23.0 $M. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (123.0 $M) likely underestimates the true value. Data-based estimate: 217.0 $M, CI = [208.0, 226.0]. If the anchor receives 0-36% weight, the estimate ranges from 183.2 to 194.4. Point estimate: 217.0 $M (data-only, unanchored).",
+    "point_estimate": 217.0,
+    "confidence_interval": [
+      183.2,
+      226.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 123.0 $M (from a venture capitalist's optimistic projection \u2014 potentially biased).",
+    "Data: mean = 217.0, SD = 23.0, n = 25. SE = 4.6.",
+    "Data-based 95% CI: [208.0, 226.0].",
+    "The anchor underestimates relative to the data by 94 $M (43%).",
+    "If we assign the anchor weight w \u2208 [0, 0.36]: estimate = w\u00d7123.0 + (1-w)\u00d7217.0.",
+    "At w=0.3: estimate = 188.8.",
+    "Best practice: the data-based estimate (217.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (123.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (123.0) and data (217.0) are substantially different, suggesting bias in the anchor",
+    "Not computing the data-based confidence interval and relying on intuitive adjustment from the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "MURU-3005",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "In R&D pipeline, a decision-maker is at the prototype stage and must decide whether to proceed to go/no-go decision. The investment cost is $264K. If the project succeeds (estimated probability 36%-52%), it yields $1907K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a pilot study for $37K. This pilot study correctly predicts success/failure with accuracy 75%-86%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $575.1K. EV with info at mid-range: $511.8K. Value of information: $-63.3K. VOI range: [$-63.3K, $-47.6K]. Information may not be worth the cost.",
+    "point_estimate": -63.3,
+    "confidence_interval": [
+      -63.3,
+      -47.6
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$1907K - $264K).",
+    "At P=0.44: EV_no_info = max(0, 0.44\u00d71907 - 264) = $575.1K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d71907 - 264) - 37.",
+    "At mid-range: EV_with_info = $511.8K.",
+    "VOI = EV_with_info - EV_no_info = $-63.3K.",
+    "Range across uncertain parameters: [$-63.3K, $-47.6K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

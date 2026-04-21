@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1226",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "A decision-maker must choose among 4 investment portfolio options. The probability of favorable market conditions is uncertain, estimated between 41% and 55%. The payoffs (in $K) for each option are: bonds: $180K in good market conditions, $45K in bad market conditions. index fund: $159K in good market conditions, $79K in bad market conditions. tech stocks: $84K in good market conditions, $23K in bad market conditions. real estate: $183K in good market conditions, $42K in bad market conditions. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.48: best option is index fund with EV=$117.4K. index fund is optimal across the entire uncertainty range. EV range of best option: [111.8, 123.0].",
+    "point_estimate": 117.4,
+    "confidence_interval": [
+      111.8,
+      123.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "bonds: EV = 0.48\u00d7180 + 0.52\u00d745 = $109.8K.",
+    "index fund: EV = 0.48\u00d7159 + 0.52\u00d779 = $117.4K.",
+    "tech stocks: EV = 0.48\u00d784 + 0.52\u00d723 = $52.3K.",
+    "real estate: EV = 0.48\u00d7183 + 0.52\u00d742 = $109.7K.",
+    "Best at mid-range: index fund ($117.4K).",
+    "Sensitivity: check endpoints P(good)=0.41 and 0.55.",
+    "index fund is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value",
+    "Not performing minimax regret analysis to find the most robust choice"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

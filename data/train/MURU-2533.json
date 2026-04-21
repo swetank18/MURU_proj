@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2533",
+  "category": "adversarial_ambiguity",
+  "difficulty": 2,
+  "stem": "In environmental, you are asked to estimate the contamination level. You are first told that an initial field screening measurement puts the value at 313.0 ppm. You then collect your own data: laboratory analysis of soil samples based on 10 observations give a mean of 505.0 ppm with SD = 94.0 ppm. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (313.0 ppm) likely underestimates the true value. Data-based estimate: 505.0 ppm, CI = [446.8, 563.2]. If the anchor receives 0-39% weight, the estimate ranges from 430.1 to 470.4. Point estimate: 505.0 ppm (data-only, unanchored).",
+    "point_estimate": 505.0,
+    "confidence_interval": [
+      430.1,
+      563.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 313.0 ppm (from an initial field screening measurement \u2014 potentially biased).",
+    "Data: mean = 505.0, SD = 94.0, n = 10. SE = 29.7.",
+    "Data-based 95% CI: [446.8, 563.2].",
+    "The anchor underestimates relative to the data by 192 ppm (38%).",
+    "If we assign the anchor weight w \u2208 [0, 0.39]: estimate = w\u00d7313.0 + (1-w)\u00d7505.0.",
+    "At w=0.29: estimate = 449.3.",
+    "Best practice: the data-based estimate (505.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (313.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (313.0) and data (505.0) are substantially different, suggesting bias in the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

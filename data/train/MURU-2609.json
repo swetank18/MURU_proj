@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2609",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A agricultural research study surveys 20 seeds planted and observes 10 positive outcomes out of 20 (50.0%). The sample contains two subgroups: Group A (10 observations, rate = 40.0%) and Group B (10 observations, rate = 60.0%). The true population composition is uncertain: Group A makes up between 33% and 52% of the population. Estimate the true germination rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Simple pooled estimate: 0.5. Weighted estimate (stratified): 0.5011 (range [0.4804, 0.5241]). Combined CI accounting for stratification uncertainty: [0.2993, 0.7007]. Point estimate: 0.5011.",
+    "point_estimate": 0.5011,
+    "confidence_interval": [
+      0.2993,
+      0.7007
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 10/20 = 0.5.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.5.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.2007.",
+    "95% CI: [0.2993, 0.7007].",
+    "Stratified estimate: weighted by population composition. At w_A=0.43: 0.43\u00d70.37 + 0.57\u00d70.6 = 0.5011."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate",
+    "Not recognizing that with n=20, the normal approximation may be poor",
+    "Ignoring the population composition uncertainty and using the simple pooled rate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

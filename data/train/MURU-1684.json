@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1684",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "In a medical pathway, a patient begins at 'initial symptoms'. At the first stage, 51% of cases take Path A (the diagnostic fast track) and 49% take Path B (the standard route). In Path A, the probability of advancing to the next stage is uncertain, estimated between 53% and 68%. In Path B, the advancement probability is 69%. At the final stage, regardless of path, the probability of correct diagnosis is between 73% and 83% (uncertain due to evaluator variability). What is the overall probability of correct diagnosis?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(correct diagnosis) = P(A)\u00d7P(advance|A)\u00d7P(final) + P(B)\u00d7P(advance|B)\u00d7P(final). Range: [0.444, 0.568]. Point estimate: 0.502.",
+    "point_estimate": 0.502,
+    "confidence_interval": [
+      0.444,
+      0.568
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Total probability via law of total probability over the two paths.",
+    "Path A contribution: 0.51 \u00d7 P(advance|A) \u00d7 P(final).",
+    "Path B contribution: 0.49 \u00d7 0.69 \u00d7 P(final).",
+    "At mid-range estimates: 0.51 \u00d7 0.6 \u00d7 0.78 + 0.49 \u00d7 0.69 \u00d7 0.78 = 0.502.",
+    "At lower bounds: 0.51 \u00d7 0.53 \u00d7 0.73 + 0.49 \u00d7 0.69 \u00d7 0.73 = 0.444.",
+    "At upper bounds: 0.51 \u00d7 0.68 \u00d7 0.83 + 0.49 \u00d7 0.69 \u00d7 0.83 = 0.568.",
+    "The two sources of uncertainty (Path A advancement and final stage) compound to create the interval [0.444, 0.568]."
+  ],
+  "common_failure_modes": [
+    "Computing only one path's probability instead of summing over all paths",
+    "Not weighting each path by its probability of being taken",
+    "Using a single rate for uncertain stages without computing the range",
+    "Assuming the paths are independent when they share a common final stage uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_conditional_cascade",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

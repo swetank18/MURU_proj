@@ -1,0 +1,35 @@
+{
+  "id": "MURU-0345",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses a CT scan screening to screen for early-stage lung cancer. The test has a sensitivity of 77% and a specificity of 88%. The prevalence of early-stage lung cancer in the patient population is estimated to be between 4.0% and 7.6%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has early-stage lung cancer? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(early-stage lung cancer | positive test) ranges from 0.211 to 0.345 as prevalence varies from 4.0% to 7.6%. Point estimate at 5.8% prevalence: 0.283.",
+    "point_estimate": 0.283,
+    "confidence_interval": [
+      0.211,
+      0.345
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.12.",
+    "At prevalence 5.8%: P(D|+) = 0.77\u00d70.058 / (0.77\u00d70.058 + 0.12\u00d70.942) \u2248 0.283.",
+    "At prevalence 4.0%: P(D|+) = 0.77\u00d70.04 / (0.77\u00d70.04 + 0.12\u00d70.96) \u2248 0.211.",
+    "At prevalence 7.6%: P(D|+) = 0.77\u00d70.076 / (0.77\u00d70.076 + 0.12\u00d70.924) \u2248 0.345.",
+    "The confidence interval [0.211, 0.345] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (77%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

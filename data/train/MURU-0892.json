@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0892",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A asset recovery team is looking for a lost drone. Based on initial analysis, they estimate a 45% probability that a lost drone is in the urban area and a 55% probability it is in the farmland area. They search the urban area first and do not find a lost drone. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in the urban area is between 66% and 90%. Given they did not find a lost drone in the urban area, what is the updated probability that a lost drone is in the farmland area?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(the farmland area | not found in the urban area) ranges from 0.782 to 0.924 as detection probability varies from 66% to 90%. Point estimate at 78% detection: 0.847.",
+    "point_estimate": 0.847,
+    "confidence_interval": [
+      0.782,
+      0.924
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.45 + 1\u00d70.55.",
+    "At detection 78%: P(B|\u00acfound) = 0.55 / (0.22\u00d70.45 + 0.55) \u2248 0.847.",
+    "At detection 66%: P(B|\u00acfound) \u2248 0.782.",
+    "At detection 90%: P(B|\u00acfound) \u2248 0.924."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in the urban area means it is definitely in the farmland area",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

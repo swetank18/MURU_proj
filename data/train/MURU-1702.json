@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1702",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "In a A/B testing scenario, a researcher begins with a prior probability of 21% that variant B outperforms A, based on user conversion data. After day of data 1, supporting evidence arrives with a likelihood ratio estimated between 2.05 and 3.7. After day of data 2, supporting evidence arrives with a likelihood ratio estimated between 3.35 and 5.38. After day of data 3, supporting evidence arrives with a likelihood ratio estimated between 2.87 and 4.17. After day of data 4, contradicting evidence arrives with a likelihood ratio estimated between 0.31 and 0.46. After day of data 5, contradicting evidence arrives with a likelihood ratio estimated between 0.19 and 0.33. What is the posterior probability that variant B outperforms A after all 5 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 5 sequential Bayesian updates, P(variant B outperforms A) ranges from 0.236 to 0.77. Point estimate: 0.544.",
+    "point_estimate": 0.544,
+    "confidence_interval": [
+      0.236,
+      0.77
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.21/0.79 = 0.266.",
+    "Update 1: multiply odds by LR \u2208 [2.05, 3.7] (mid: 2.88, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [3.35, 5.38] (mid: 4.37, supporting evidence).",
+    "Update 3: multiply odds by LR \u2208 [2.87, 4.17] (mid: 3.52, supporting evidence).",
+    "Update 4: multiply odds by LR \u2208 [0.31, 0.46] (mid: 0.39, contradicting evidence).",
+    "Update 5: multiply odds by LR \u2208 [0.19, 0.33] (mid: 0.26, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.236, 0.77], point estimate: 0.544."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates",
+    "Failing to account for compounding uncertainty across multiple uncertain LRs"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2130",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "In mine development, a decision-maker is at the geological survey stage and must decide whether to proceed to mine construction. The investment cost is $399K. If the project succeeds (estimated probability 26%-46%), it yields $1775K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a core sample analysis for $47K. This core sample analysis correctly predicts success/failure with accuracy 69%-82%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $240.0K. EV with info at mid-range: $260.7K. Value of information: $20.7K. VOI range: [$15.7K, $45.8K]. Information is worth purchasing.",
+    "point_estimate": 20.7,
+    "confidence_interval": [
+      15.7,
+      45.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$1775K - $399K).",
+    "At P=0.36: EV_no_info = max(0, 0.36\u00d71775 - 399) = $240.0K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d71775 - 399) - 47.",
+    "At mid-range: EV_with_info = $260.7K.",
+    "VOI = EV_with_info - EV_no_info = $20.7K.",
+    "Range across uncertain parameters: [$15.7K, $45.8K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "MURU-1559",
+  "category": "distribution_estimation",
+  "difficulty": 1,
+  "stem": "A quality control study surveys 100 manufactured units and observes 39 positive outcomes out of 100 (39.0%). Estimate the true product defect rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Sample proportion: 0.39. Wilson 95% CI: [0.3002, 0.488]. Point estimate: 0.3941.",
+    "point_estimate": 0.3941,
+    "confidence_interval": [
+      0.3002,
+      0.488
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 39/100 = 0.39.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.3941.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.0939.",
+    "95% CI: [0.3002, 0.488]."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

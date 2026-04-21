@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1447",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A web performance study measures the response time (ms) for a sample of 40 website users. The sample mean is 358.1 ms with a sample standard deviation of 66.0 ms. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 358.1 ms. 95% CI = [337.0, 379.2]. Point estimate: 358.1 ms.",
+    "point_estimate": 358.1,
+    "confidence_interval": [
+      337.0,
+      379.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 66.0/\u221a40 = 10.44.",
+    "Degrees of freedom: df = 40 - 1 = 39.",
+    "t-critical value: t(39, 0.025) \u2248 2.023.",
+    "Margin of error: 2.023 \u00d7 10.44 = 21.12.",
+    "95% CI: 358.1 \u00b1 21.12 = [337.0, 379.2]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 66.0/n instead of 66.0/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

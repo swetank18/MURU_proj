@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0731",
+  "category": "conditional_probability_chains",
+  "difficulty": 1,
+  "stem": "A product enters the manufacturing pipeline. The probability of passing raw material inspection is 85%. If the previous stage is passed, the probability of passing machining is between 62% and 74% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing assembly is 88%. What is the overall probability that the product is shipped?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(shipped) ranges from 0.464 to 0.554 as the machining pass rate varies from 62% to 74%. Point estimate: 0.509.",
+    "point_estimate": 0.509,
+    "confidence_interval": [
+      0.464,
+      0.554
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The product must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.85 \u00d7 0.68 \u00d7 0.88 = 0.509.",
+    "At lower bound: P(success) = 0.85 \u00d7 0.62 \u00d7 0.88 = 0.464.",
+    "At upper bound: P(success) = 0.85 \u00d7 0.74 \u00d7 0.88 = 0.554.",
+    "The uncertainty in the machining stage creates a 9.0 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the machining rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

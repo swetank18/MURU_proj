@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0933",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose between two options. Option A (the highway route) yields a guaranteed return of $181K. Option B (the scenic route) depends on traffic conditions: with probability 41-57% (uncertain), it yields $291K; otherwise it yields $63K. Compute the expected value of each option and determine which is better. How does the uncertainty in traffic conditions affect the recommendation?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV(A) = $181K (fixed). EV(B) ranges from $156.5K to $193.0K. Point estimate: $174.7K. Option A is preferred at most assumptions (EV_A > EV_B when P(good) < 51.8%).",
+    "point_estimate": 174.7,
+    "confidence_interval": [
+      156.5,
+      193.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV(A) = $181K (guaranteed).",
+    "EV(B) = P(good)\u00d7$291K + (1-P(good))\u00d7$63K.",
+    "At P(good)=0.49: EV(B) = 0.49\u00d7291 + 0.51\u00d763 = $174.7K.",
+    "At P(good)=0.41: EV(B) = $156.5K.",
+    "At P(good)=0.57: EV(B) = $193.0K.",
+    "Breakeven probability: P(good) = (181-63) / (291-63) = 0.518.",
+    "The decision switches at P(good) = 51.8%, which falls within the uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Picking a single probability and giving a definitive recommendation without sensitivity analysis",
+    "Not computing the breakeven probability where the optimal decision switches",
+    "Ignoring the range of outcomes and focusing only on expected values (risk-neutral assumption)"
+  ],
+  "metadata": {
+    "author": "generator_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

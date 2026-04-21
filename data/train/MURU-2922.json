@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2922",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A industrial safety safety system uses 3 parallel sensors for redundancy. The hazard detected requires at least one sensor to function. sensor 1 has a reliability of 86%. sensor 2 has a reliability between 67% and 80% (uncertain due to limited operational data). sensor 3 has a reliability of 88%. Additionally, there is a common-cause failure probability (e.g., power outage, shared software bug) that could disable all sensors simultaneously, estimated between 3.3% and 8.0%. What is the overall probability that the hazard detected?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(hazard detected) ranges from 0.9149 to 0.9637. Point estimate: 0.9389.",
+    "point_estimate": 0.9389,
+    "confidence_interval": [
+      0.9149,
+      0.9637
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 3 sensors fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2) \u00d7 (1-R_3).",
+    "At mid-range: P(all fail) = 0.14 \u00d7 0.26 \u00d7 0.12 = 0.0044. P(works) = 0.9956.",
+    "At lower bound: P(all fail) = 0.14 \u00d7 0.33 \u00d7 0.12 = 0.0055. P(works) = 0.9945.",
+    "At upper bound: P(all fail) = 0.14 \u00d7 0.2 \u00d7 0.12 = 0.0034. P(works) = 0.9966.",
+    "With common-cause failure (3.3%-8.0%): P(works) = (1-P_cc) \u00d7 P(independent works). Range: [0.9149, 0.9637]."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)",
+    "Ignoring common-cause failures that can disable all paths simultaneously"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

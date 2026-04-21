@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1531",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A ISP analysis study measures the download speed (Mbps) for a sample of 15 subscribers. The sample mean is 269.7 Mbps with a sample standard deviation of 101.6 Mbps. However, 3 of the 15 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 12 observations have a mean of 253.0 Mbps and standard deviation of 77.2 Mbps. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 269.7, 95% CI = [213.4, 326.0]. Without outliers: mean = 253.0, 95% CI = [208.4, 297.6]. Combined interval accounting for analytic uncertainty: [208.4, 326.0]. Point estimate: 261.4 Mbps.",
+    "point_estimate": 261.4,
+    "confidence_interval": [
+      208.4,
+      326.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=15): SE = 101.6/\u221a15 = 26.23. Margin = t(14,0.025) \u00d7 26.23 = 2.145 \u00d7 26.23 \u2248 56.26.",
+    "Full sample 95% CI: 269.7 \u00b1 56.26 = [213.4, 326.0].",
+    "With trimmed sample (n=12): SE = 77.2/\u221a12 = 22.29. Margin = 2.0 \u00d7 22.29 \u2248 44.58.",
+    "Trimmed 95% CI: 253.0 \u00b1 44.58 = [208.4, 297.6].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [208.4, 326.0]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

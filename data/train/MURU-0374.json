@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0374",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A food manufacturing study measures the weight (grams) for a sample of 50 cereal boxes. The sample mean is 347.4 g with a sample standard deviation of 88.0 g. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 347.4 g. 95% CI = [322.4, 372.4]. Point estimate: 347.4 g.",
+    "point_estimate": 347.4,
+    "confidence_interval": [
+      322.4,
+      372.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 88.0/\u221a50 = 12.45.",
+    "Degrees of freedom: df = 50 - 1 = 49.",
+    "t-critical value: t(49, 0.025) \u2248 2.01.",
+    "Margin of error: 2.01 \u00d7 12.45 = 25.02.",
+    "95% CI: 347.4 \u00b1 25.02 = [322.4, 372.4]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 88.0/n instead of 88.0/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1119",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A materials science dataset contains 150 observations of tensile strength. The data is believed to come from a mixture of two populations: bulk material (mean \u2248 47.3 MPa, SD \u2248 6.0) and surface-treated material (mean \u2248 75.0 MPa, SD \u2248 10.2). The proportion of bulk material in the sample is uncertain, estimated between 39% and 63%. The observed overall mean is 60.9 MPa with SD = 16.2. Estimate the true population mean of tensile strength, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d747.3 + (1-w)\u00d775.0. As w varies from 0.39 to 0.63, the mixture mean ranges from 57.5 to 64.2. With sampling variability, CI = [54.9, 66.8]. Point estimate at w=0.51: 60.9 MPa.",
+    "point_estimate": 60.9,
+    "confidence_interval": [
+      54.9,
+      66.8
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.51: \u03bc_mix = 0.51\u00d747.3 + 0.49\u00d775.0 = 60.9.",
+    "At w=0.39: \u03bc_mix = 64.2 (more of surface-treated material).",
+    "At w=0.63: \u03bc_mix = 57.5 (more of bulk material).",
+    "Mixture SD \u2248 16.2. SE = 16.2/\u221a150 = 1.32.",
+    "Combined interval [54.9, 66.8] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (16.2) is inflated by the between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

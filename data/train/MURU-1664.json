@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1664",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A HR analytics study surveys 20 staff members and observes 4 positive outcomes out of 20 (20.0%). The sample contains two subgroups: Group A (7 observations, rate = 14.3%) and Group B (13 observations, rate = 23.1%). The true population composition is uncertain: Group A makes up between 38% and 54% of the population. Estimate the true employee turnover rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Simple pooled estimate: 0.2. Weighted estimate (stratified): 0.2097 (range [0.2061, 0.2134]). Combined CI accounting for stratification uncertainty: [0.0807, 0.416]. Point estimate: 0.2097.",
+    "point_estimate": 0.2097,
+    "confidence_interval": [
+      0.0807,
+      0.416
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 4/20 = 0.2.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.2483.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.1677.",
+    "95% CI: [0.0807, 0.416].",
+    "Stratified estimate: weighted by population composition. At w_A=0.46: 0.46\u00d70.185 + 0.54\u00d70.2308 = 0.2097."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate",
+    "Not recognizing that with n=20, the normal approximation may be poor",
+    "Ignoring the population composition uncertainty and using the simple pooled rate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

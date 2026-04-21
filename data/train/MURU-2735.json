@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2735",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A digital marketing study surveys 20 users shown the ad and observes 4 positive outcomes out of 20 (20.0%). The sample contains two subgroups: Group A (6 observations, rate = 16.7%) and Group B (14 observations, rate = 21.4%). The true population composition is uncertain: Group A makes up between 35% and 45% of the population. Estimate the true click-through rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Simple pooled estimate: 0.2. Weighted estimate (stratified): 0.1842 (range [0.1804, 0.1879]). Combined CI accounting for stratification uncertainty: [0.0807, 0.416]. Point estimate: 0.1842.",
+    "point_estimate": 0.1842,
+    "confidence_interval": [
+      0.0807,
+      0.416
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 4/20 = 0.2.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.2483.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.1677.",
+    "95% CI: [0.0807, 0.416].",
+    "Stratified estimate: weighted by population composition. At w_A=0.4: 0.4\u00d70.139 + 0.6\u00d70.2143 = 0.1842."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate",
+    "Not recognizing that with n=20, the normal approximation may be poor",
+    "Ignoring the population composition uncertainty and using the simple pooled rate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

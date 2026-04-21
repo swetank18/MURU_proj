@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2862",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A income study dataset contains 150 observations of monthly income. The data is believed to come from a mixture of two populations: part-time workers (mean \u2248 52.3 $, SD \u2248 10.0) and full-time workers (mean \u2248 106.5 $, SD \u2248 19.9). The proportion of part-time workers in the sample is uncertain, estimated between 31% and 55%. The observed overall mean is 83.2 $ with SD = 31.4. Estimate the true population mean of monthly income, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d752.3 + (1-w)\u00d7106.5. As w varies from 0.31 to 0.55, the mixture mean ranges from 76.7 to 89.7. With sampling variability, CI = [71.7, 94.7]. Point estimate at w=0.43: 83.2 $.",
+    "point_estimate": 83.2,
+    "confidence_interval": [
+      71.7,
+      94.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.43: \u03bc_mix = 0.43\u00d752.3 + 0.57\u00d7106.5 = 83.2.",
+    "At w=0.31: \u03bc_mix = 89.7 (more of full-time workers).",
+    "At w=0.55: \u03bc_mix = 76.7 (more of part-time workers).",
+    "Mixture SD \u2248 31.4. SE = 31.4/\u221a150 = 2.56.",
+    "Combined interval [71.7, 94.7] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (31.4) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

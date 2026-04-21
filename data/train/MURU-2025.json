@@ -1,0 +1,39 @@
+{
+  "id": "MURU-2025",
+  "category": "decision_under_uncertainty",
+  "difficulty": 5,
+  "stem": "In oil exploration, a decision-maker is at the seismic survey stage and must decide whether to proceed to drill decision. The investment cost is $170K. If the project succeeds (estimated probability 28%-44%), it yields $919K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a seismic data for $17K. This seismic data correctly predicts success/failure with accuracy 74%-93%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $160.8K. EV with info at mid-range: $188.3K. Value of information: $27.5K. VOI range: [$19.1K, $48.4K]. Information is worth purchasing.",
+    "point_estimate": 27.5,
+    "confidence_interval": [
+      19.1,
+      48.4
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$919K - $170K).",
+    "At P=0.36: EV_no_info = max(0, 0.36\u00d7919 - 170) = $160.8K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d7919 - 170) - 17.",
+    "At mid-range: EV_with_info = $188.3K.",
+    "VOI = EV_with_info - EV_no_info = $27.5K.",
+    "Range across uncertain parameters: [$19.1K, $48.4K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy",
+    "Not recognizing the option value: negative EV without info doesn't mean info is worthless"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

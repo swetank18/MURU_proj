@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2900",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A retail study measures customer satisfaction score across 3 chains, each containing multiple stores. chain A has 8 observations with mean 71.6 /10 (within-chain SD = 3.6). chain B has 20 observations with mean 72.8 /10 (within-chain SD = 3.8). chain C has 10 observations with mean 73.4 /10 (within-chain SD = 7.7). The between-chain standard deviation is uncertain, estimated between 4.0 and 9.9 /10. Using a hierarchical Bayesian model, estimate the true customer satisfaction score for chain B, accounting for shrinkage toward the grand mean and the uncertainty in the between-chain variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for chain B: 72.8 /10 (shrunk from raw 72.8). Range [72.8, 72.89999999999999] as between-chain SD varies from 4.0 to 9.9. Pooled mean: 72.7.",
+    "point_estimate": 72.8,
+    "confidence_interval": [
+      72.8,
+      72.89999999999999
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 72.7 /10 (weighted average of 3 chain means).",
+    "Shrinkage factor for chain B: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/20). At \u03c3_between=6.6: B = 0.984.",
+    "Shrunk estimate = B \u00d7 72.8 + (1-B) \u00d7 72.7 = 72.8.",
+    "At \u03c3_between=4.0: more shrinkage \u2192 estimate = 72.8.",
+    "At \u03c3_between=9.9: less shrinkage \u2192 estimate = 72.8.",
+    "Interval [72.8, 72.89999999999999] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (72.8) without shrinkage",
+    "Using only the grand mean (72.7) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

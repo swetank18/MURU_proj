@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0620",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A safety inspection team is looking for a gas leak. Based on initial analysis, they estimate a 61% probability that a gas leak is in Building Wing A and a 39% probability it is in Building Wing B. They search Building Wing A first and do not find a gas leak. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in Building Wing A is between 68% and 85%. Given they did not find a gas leak in Building Wing A, what is the updated probability that a gas leak is in Building Wing B?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Building Wing B | not found in Building Wing A) ranges from 0.666 to 0.81 as detection probability varies from 68% to 85%. Point estimate at 77% detection: 0.735.",
+    "point_estimate": 0.735,
+    "confidence_interval": [
+      0.666,
+      0.81
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.61 + 1\u00d70.39.",
+    "At detection 77%: P(B|\u00acfound) = 0.39 / (0.23\u00d70.61 + 0.39) \u2248 0.735.",
+    "At detection 68%: P(B|\u00acfound) \u2248 0.666.",
+    "At detection 85%: P(B|\u00acfound) \u2248 0.81."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in Building Wing A means it is definitely in Building Wing B",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

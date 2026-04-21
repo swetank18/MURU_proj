@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0923",
+  "category": "conditional_probability_chains",
+  "difficulty": 1,
+  "stem": "A release enters the software release pipeline. The probability of passing code review is between 58% and 74% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing unit testing is 79%. If the previous stage is passed, the probability of passing integration testing is 90%. What is the overall probability that the release is deployed without incidents?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(deployed without incidents) ranges from 0.412 to 0.526 as the code review pass rate varies from 58% to 74%. Point estimate: 0.469.",
+    "point_estimate": 0.469,
+    "confidence_interval": [
+      0.412,
+      0.526
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The release must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.66 \u00d7 0.79 \u00d7 0.9 = 0.469.",
+    "At lower bound: P(success) = 0.58 \u00d7 0.79 \u00d7 0.9 = 0.412.",
+    "At upper bound: P(success) = 0.74 \u00d7 0.79 \u00d7 0.9 = 0.526.",
+    "The uncertainty in the code review stage creates a 11.4 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the code review rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

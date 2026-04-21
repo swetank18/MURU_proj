@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2060",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A healthcare study measures average patient recovery rate across 3 hospitals, each containing multiple departments. hospital A has 8 observations with mean 53.0 % (within-hospital SD = 5.3). hospital B has 20 observations with mean 61.6 % (within-hospital SD = 8.4). hospital C has 5 observations with mean 56.4 % (within-hospital SD = 3.8). The between-hospital standard deviation is uncertain, estimated between 3.9 and 9.8 %. Using a hierarchical Bayesian model, estimate the true average patient recovery rate for hospital C, accounting for shrinkage toward the grand mean and the uncertainty in the between-hospital variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for hospital C: 56.5 % (shrunk from raw 56.4). Range [56.5, 56.8] as between-hospital SD varies from 3.9 to 9.8. Pooled mean: 58.7.",
+    "point_estimate": 56.5,
+    "confidence_interval": [
+      56.5,
+      56.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 58.7 % (weighted average of 3 hospital means).",
+    "Shrinkage factor for hospital C: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/5). At \u03c3_between=6.5: B = 0.936.",
+    "Shrunk estimate = B \u00d7 56.4 + (1-B) \u00d7 58.7 = 56.5.",
+    "At \u03c3_between=3.9: more shrinkage \u2192 estimate = 56.8.",
+    "At \u03c3_between=9.8: less shrinkage \u2192 estimate = 56.5.",
+    "Interval [56.5, 56.8] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (56.4) without shrinkage",
+    "Using only the grand mean (58.7) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

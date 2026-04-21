@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2369",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A petroleum exploration team is looking for an oil deposit. Based on initial analysis, they estimate a 57% probability that an oil deposit is in Block X and a 43% probability it is in Block Y. They search Block X first and do not find an oil deposit. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in Block X is between 61% and 83%. Given they did not find an oil deposit in Block X, what is the updated probability that an oil deposit is in Block Y?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Block Y | not found in Block X) ranges from 0.659 to 0.816 as detection probability varies from 61% to 83%. Point estimate at 72% detection: 0.729.",
+    "point_estimate": 0.729,
+    "confidence_interval": [
+      0.659,
+      0.816
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.57 + 1\u00d70.43.",
+    "At detection 72%: P(B|\u00acfound) = 0.43 / (0.28\u00d70.57 + 0.43) \u2248 0.729.",
+    "At detection 61%: P(B|\u00acfound) \u2248 0.659.",
+    "At detection 83%: P(B|\u00acfound) \u2248 0.816."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in Block X means it is definitely in Block Y",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0706",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A factory produces glass bottles using two sources. Furnace Alpha handles 61% of production with a known defect rate of 1.1%. Furnace Beta handles 39% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 4.8% and 7.5%, depending on raw material batch quality. A randomly selected glass bottle is found to be defective. What is the probability it came from Furnace Beta?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Furnace Beta | defective) ranges from 0.736 to 0.813 as Furnace Beta's defect rate varies from 4.8% to 7.5%. Point estimate at 6.1%: 0.78.",
+    "point_estimate": 0.78,
+    "confidence_interval": [
+      0.736,
+      0.813
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 6.1%: P(B|def) = 0.061\u00d70.39 / (0.011\u00d70.61 + 0.061\u00d70.39) \u2248 0.78.",
+    "At defect rate 4.8%: P(B|def) \u2248 0.736.",
+    "At defect rate 7.5%: P(B|def) \u2248 0.813.",
+    "The interval [0.736, 0.813] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (61/39 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1268",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose among 3 marketing channel options. The probability of favorable target demographic response is uncertain, estimated between 37% and 48%. The payoffs (in $K) for each option are: social media: $118K in good target demographic response, $27K in bad target demographic response. TV ads: $90K in good target demographic response, $23K in bad target demographic response. email: $107K in good target demographic response, $44K in bad target demographic response. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.42: best option is email with EV=$70.5K. email is optimal across the entire uncertainty range. EV range of best option: [67.3, 74.2].",
+    "point_estimate": 70.5,
+    "confidence_interval": [
+      67.3,
+      74.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "social media: EV = 0.42\u00d7118 + 0.58\u00d727 = $65.2K.",
+    "TV ads: EV = 0.42\u00d790 + 0.58\u00d723 = $51.1K.",
+    "email: EV = 0.42\u00d7107 + 0.58\u00d744 = $70.5K.",
+    "Best at mid-range: email ($70.5K).",
+    "Sensitivity: check endpoints P(good)=0.37 and 0.48.",
+    "email is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

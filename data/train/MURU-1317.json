@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1317",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A factory produces automotive parts using two sources. Robot Arm Station 1 handles 80% of production with a known defect rate of 2.2%. Robot Arm Station 2 handles 20% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 8.0% and 13.5%, depending on raw material batch quality. A randomly selected automotive part is found to be defective. What is the probability it came from Robot Arm Station 2?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Robot Arm Station 2 | defective) ranges from 0.476 to 0.605 as Robot Arm Station 2's defect rate varies from 8.0% to 13.5%. Point estimate at 10.8%: 0.551.",
+    "point_estimate": 0.551,
+    "confidence_interval": [
+      0.476,
+      0.605
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 10.8%: P(B|def) = 0.108\u00d70.2 / (0.022\u00d70.8 + 0.108\u00d70.2) \u2248 0.551.",
+    "At defect rate 8.0%: P(B|def) \u2248 0.476.",
+    "At defect rate 13.5%: P(B|def) \u2248 0.605.",
+    "The interval [0.476, 0.605] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (80/20 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

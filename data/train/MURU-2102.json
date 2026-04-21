@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2102",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A education study measures average test score improvement across 3 schools, each containing multiple classrooms. school A has 15 observations with mean 71.3 points (within-school SD = 8.3). school B has 10 observations with mean 64.9 points (within-school SD = 6.2). school C has 20 observations with mean 73.4 points (within-school SD = 7.2). The between-school standard deviation is uncertain, estimated between 3.2 and 7.9 points. Using a hierarchical Bayesian model, estimate the true average test score improvement for school C, accounting for shrinkage toward the grand mean and the uncertainty in the between-school variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for school C: 73.2 points (shrunk from raw 73.4). Range [72.9, 73.3] as between-school SD varies from 3.2 to 7.9. Pooled mean: 70.8.",
+    "point_estimate": 73.2,
+    "confidence_interval": [
+      72.9,
+      73.3
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 70.8 points (weighted average of 3 school means).",
+    "Shrinkage factor for school C: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/20). At \u03c3_between=5.3: B = 0.916.",
+    "Shrunk estimate = B \u00d7 73.4 + (1-B) \u00d7 70.8 = 73.2.",
+    "At \u03c3_between=3.2: more shrinkage \u2192 estimate = 72.9.",
+    "At \u03c3_between=7.9: less shrinkage \u2192 estimate = 73.3.",
+    "Interval [72.9, 73.3] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (73.4) without shrinkage",
+    "Using only the grand mean (70.8) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

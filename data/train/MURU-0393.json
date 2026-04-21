@@ -1,0 +1,35 @@
+{
+  "id": "MURU-0393",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses an HbA1c test to screen for Type 2 diabetes. The test has a sensitivity of 88% and a specificity of 93%. The prevalence of Type 2 diabetes in the patient population is estimated to be between 8.1% and 15.6%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has Type 2 diabetes? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Type 2 diabetes | positive test) ranges from 0.526 to 0.699 as prevalence varies from 8.1% to 15.6%. Point estimate at 11.8% prevalence: 0.627.",
+    "point_estimate": 0.627,
+    "confidence_interval": [
+      0.526,
+      0.699
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.07.",
+    "At prevalence 11.8%: P(D|+) = 0.88\u00d70.118 / (0.88\u00d70.118 + 0.07\u00d70.882) \u2248 0.627.",
+    "At prevalence 8.1%: P(D|+) = 0.88\u00d70.081 / (0.88\u00d70.081 + 0.07\u00d70.919) \u2248 0.526.",
+    "At prevalence 15.6%: P(D|+) = 0.88\u00d70.156 / (0.88\u00d70.156 + 0.07\u00d70.844) \u2248 0.699.",
+    "The confidence interval [0.526, 0.699] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (88%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1662",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A GPS navigation navigation system uses 4 parallel satellite links for redundancy. The position fixed requires at least one satellite link to function. satellite link 1 has a reliability of 83%. satellite link 2 has a reliability of 82%. satellite link 3 has a reliability between 69% and 79% (uncertain due to limited operational data). satellite link 4 has a reliability of 86%. Additionally, there is a common-cause failure probability (e.g., power outage, shared software bug) that could disable all satellite links simultaneously, estimated between 2.0% and 6.3%. What is the overall probability that the position fixed?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(position fixed) ranges from 0.9358 to 0.9791. Point estimate: 0.9569.",
+    "point_estimate": 0.9569,
+    "confidence_interval": [
+      0.9358,
+      0.9791
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 4 satellite links fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2) \u00d7 (1-R_3) \u00d7 (1-R_4).",
+    "At mid-range: P(all fail) = 0.17 \u00d7 0.18 \u00d7 0.26 \u00d7 0.14 = 0.0011. P(works) = 0.9989.",
+    "At lower bound: P(all fail) = 0.17 \u00d7 0.18 \u00d7 0.31 \u00d7 0.14 = 0.0013. P(works) = 0.9987.",
+    "At upper bound: P(all fail) = 0.17 \u00d7 0.18 \u00d7 0.21 \u00d7 0.14 = 0.0009. P(works) = 0.9991.",
+    "With common-cause failure (2.0%-6.3%): P(works) = (1-P_cc) \u00d7 P(independent works). Range: [0.9358, 0.9791]."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)",
+    "Ignoring common-cause failures that can disable all paths simultaneously"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

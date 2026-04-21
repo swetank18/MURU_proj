@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1123",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "An insurer is pricing a cyber insurance policy for corporate data in a financial institution. Historical data suggests the annual frequency of cyber attack events follows a Poisson distribution with rate \u03bb estimated between 1.4 and 3.98 events/year. Each event causes a loss estimated between $89K and $205K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 31% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $124.6K to $815.9K. Point estimate: $395.4K. With 31% loading: premium range [$163.2K, $1068.8K]. Point estimate premium: $518.0K.",
+    "point_estimate": 518.0,
+    "confidence_interval": [
+      163.2,
+      1068.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=2.69, severity=$147K: EL = 2.69\u00d7147 = $395.4K.",
+    "At \u03bb=1.4, severity=$89K: EL = $124.6K (lower bound).",
+    "At \u03bb=3.98, severity=$205K: EL = $815.9K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.31.",
+    "Premium range: [$163.2K, $1068.8K]. Mid: $518.0K."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

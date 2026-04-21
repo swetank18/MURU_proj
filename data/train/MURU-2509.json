@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2509",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "An insurer is pricing a business interruption policy for manufacturing operations in a global supply chain. Historical data suggests the annual frequency of supply chain disruption events follows a Poisson distribution with rate \u03bb estimated between 1.21 and 3.68 events/year. Each event causes a loss estimated between $174K and $432K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 32% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $210.5K to $1589.8K. Point estimate: $742.4K. With 32% loading: premium range [$277.9K, $2098.5K]. Point estimate premium: $980.0K.",
+    "point_estimate": 980.0,
+    "confidence_interval": [
+      277.9,
+      2098.5
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=2.45, severity=$303K: EL = 2.45\u00d7303 = $742.4K.",
+    "At \u03bb=1.21, severity=$174K: EL = $210.5K (lower bound).",
+    "At \u03bb=3.68, severity=$432K: EL = $1589.8K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.32.",
+    "Premium range: [$277.9K, $2098.5K]. Mid: $980.0K."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

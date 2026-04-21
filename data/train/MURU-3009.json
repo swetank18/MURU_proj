@@ -1,0 +1,38 @@
+{
+  "id": "MURU-3009",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "In startup funding, a decision-maker is at the seed round stage and must decide whether to proceed to Series A decision. The investment cost is $417K. If the project succeeds (estimated probability 39%-57%), it yields $3275K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a product-market fit data for $62K. This product-market fit data correctly predicts success/failure with accuracy 72%-86%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $1155.0K. EV with info at mid-range: $976.2K. Value of information: $-178.8K. VOI range: [$-190.9K, $-135.8K]. Information may not be worth the cost.",
+    "point_estimate": -178.8,
+    "confidence_interval": [
+      -190.9,
+      -135.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$3275K - $417K).",
+    "At P=0.48: EV_no_info = max(0, 0.48\u00d73275 - 417) = $1155.0K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d73275 - 417) - 62.",
+    "At mid-range: EV_with_info = $976.2K.",
+    "VOI = EV_with_info - EV_no_info = $-178.8K.",
+    "Range across uncertain parameters: [$-190.9K, $-135.8K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

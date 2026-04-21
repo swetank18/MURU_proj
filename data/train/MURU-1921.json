@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1921",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "An insurer is pricing a business interruption policy for manufacturing operations in a global supply chain. Historical data suggests the annual frequency of supply chain disruption events follows a Poisson distribution with rate \u03bb estimated between 0.92 and 3.47 events/year. Each event causes a loss estimated between $91K and $159K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 28% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $83.7K to $551.7K. Point estimate: $275.0K. With 28% loading: premium range [$107.1K, $706.2K]. Point estimate premium: $352.0K.",
+    "point_estimate": 352.0,
+    "confidence_interval": [
+      107.1,
+      706.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=2.2, severity=$125K: EL = 2.2\u00d7125 = $275.0K.",
+    "At \u03bb=0.92, severity=$91K: EL = $83.7K (lower bound).",
+    "At \u03bb=3.47, severity=$159K: EL = $551.7K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.28.",
+    "Premium range: [$107.1K, $706.2K]. Mid: $352.0K."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

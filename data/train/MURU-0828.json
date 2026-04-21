@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0828",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A naval search team is looking for a submarine. Based on initial analysis, they estimate a 51% probability that a submarine is in Sector Alpha and a 49% probability it is in Sector Bravo. They search Sector Alpha first and do not find a submarine. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in Sector Alpha is between 63% and 76%. Given they did not find a submarine in Sector Alpha, what is the updated probability that a submarine is in Sector Bravo?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Sector Bravo | not found in Sector Alpha) ranges from 0.722 to 0.8 as detection probability varies from 63% to 76%. Point estimate at 70% detection: 0.762.",
+    "point_estimate": 0.762,
+    "confidence_interval": [
+      0.722,
+      0.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.51 + 1\u00d70.49.",
+    "At detection 70%: P(B|\u00acfound) = 0.49 / (0.3\u00d70.51 + 0.49) \u2248 0.762.",
+    "At detection 63%: P(B|\u00acfound) \u2248 0.722.",
+    "At detection 76%: P(B|\u00acfound) \u2248 0.8."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in Sector Alpha means it is definitely in Sector Bravo",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2141",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "An engineer takes 30 measurements of PM2.5 concentration using an air quality sensor. The measurements have a mean of 174.4 \u00b5g/m\u00b3 and a standard deviation of 16.5 \u00b5g/m\u00b3. However, calibration tests reveal that an air quality sensor systematically underestimates the true value by between 3.4% and 7.1%. Estimate the true PM2.5 concentration and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 174.4 \u00b5g/m\u00b3. After correcting for the 5.2% bias: \u2248 184.0 \u00b5g/m\u00b3. Full interval accounting for bias uncertainty (3.4%-7.1%) and sampling variability: [174.5, 193.7]. Point estimate: 184.0 \u00b5g/m\u00b3.",
+    "point_estimate": 184.0,
+    "confidence_interval": [
+      174.5,
+      193.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 174.4 \u00b5g/m\u00b3 (n=30, s=16.5).",
+    "Sampling SE: 16.5/\u221a30 = 3.01. Sampling margin \u2248 \u00b16.0.",
+    "Bias correction: instrument underestimates by 3.4%-7.1%.",
+    "At 5.2% correction: true value \u2248 184.0 \u00b5g/m\u00b3.",
+    "At 3.4% correction: true value \u2248 180.5 \u00b5g/m\u00b3.",
+    "At 7.1% correction: true value \u2248 187.7 \u00b5g/m\u00b3.",
+    "Combined interval (bias range + sampling): [174.5, 193.7]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

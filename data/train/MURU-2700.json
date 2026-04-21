@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2700",
+  "category": "adversarial_ambiguity",
+  "difficulty": 4,
+  "stem": "For recidivism prediction, the base rate for a parolee depends on which reference class is used: Reference Class A (all parolees nationally, n=2000): base rate = 18%. Reference Class B (parolees with similar offense type, n=200): base rate = 38%. Reference Class C (parolees from this specific facility, n=30): base rate = 51%. Each reference class has a different level of specificity and sample size. What is the appropriate base rate to use, and how should the choice of reference class affect the uncertainty in the prediction?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The reference class problem: different classes give rates of 18%, 38%, 51%. No single class is objectively 'correct'. Combined interval spanning all classes: [0.164, 0.677]. Weighted point estimate (specificity-weighted): 0.413.",
+    "point_estimate": 0.413,
+    "confidence_interval": [
+      0.164,
+      0.677
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Class A (all parolees nationally): rate=0.18, n=2000, CI=[0.164, 0.197]. Large sample but least specific.",
+    "Class B (parolees with similar offense type): rate=0.38, n=200, CI=[0.316, 0.449]. Moderate specificity and sample size.",
+    "Class C (parolees from this specific facility): rate=0.51, n=30, CI=[0.34, 0.677]. Most specific but smallest sample (widest CI).",
+    "The reference class problem has no definitive solution \u2014 the 'correct' base rate depends on which class membership is considered most relevant.",
+    "Weighted estimate (weights reflecting specificity): 0.16\u00d70.18 + 0.34\u00d70.38 + 0.5\u00d70.51 = 0.413.",
+    "Full uncertainty range spanning all reference classes: [0.164, 0.677]."
+  ],
+  "common_failure_modes": [
+    "Choosing one reference class without acknowledging the others",
+    "Using only the most specific class (Class C) despite its small sample size",
+    "Using only the broadest class (Class A) despite its low relevance",
+    "Not recognizing that the choice of reference class is itself a source of fundamental uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_reference_class",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

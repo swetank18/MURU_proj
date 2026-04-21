@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1793",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "A decision-maker must choose among 4 project methodology options. The probability of favorable team experience and project size is uncertain, estimated between 31% and 42%. The payoffs (in $K) for each option are: Agile: $151K in good team experience and project size, $25K in bad team experience and project size. Waterfall: $132K in good team experience and project size, $73K in bad team experience and project size. Hybrid: $116K in good team experience and project size, $15K in bad team experience and project size. Kanban: $85K in good team experience and project size, $22K in bad team experience and project size. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.36: best option is Waterfall with EV=$94.2K. Waterfall is optimal across the entire uncertainty range. EV range of best option: [91.3, 97.8].",
+    "point_estimate": 94.2,
+    "confidence_interval": [
+      91.3,
+      97.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "Agile: EV = 0.36\u00d7151 + 0.64\u00d725 = $70.4K.",
+    "Waterfall: EV = 0.36\u00d7132 + 0.64\u00d773 = $94.2K.",
+    "Hybrid: EV = 0.36\u00d7116 + 0.64\u00d715 = $51.4K.",
+    "Kanban: EV = 0.36\u00d785 + 0.64\u00d722 = $44.7K.",
+    "Best at mid-range: Waterfall ($94.2K).",
+    "Sensitivity: check endpoints P(good)=0.31 and 0.42.",
+    "Waterfall is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value",
+    "Not performing minimax regret analysis to find the most robust choice"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

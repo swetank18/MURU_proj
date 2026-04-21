@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2442",
+  "category": "distribution_estimation",
+  "difficulty": 5,
+  "stem": "A materials science dataset contains 80 observations of tensile strength. The data is believed to come from a mixture of two populations: bulk material (mean \u2248 40.9 MPa, SD \u2248 10.0) and surface-treated material (mean \u2248 90.2 MPa, SD \u2248 10.7). The proportion of bulk material in the sample is uncertain, estimated between 49% and 64%. The observed overall mean is 62.6 MPa with SD = 26.6. Estimate the true population mean of tensile strength, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d740.9 + (1-w)\u00d790.2. As w varies from 0.49 to 0.64, the mixture mean ranges from 58.6 to 66.0. With sampling variability, CI = [52.8, 71.8]. Point estimate at w=0.56: 62.6 MPa.",
+    "point_estimate": 62.6,
+    "confidence_interval": [
+      52.8,
+      71.8
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.56: \u03bc_mix = 0.56\u00d740.9 + 0.44\u00d790.2 = 62.6.",
+    "At w=0.49: \u03bc_mix = 66.0 (more of surface-treated material).",
+    "At w=0.64: \u03bc_mix = 58.6 (more of bulk material).",
+    "Mixture SD \u2248 26.6. SE = 26.6/\u221a80 = 2.97.",
+    "Combined interval [52.8, 71.8] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (26.6) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation",
+    "Failing to propagate the uncertainty in mixing weights through to the final interval"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

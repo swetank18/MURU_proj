@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2672",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A public health study surveys 15 residents surveyed and observes 6 positive outcomes out of 15 (40.0%). The sample contains two subgroups: Group A (8 observations, rate = 25.0%) and Group B (7 observations, rate = 57.1%). The true population composition is uncertain: Group A makes up between 37% and 57% of the population. Estimate the true vaccination coverage and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Simple pooled estimate: 0.4. Weighted estimate (stratified): 0.4368 (range [0.4082, 0.4654]). Combined CI accounting for stratification uncertainty: [0.1982, 0.6425]. Point estimate: 0.4368.",
+    "point_estimate": 0.4368,
+    "confidence_interval": [
+      0.1982,
+      0.6425
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 6/15 = 0.4.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.4204.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.2221.",
+    "95% CI: [0.1982, 0.6425].",
+    "Stratified estimate: weighted by population composition. At w_A=0.47: 0.47\u00d70.285 + 0.53\u00d70.5714 = 0.4368."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate",
+    "Not recognizing that with n=15, the normal approximation may be poor",
+    "Ignoring the population composition uncertainty and using the simple pooled rate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

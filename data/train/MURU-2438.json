@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2438",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A agriculture study measures crop yield across 3 regions, each containing multiple farms. region A has 10 observations with mean 45.0 tonnes/hectare (within-region SD = 4.2). region B has 15 observations with mean 42.6 tonnes/hectare (within-region SD = 8.6). region C has 8 observations with mean 49.2 tonnes/hectare (within-region SD = 4.0). The between-region standard deviation is uncertain, estimated between 3.7 and 9.1 tonnes/hectare. Using a hierarchical Bayesian model, estimate the true crop yield for region B, accounting for shrinkage toward the grand mean and the uncertainty in the between-region variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for region B: 42.9 tonnes/hectare (shrunk from raw 42.6). Range [42.7, 43.2] as between-region SD varies from 3.7 to 9.1. Pooled mean: 44.9.",
+    "point_estimate": 42.9,
+    "confidence_interval": [
+      42.7,
+      43.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 44.9 tonnes/hectare (weighted average of 3 region means).",
+    "Shrinkage factor for region B: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/15). At \u03c3_between=6.1: B = 0.883.",
+    "Shrunk estimate = B \u00d7 42.6 + (1-B) \u00d7 44.9 = 42.9.",
+    "At \u03c3_between=3.7: more shrinkage \u2192 estimate = 43.2.",
+    "At \u03c3_between=9.1: less shrinkage \u2192 estimate = 42.7.",
+    "Interval [42.7, 43.2] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (42.6) without shrinkage",
+    "Using only the grand mean (44.9) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

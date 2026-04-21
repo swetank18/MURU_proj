@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1734",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "For project duration estimation, the base rate for a software project depends on which reference class is used: Reference Class A (all IT projects in the firm, n=500): base rate = 26%. Reference Class B (similar-sized agile projects, n=100): base rate = 43%. Reference Class C (projects by this same team, n=15): base rate = 63%. Each reference class has a different level of specificity and sample size. What is the appropriate base rate to use, and how should the choice of reference class affect the uncertainty in the prediction?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The reference class problem: different classes give rates of 26%, 43%, 63%. No single class is objectively 'correct'. Combined interval spanning all classes: [0.223, 0.823]. Weighted point estimate (specificity-weighted): 0.486.",
+    "point_estimate": 0.486,
+    "confidence_interval": [
+      0.223,
+      0.823
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Class A (all IT projects in the firm): rate=0.26, n=500, CI=[0.223, 0.3]. Large sample but least specific.",
+    "Class B (similar-sized agile projects): rate=0.43, n=100, CI=[0.337, 0.528]. Moderate specificity and sample size.",
+    "Class C (projects by this same team): rate=0.63, n=15, CI=[0.384, 0.823]. Most specific but smallest sample (widest CI).",
+    "The reference class problem has no definitive solution \u2014 the 'correct' base rate depends on which class membership is considered most relevant.",
+    "Weighted estimate (weights reflecting specificity): 0.2\u00d70.26 + 0.35\u00d70.43 + 0.45\u00d70.63 = 0.486.",
+    "Full uncertainty range spanning all reference classes: [0.223, 0.823]."
+  ],
+  "common_failure_modes": [
+    "Choosing one reference class without acknowledging the others",
+    "Using only the most specific class (Class C) despite its small sample size",
+    "Using only the broadest class (Class A) despite its low relevance",
+    "Not recognizing that the choice of reference class is itself a source of fundamental uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_reference_class",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

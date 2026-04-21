@@ -1,0 +1,33 @@
+{
+  "id": "MURU-2647",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "In a epidemiology scenario, a researcher begins with a prior probability of 25% that a disease outbreak is occurring, based on case reports. After weekly report 1, supporting evidence arrives with a likelihood ratio estimated between 1.58 and 2.35. After weekly report 2, supporting evidence arrives with a likelihood ratio estimated between 2.88 and 4.44. What is the posterior probability that a disease outbreak is occurring after all 2 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 2 sequential Bayesian updates, P(a disease outbreak is occurring) ranges from 0.603 to 0.777. Point estimate: 0.706.",
+    "point_estimate": 0.706,
+    "confidence_interval": [
+      0.603,
+      0.777
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.25/0.75 = 0.333.",
+    "Update 1: multiply odds by LR \u2208 [1.58, 2.35] (mid: 1.97, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [2.88, 4.44] (mid: 3.66, supporting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.603, 0.777], point estimate: 0.706."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

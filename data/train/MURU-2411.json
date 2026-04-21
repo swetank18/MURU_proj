@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2411",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A cybersecurity team is looking for a network intrusion. Based on initial analysis, they estimate a 58% probability that a network intrusion is in the web server cluster and a 42% probability it is in the database cluster. They search the web server cluster first and do not find a network intrusion. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in the web server cluster is between 60% and 76%. Given they did not find a network intrusion in the web server cluster, what is the updated probability that a network intrusion is in the database cluster?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(the database cluster | not found in the web server cluster) ranges from 0.644 to 0.751 as detection probability varies from 60% to 76%. Point estimate at 68% detection: 0.694.",
+    "point_estimate": 0.694,
+    "confidence_interval": [
+      0.644,
+      0.751
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.58 + 1\u00d70.42.",
+    "At detection 68%: P(B|\u00acfound) = 0.42 / (0.32\u00d70.58 + 0.42) \u2248 0.694.",
+    "At detection 60%: P(B|\u00acfound) \u2248 0.644.",
+    "At detection 76%: P(B|\u00acfound) \u2248 0.751."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in the web server cluster means it is definitely in the database cluster",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

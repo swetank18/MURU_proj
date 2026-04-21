@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1438",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "An insurer is pricing a product liability policy for consumer products in the US market. Historical data suggests the annual frequency of product liability claim events follows a Poisson distribution with rate \u03bb estimated between 0.8 and 3.5 events/year. Each event causes a loss estimated between $67K and $158K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 19% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $53.6K to $553.0K. Point estimate: $240.8K. With 19% loading: premium range [$63.8K, $658.1K]. Point estimate premium: $286.6K.",
+    "point_estimate": 286.6,
+    "confidence_interval": [
+      63.8,
+      658.1
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=2.15, severity=$112K: EL = 2.15\u00d7112 = $240.8K.",
+    "At \u03bb=0.8, severity=$67K: EL = $53.6K (lower bound).",
+    "At \u03bb=3.5, severity=$158K: EL = $553.0K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.19.",
+    "Premium range: [$63.8K, $658.1K]. Mid: $286.6K.",
+    "Note: this assumes independence between frequency and severity. In practice, high-frequency years may also have higher severity (correlation), which would widen the range further."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin",
+    "Assuming frequency and severity are independent when they may be correlated"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

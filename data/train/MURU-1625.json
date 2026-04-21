@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1625",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "A decision-maker must choose among 4 crop selection options. The probability of favorable weather patterns is uncertain, estimated between 30% and 43%. The payoffs (in $K) for each option are: rice: $78K in good weather patterns, $28K in bad weather patterns. wheat: $105K in good weather patterns, $62K in bad weather patterns. soybeans: $98K in good weather patterns, $26K in bad weather patterns. corn: $168K in good weather patterns, $90K in bad weather patterns. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.36: best option is corn with EV=$118.1K. corn is optimal across the entire uncertainty range. EV range of best option: [113.4, 123.5].",
+    "point_estimate": 118.1,
+    "confidence_interval": [
+      113.4,
+      123.5
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "rice: EV = 0.36\u00d778 + 0.64\u00d728 = $46.0K.",
+    "wheat: EV = 0.36\u00d7105 + 0.64\u00d762 = $77.5K.",
+    "soybeans: EV = 0.36\u00d798 + 0.64\u00d726 = $51.9K.",
+    "corn: EV = 0.36\u00d7168 + 0.64\u00d790 = $118.1K.",
+    "Best at mid-range: corn ($118.1K).",
+    "Sensitivity: check endpoints P(good)=0.3 and 0.43.",
+    "corn is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value",
+    "Not performing minimax regret analysis to find the most robust choice"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "MURU-2926",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A network performance study measures signal latency for 40 samples to determine if the process variability is below 50ms for 99% of packets. The sample standard deviation is 6.1 ms (sample variance = 37.21). Estimate the true population standard deviation of signal latency and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Sample SD = 6.1 ms. 95% CI for \u03c3 (chi-squared): [5.0, 7.83]. Point estimate: 6.1 ms.",
+    "point_estimate": 6.1,
+    "confidence_interval": [
+      5.0,
+      7.83
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample variance s\u00b2 = 37.21, df = 39.",
+    "\u03c7\u00b2 CI for \u03c3\u00b2: [(n-1)s\u00b2/\u03c7\u00b2_upper, (n-1)s\u00b2/\u03c7\u00b2_lower] = [39\u00d737.21/58.12, 39\u00d737.21/23.654] = [24.97, 61.35].",
+    "CI for \u03c3: [\u221a24.97, \u221a61.35] = [5.0, 7.83]."
+  ],
+  "common_failure_modes": [
+    "Using z-based CI for the mean instead of \u03c7\u00b2-based CI for the variance",
+    "Reporting the sample SD (6.1) as the population SD without uncertainty",
+    "Not recognizing that confidence intervals for variance are asymmetric"
+  ],
+  "metadata": {
+    "author": "generator_variance_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0795",
+  "category": "conditional_probability_chains",
+  "difficulty": 2,
+  "stem": "A mission enters the space mission pipeline. The probability of passing design review is between 55% and 63% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing testing is 71%. If the previous stage is passed, the probability of passing launch is 84%. What is the overall probability that the mission is successful?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(successful) ranges from 0.328 to 0.376 as the design review pass rate varies from 55% to 63%. Point estimate: 0.352.",
+    "point_estimate": 0.352,
+    "confidence_interval": [
+      0.328,
+      0.376
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The mission must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.59 \u00d7 0.71 \u00d7 0.84 = 0.352.",
+    "At lower bound: P(success) = 0.55 \u00d7 0.71 \u00d7 0.84 = 0.328.",
+    "At upper bound: P(success) = 0.63 \u00d7 0.71 \u00d7 0.84 = 0.376.",
+    "The uncertainty in the design review stage creates a 4.8 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the design review rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

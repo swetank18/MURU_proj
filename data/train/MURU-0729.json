@@ -1,0 +1,35 @@
+{
+  "id": "MURU-0729",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses a rapid antibody test to screen for HIV. The test has a sensitivity of 80% and a specificity of 73%. The prevalence of HIV in the patient population is estimated to be between 3.9% and 8.2%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has HIV? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(HIV | positive test) ranges from 0.107 to 0.209 as prevalence varies from 3.9% to 8.2%. Point estimate at 6.0% prevalence: 0.159.",
+    "point_estimate": 0.159,
+    "confidence_interval": [
+      0.107,
+      0.209
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.27.",
+    "At prevalence 6.0%: P(D|+) = 0.8\u00d70.06 / (0.8\u00d70.06 + 0.27\u00d70.94) \u2248 0.159.",
+    "At prevalence 3.9%: P(D|+) = 0.8\u00d70.039 / (0.8\u00d70.039 + 0.27\u00d70.961) \u2248 0.107.",
+    "At prevalence 8.2%: P(D|+) = 0.8\u00d70.082 / (0.8\u00d70.082 + 0.27\u00d70.918) \u2248 0.209.",
+    "The confidence interval [0.107, 0.209] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (80%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

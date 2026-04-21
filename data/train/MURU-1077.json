@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1077",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A customer analytics dataset contains 100 observations of purchase amount. The data is believed to come from a mixture of two populations: casual buyers (mean \u2248 66.9 $, SD \u2248 13.8) and power users (mean \u2248 154.8 $, SD \u2248 21.5). The proportion of casual buyers in the sample is uncertain, estimated between 45% and 57%. The observed overall mean is 110.0 $ with SD = 47.5. Estimate the true population mean of purchase amount, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d766.9 + (1-w)\u00d7154.8. As w varies from 0.45 to 0.57, the mixture mean ranges from 104.7 to 115.2. With sampling variability, CI = [95.4, 124.5]. Point estimate at w=0.51: 110.0 $.",
+    "point_estimate": 110.0,
+    "confidence_interval": [
+      95.4,
+      124.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.51: \u03bc_mix = 0.51\u00d766.9 + 0.49\u00d7154.8 = 110.0.",
+    "At w=0.45: \u03bc_mix = 115.2 (more of power users).",
+    "At w=0.57: \u03bc_mix = 104.7 (more of casual buyers).",
+    "Mixture SD \u2248 47.5. SE = 47.5/\u221a100 = 4.75.",
+    "Combined interval [95.4, 124.5] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (47.5) is inflated by the between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

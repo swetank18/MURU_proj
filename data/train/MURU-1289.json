@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1289",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose among 4 project methodology options. The probability of favorable team experience and project size is uncertain, estimated between 40% and 59%. The payoffs (in $K) for each option are: Agile: $167K in good team experience and project size, $65K in bad team experience and project size. Waterfall: $271K in good team experience and project size, $31K in bad team experience and project size. Hybrid: $140K in good team experience and project size, $57K in bad team experience and project size. Kanban: $53K in good team experience and project size, $16K in bad team experience and project size. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.49: best option is Waterfall with EV=$148.6K. Waterfall is optimal across the entire uncertainty range. EV range of best option: [127.0, 172.6].",
+    "point_estimate": 148.6,
+    "confidence_interval": [
+      127.0,
+      172.6
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "Agile: EV = 0.49\u00d7167 + 0.51\u00d765 = $115.0K.",
+    "Waterfall: EV = 0.49\u00d7271 + 0.51\u00d731 = $148.6K.",
+    "Hybrid: EV = 0.49\u00d7140 + 0.51\u00d757 = $97.7K.",
+    "Kanban: EV = 0.49\u00d753 + 0.51\u00d716 = $34.1K.",
+    "Best at mid-range: Waterfall ($148.6K).",
+    "Sensitivity: check endpoints P(good)=0.4 and 0.59.",
+    "Waterfall is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

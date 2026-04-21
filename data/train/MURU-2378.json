@@ -1,0 +1,33 @@
+{
+  "id": "MURU-2378",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A ecology study surveys 30 sampled plots and observes 18 positive outcomes out of 30 (60.0%). Estimate the true species occurrence rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Sample proportion: 0.6. Wilson 95% CI: [0.4232, 0.7541]. Point estimate: 0.5886.",
+    "point_estimate": 0.5886,
+    "confidence_interval": [
+      0.4232,
+      0.7541
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 18/30 = 0.6.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.5886.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.1654.",
+    "95% CI: [0.4232, 0.7541]."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate",
+    "Not recognizing that with n=30, the normal approximation may be poor"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

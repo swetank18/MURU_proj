@@ -1,0 +1,32 @@
+{
+  "id": "MURU-1181",
+  "category": "distribution_estimation",
+  "difficulty": 1,
+  "stem": "A agricultural research study surveys 200 seeds planted and observes 91 positive outcomes out of 200 (45.5%). Estimate the true germination rate and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Sample proportion: 0.455. Wilson 95% CI: [0.3875, 0.5242]. Point estimate: 0.4558.",
+    "point_estimate": 0.4558,
+    "confidence_interval": [
+      0.3875,
+      0.5242
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample proportion p\u0302 = 91/200 = 0.455.",
+    "Wilson interval: center = (p\u0302 + z\u00b2/2n)/(1 + z\u00b2/n) = 0.4558.",
+    "Margin = z \u00d7 \u221a(p\u0302(1-p\u0302)/n + z\u00b2/4n\u00b2) / (1 + z\u00b2/n) = 0.0684.",
+    "95% CI: [0.3875, 0.5242]."
+  ],
+  "common_failure_modes": [
+    "Using the Wald interval (p\u0302 \u00b1 z\u221a(p\u0302(1-p\u0302)/n)) which performs poorly for small samples",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_proportion_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

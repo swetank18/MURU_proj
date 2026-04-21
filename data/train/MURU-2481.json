@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2481",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A healthcare medical diagnosis uses 4 parallel tests for redundancy. The condition detected requires at least one test to function. test 1 has a reliability of 87%. test 2 has a reliability of 91%. test 3 has a reliability between 63% and 80% (uncertain due to limited operational data). test 4 has a reliability of 89%. Additionally, there is a common-cause failure probability (e.g., power outage, shared software bug) that could disable all tests simultaneously, estimated between 2.2% and 6.9%. What is the overall probability that the condition detected?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(condition detected) ranges from 0.9305 to 0.9777. Point estimate: 0.9546.",
+    "point_estimate": 0.9546,
+    "confidence_interval": [
+      0.9305,
+      0.9777
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 4 tests fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2) \u00d7 (1-R_3) \u00d7 (1-R_4).",
+    "At mid-range: P(all fail) = 0.13 \u00d7 0.09 \u00d7 0.28 \u00d7 0.11 = 0.0004. P(works) = 0.9996.",
+    "At lower bound: P(all fail) = 0.13 \u00d7 0.09 \u00d7 0.37 \u00d7 0.11 = 0.0005. P(works) = 0.9995.",
+    "At upper bound: P(all fail) = 0.13 \u00d7 0.09 \u00d7 0.2 \u00d7 0.11 = 0.0003. P(works) = 0.9997.",
+    "With common-cause failure (2.2%-6.9%): P(works) = (1-P_cc) \u00d7 P(independent works). Range: [0.9305, 0.9777]."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)",
+    "Ignoring common-cause failures that can disable all paths simultaneously"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

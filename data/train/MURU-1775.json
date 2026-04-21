@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1775",
+  "category": "adversarial_ambiguity",
+  "difficulty": 5,
+  "stem": "In a legal outcomes study comparing Judge A vs. Judge B: Overall, Treatment Y has a higher acquittal rate (68.0% vs 55.4%). However, when stratified by case severity: In misdemeanors (n_X=30, n_Y=80): Treatment X achieves 86% vs Treatment Y's 76%. In felonies (n_X=100, n_Y=20): Treatment X achieves 46% vs Treatment Y's 38%. The true population proportion of misdemeanors is uncertain, estimated between 44% and 58%. Which treatment is actually better, and by how much?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to felonies (harder cases). Adjusted difference (X - Y): [0.089, 0.092], point estimate: 0.09. Treatment X is genuinely better by 9.0 percentage points.",
+    "point_estimate": 0.09,
+    "confidence_interval": [
+      0.089,
+      0.092
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=55.4%, Y=68.0% (Y appears better).",
+    "Stratified: In misdemeanors: X=86% > Y=76%. In felonies: X=46% > Y=38%.",
+    "X is better in BOTH subgroups \u2014 this is Simpson's Paradox.",
+    "The paradox arises because Judge A is applied more to felonies (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A\u00d70.86 + (1-w_A)\u00d70.46.",
+    "Population-adjusted rate for Y: w_A\u00d70.76 + (1-w_A)\u00d70.38.",
+    "Difference X-Y at w_A=0.51: 0.09. Range: [0.089, 0.092]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty",
+    "Not considering that additional unobserved confounders could further modify the comparison"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

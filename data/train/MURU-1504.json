@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1504",
+  "category": "adversarial_ambiguity",
+  "difficulty": 2,
+  "stem": "In salary negotiation, you are asked to estimate the fair compensation. You are first told that an initial offer from the employer puts the value at 26.0 $K/year. You then collect your own data: industry salary surveys and cost-of-living data based on 15 observations give a mean of 55.0 $K/year with SD = 7.0 $K/year. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (26.0 $K/year) likely underestimates the true value. Data-based estimate: 55.0 $K/year, CI = [51.5, 58.5]. If the anchor receives 0-37% weight, the estimate ranges from 44.3 to 48.0. Point estimate: 55.0 $K/year (data-only, unanchored).",
+    "point_estimate": 55.0,
+    "confidence_interval": [
+      44.3,
+      58.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 26.0 $K/year (from an initial offer from the employer \u2014 potentially biased).",
+    "Data: mean = 55.0, SD = 7.0, n = 15. SE = 1.8.",
+    "Data-based 95% CI: [51.5, 58.5].",
+    "The anchor underestimates relative to the data by 29 $K/year (53%).",
+    "If we assign the anchor weight w \u2208 [0, 0.37]: estimate = w\u00d726.0 + (1-w)\u00d755.0.",
+    "At w=0.3: estimate = 46.3.",
+    "Best practice: the data-based estimate (55.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (26.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (26.0) and data (55.0) are substantially different, suggesting bias in the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

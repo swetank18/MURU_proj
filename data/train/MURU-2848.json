@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2848",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In project estimation, you are asked to estimate the project completion time. You are first told that a sales team's promise to the client puts the value at 350.0 months. You then collect your own data: historical data on similar projects based on 15 observations give a mean of 239.0 months with SD = 45.0 months. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (350.0 months) likely overestimates the true value. Data-based estimate: 239.0 months, CI = [216.3, 261.7]. If the anchor receives 0-32% weight, the estimate ranges from 261.2 to 274.5. Point estimate: 239.0 months (data-only, unanchored).",
+    "point_estimate": 239.0,
+    "confidence_interval": [
+      216.3,
+      274.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 350.0 months (from a sales team's promise to the client \u2014 potentially biased).",
+    "Data: mean = 239.0, SD = 45.0, n = 15. SE = 11.6.",
+    "Data-based 95% CI: [216.3, 261.7].",
+    "The anchor overestimates relative to the data by 111 months (46%).",
+    "If we assign the anchor weight w \u2208 [0, 0.32]: estimate = w\u00d7350.0 + (1-w)\u00d7239.0.",
+    "At w=0.26: estimate = 267.9.",
+    "Best practice: the data-based estimate (239.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (350.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (350.0) and data (239.0) are substantially different, suggesting bias in the anchor",
+    "Not computing the data-based confidence interval and relying on intuitive adjustment from the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0562",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A factory produces food packages using two sources. Packaging Line Morning Shift handles 74% of production with a known defect rate of 1.2%. Packaging Line Night Shift handles 26% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 4.2% and 6.9%, depending on raw material batch quality. A randomly selected food package is found to be defective. What is the probability it came from Packaging Line Night Shift?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Packaging Line Night Shift | defective) ranges from 0.552 to 0.669 as Packaging Line Night Shift's defect rate varies from 4.2% to 6.9%. Point estimate at 5.6%: 0.621.",
+    "point_estimate": 0.621,
+    "confidence_interval": [
+      0.552,
+      0.669
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 5.6%: P(B|def) = 0.056\u00d70.26 / (0.012\u00d70.74 + 0.056\u00d70.26) \u2248 0.621.",
+    "At defect rate 4.2%: P(B|def) \u2248 0.552.",
+    "At defect rate 6.9%: P(B|def) \u2248 0.669.",
+    "The interval [0.552, 0.669] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (74/26 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

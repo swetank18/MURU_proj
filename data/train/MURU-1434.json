@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1434",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A astronomy dataset contains 150 observations of apparent magnitude. The data is believed to come from a mixture of two populations: foreground stars (mean \u2248 37.9 mag, SD \u2248 6.6) and background galaxies (mean \u2248 82.2 mag, SD \u2248 9.7). The proportion of foreground stars in the sample is uncertain, estimated between 39% and 58%. The observed overall mean is 60.9 mag with SD = 23.7. Estimate the true population mean of apparent magnitude, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d737.9 + (1-w)\u00d782.2. As w varies from 0.39 to 0.58, the mixture mean ranges from 56.5 to 64.9. With sampling variability, CI = [52.7, 68.7]. Point estimate at w=0.48: 60.9 mag.",
+    "point_estimate": 60.9,
+    "confidence_interval": [
+      52.7,
+      68.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.48: \u03bc_mix = 0.48\u00d737.9 + 0.52\u00d782.2 = 60.9.",
+    "At w=0.39: \u03bc_mix = 64.9 (more of background galaxies).",
+    "At w=0.58: \u03bc_mix = 56.5 (more of foreground stars).",
+    "Mixture SD \u2248 23.7. SE = 23.7/\u221a150 = 1.94.",
+    "Combined interval [52.7, 68.7] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (23.7) is inflated by the between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0723",
+  "category": "conditional_probability_chains",
+  "difficulty": 1,
+  "stem": "A loan application enters the loan processing pipeline. The probability of passing application review is 78%. If the previous stage is passed, the probability of passing credit check is 87%. If the previous stage is passed, the probability of passing underwriting is between 80% and 92% (uncertain due to evaluator variability). What is the overall probability that the loan application is approved?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(approved) ranges from 0.543 to 0.624 as the underwriting pass rate varies from 80% to 92%. Point estimate: 0.584.",
+    "point_estimate": 0.584,
+    "confidence_interval": [
+      0.543,
+      0.624
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The loan application must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.78 \u00d7 0.87 \u00d7 0.86 = 0.584.",
+    "At lower bound: P(success) = 0.78 \u00d7 0.87 \u00d7 0.8 = 0.543.",
+    "At upper bound: P(success) = 0.78 \u00d7 0.87 \u00d7 0.92 = 0.624.",
+    "The uncertainty in the underwriting stage creates a 8.1 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the underwriting rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

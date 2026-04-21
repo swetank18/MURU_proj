@@ -316,13 +316,66 @@ Balaji Lakshminarayanan, Alexander Pritzel, and Charles Blundell.
 \section{Sample Problems}
 \label{app:samples}
 
-% TODO: Include 2-3 sample problems from each category
+We present representative problems from two categories to illustrate the benchmark's structure.
+
+\subsection*{Example 1: Bayesian Updating (Difficulty 1)}
+
+\noindent\textbf{Problem.}
+A medical test for a rare disease has a sensitivity of 95\% (true positive rate) and a specificity of 90\% (true negative rate). The disease affects 1\% of the population. A patient tests positive. What is the probability that the patient actually has the disease? Express your answer as a probability and provide a confidence interval reflecting the uncertainty in the population prevalence, which epidemiologists estimate could range from 0.5\% to 1.5\%.
+
+\noindent\textbf{Ground Truth.}
+$P(\text{Disease} \mid \text{Positive})$ ranges from 0.046 to 0.126 depending on the true prevalence (0.5\% to 1.5\%). Point estimate at 1\% prevalence: 0.087. CI level: 90\%.
+
+\noindent\textbf{Common Failure Modes.}
+\begin{itemize}
+    \item Ignoring the base rate and directly using the test sensitivity as the answer (giving 95\%)
+    \item Providing only the point estimate 0.087 without acknowledging the prevalence uncertainty
+    \item Confusing sensitivity with positive predictive value
+\end{itemize}
+
+\subsection*{Example 2: Adversarial Ambiguity (Difficulty 3)}
+
+\noindent\textbf{Problem.}
+You are told that a coin was flipped 10 times, yielding 7 heads and 3 tails. You are asked: what is the probability the coin is fair? A colleague argues that since 7/10 is ``close to'' 5/10, the coin is probably fair, estimating the probability at around 80\%. Another colleague uses a frequentist hypothesis test and gets $p = 0.17$, concluding ``we cannot reject the null that the coin is fair.'' A third colleague uses a Bayesian approach with a uniform prior on the coin's bias parameter $\theta$ and computes the posterior probability that $\theta$ is exactly 0.5. Who, if anyone, is reasoning correctly, and what is the right answer to the question as stated?
+
+\noindent\textbf{Ground Truth.}
+The question is fundamentally ambiguous. $P(\theta = 0.5 \text{ exactly}) = 0$ under a continuous prior. $P(\theta \in [0.45, 0.55]) \approx 0.11$. The Bayes factor $\approx 0.55$. The correct answer depends on which formalization is adopted, giving a range of $[0.07, 0.55]$.
 
 
 \section{Evaluation Prompts}
 \label{app:prompts}
 
-% TODO: Include exact prompts used for each model
+All models were evaluated with the following system and user prompts. Temperature was set to 0 for reproducibility.
+
+\subsection*{System Prompt}
+
+\begin{quote}
+\small
+You are a mathematical reasoning expert. You will be given a problem involving mathematical uncertainty. You must:
+(1) Identify the correct mathematical framework (\texttt{bayesian\_inference}, \texttt{frequentist\_inference}, \texttt{decision\_theory}, \texttt{information\_theory}, or \texttt{monte\_carlo}).
+(2) Show your reasoning step-by-step.
+(3) Provide your final answer as a single number (point estimate).
+(4) Provide a confidence interval [lower, upper] for your answer.
+(5) State your confidence in your answer as a probability between 0 and 1.
+
+Format your response EXACTLY as follows at the end:
+
+\texttt{FRAMEWORK: <framework\_name>} \\
+\texttt{POINT\_ESTIMATE: <number>} \\
+\texttt{CONFIDENCE\_INTERVAL: [<lower>, <upper>]} \\
+\texttt{CONFIDENCE: <probability>}
+\end{quote}
+
+\subsection*{User Prompt}
+
+\begin{quote}
+\small
+Problem: \{problem stem\}
+
+Please solve this problem step by step, then provide your answer in the required format.
+\end{quote}
+
+Responses were parsed using regex extraction for the four structured output fields. Problems where the model's response could not be parsed were recorded as failures.
 
 
 \end{document}

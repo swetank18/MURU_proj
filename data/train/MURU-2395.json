@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2395",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "In a seismology scenario, a researcher begins with a prior probability of 31% that a major earthquake is imminent, based on tremor measurements. After monitoring period 1, supporting evidence arrives with a likelihood ratio estimated between 2.88 and 3.63. After monitoring period 2, contradicting evidence arrives with a likelihood ratio estimated between 0.35 and 0.6. After monitoring period 3, supporting evidence arrives with a likelihood ratio estimated between 3.37 and 4.46. After monitoring period 4, contradicting evidence arrives with a likelihood ratio estimated between 0.31 and 0.53. What is the posterior probability that a major earthquake is imminent after all 4 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 4 sequential Bayesian updates, P(a major earthquake is imminent) ranges from 0.321 to 0.698. Point estimate: 0.53.",
+    "point_estimate": 0.53,
+    "confidence_interval": [
+      0.321,
+      0.698
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.31/0.69 = 0.449.",
+    "Update 1: multiply odds by LR \u2208 [2.88, 3.63] (mid: 3.25, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.35, 0.6] (mid: 0.47, contradicting evidence).",
+    "Update 3: multiply odds by LR \u2208 [3.37, 4.46] (mid: 3.92, supporting evidence).",
+    "Update 4: multiply odds by LR \u2208 [0.31, 0.53] (mid: 0.42, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.321, 0.698], point estimate: 0.53."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

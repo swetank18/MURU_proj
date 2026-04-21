@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2598",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A factory produces pharmaceutical tablets using two sources. Batch Process Alpha handles 77% of production with a known defect rate of 1.5%. Batch Process Beta handles 23% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 8.0% and 12.6%, depending on raw material batch quality. A randomly selected pharmaceutical tablet is found to be defective. What is the probability it came from Batch Process Beta?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Batch Process Beta | defective) ranges from 0.614 to 0.715 as Batch Process Beta's defect rate varies from 8.0% to 12.6%. Point estimate at 10.3%: 0.672.",
+    "point_estimate": 0.672,
+    "confidence_interval": [
+      0.614,
+      0.715
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 10.3%: P(B|def) = 0.103\u00d70.23 / (0.015\u00d70.77 + 0.103\u00d70.23) \u2248 0.672.",
+    "At defect rate 8.0%: P(B|def) \u2248 0.614.",
+    "At defect rate 12.6%: P(B|def) \u2248 0.715.",
+    "The interval [0.614, 0.715] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (77/23 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

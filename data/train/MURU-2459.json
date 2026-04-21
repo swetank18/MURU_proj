@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2459",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A healthcare study measures average patient recovery rate across 4 hospitals, each containing multiple departments. hospital A has 20 observations with mean 70.3 % (within-hospital SD = 9.8). hospital B has 5 observations with mean 45.3 % (within-hospital SD = 7.8). hospital C has 5 observations with mean 69.5 % (within-hospital SD = 9.4). hospital D has 15 observations with mean 62.8 % (within-hospital SD = 5.1). The between-hospital standard deviation is uncertain, estimated between 5.5 and 13.8 %. Using a hierarchical Bayesian model, estimate the true average patient recovery rate for hospital D, accounting for shrinkage toward the grand mean and the uncertainty in the between-hospital variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for hospital D: 62.8 % (shrunk from raw 62.8). Range [62.8, 62.9] as between-hospital SD varies from 5.5 to 13.8. Pooled mean: 64.9.",
+    "point_estimate": 62.8,
+    "confidence_interval": [
+      62.8,
+      62.9
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 64.9 % (weighted average of 4 hospital means).",
+    "Shrinkage factor for hospital D: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/15). At \u03c3_between=9.2: B = 0.98.",
+    "Shrunk estimate = B \u00d7 62.8 + (1-B) \u00d7 64.9 = 62.8.",
+    "At \u03c3_between=5.5: more shrinkage \u2192 estimate = 62.9.",
+    "At \u03c3_between=13.8: less shrinkage \u2192 estimate = 62.8.",
+    "Interval [62.8, 62.9] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (62.8) without shrinkage",
+    "Using only the grand mean (64.9) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

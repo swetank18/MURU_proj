@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2634",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "In clinical trials, a decision-maker is at the Phase I stage and must decide whether to proceed to Phase II decision. The investment cost is $488K. If the project succeeds (estimated probability 39%-56%), it yields $1874K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a Phase I results for $34K. This Phase I results correctly predicts success/failure with accuracy 71%-87%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $411.5K. EV with info at mid-range: $438.3K. Value of information: $26.8K. VOI range: [$20.6K, $51.9K]. Information is worth purchasing.",
+    "point_estimate": 26.8,
+    "confidence_interval": [
+      20.6,
+      51.9
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$1874K - $488K).",
+    "At P=0.48: EV_no_info = max(0, 0.48\u00d71874 - 488) = $411.5K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d71874 - 488) - 34.",
+    "At mid-range: EV_with_info = $438.3K.",
+    "VOI = EV_with_info - EV_no_info = $26.8K.",
+    "Range across uncertain parameters: [$20.6K, $51.9K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

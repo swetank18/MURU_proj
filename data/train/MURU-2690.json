@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2690",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A retail study measures customer satisfaction score across 3 chains, each containing multiple stores. chain A has 5 observations with mean 84.0 /10 (within-chain SD = 4.7). chain B has 20 observations with mean 75.6 /10 (within-chain SD = 6.5). chain C has 15 observations with mean 88.3 /10 (within-chain SD = 5.4). The between-chain standard deviation is uncertain, estimated between 4.1 and 10.4 /10. Using a hierarchical Bayesian model, estimate the true customer satisfaction score for chain A, accounting for shrinkage toward the grand mean and the uncertainty in the between-chain variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for chain A: 83.8 /10 (shrunk from raw 84.0). Range [83.5, 83.9] as between-chain SD varies from 4.1 to 10.4. Pooled mean: 81.4.",
+    "point_estimate": 83.8,
+    "confidence_interval": [
+      83.5,
+      83.9
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 81.4 /10 (weighted average of 3 chain means).",
+    "Shrinkage factor for chain A: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/5). At \u03c3_between=6.9: B = 0.915.",
+    "Shrunk estimate = B \u00d7 84.0 + (1-B) \u00d7 81.4 = 83.8.",
+    "At \u03c3_between=4.1: more shrinkage \u2192 estimate = 83.5.",
+    "At \u03c3_between=10.4: less shrinkage \u2192 estimate = 83.9.",
+    "Interval [83.5, 83.9] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (84.0) without shrinkage",
+    "Using only the grand mean (81.4) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

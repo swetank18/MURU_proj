@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2366",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A hospital uses an anti-CCP antibody test to screen for rheumatoid arthritis. The test has a sensitivity of 87% and a specificity of 83%. The prevalence of rheumatoid arthritis in the patient population is estimated to be between 1.7% and 4.4%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has rheumatoid arthritis? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(rheumatoid arthritis | positive test) ranges from 0.0813 to 0.191 as prevalence varies from 1.7% to 4.4%. Point estimate at 3.0% prevalence: 0.137.",
+    "point_estimate": 0.137,
+    "confidence_interval": [
+      0.0813,
+      0.191
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.17.",
+    "At prevalence 3.0%: P(D|+) = 0.87\u00d70.03 / (0.87\u00d70.03 + 0.17\u00d70.97) \u2248 0.137.",
+    "At prevalence 1.7%: P(D|+) = 0.87\u00d70.017 / (0.87\u00d70.017 + 0.17\u00d70.983) \u2248 0.0813.",
+    "At prevalence 4.4%: P(D|+) = 0.87\u00d70.044 / (0.87\u00d70.044 + 0.17\u00d70.956) \u2248 0.191.",
+    "The confidence interval [0.0813, 0.191] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (87%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

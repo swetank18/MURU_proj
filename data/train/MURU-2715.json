@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2715",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A biology dataset contains 50 observations of cell size. The data is believed to come from a mixture of two populations: healthy cells (mean \u2248 57.1 \u00b5m, SD \u2248 6.3) and abnormal cells (mean \u2248 133.4 \u00b5m, SD \u2248 29.7). The proportion of healthy cells in the sample is uncertain, estimated between 50% and 60%. The observed overall mean is 91.4 \u00b5m with SD = 43.1. Estimate the true population mean of cell size, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d757.1 + (1-w)\u00d7133.4. As w varies from 0.5 to 0.6, the mixture mean ranges from 87.6 to 95.2. With sampling variability, CI = [75.6, 107.2]. Point estimate at w=0.55: 91.4 \u00b5m.",
+    "point_estimate": 91.4,
+    "confidence_interval": [
+      75.6,
+      107.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.55: \u03bc_mix = 0.55\u00d757.1 + 0.45\u00d7133.4 = 91.4.",
+    "At w=0.5: \u03bc_mix = 95.2 (more of abnormal cells).",
+    "At w=0.6: \u03bc_mix = 87.6 (more of healthy cells).",
+    "Mixture SD \u2248 43.1. SE = 43.1/\u221a50 = 6.1.",
+    "Combined interval [75.6, 107.2] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (43.1) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

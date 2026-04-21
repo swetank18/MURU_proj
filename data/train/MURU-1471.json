@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1471",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "In a satellite tracking scenario, a researcher begins with a prior probability of 43% that the debris field will intersect the orbit, based on radar pings. After tracking window 1, supporting evidence arrives with a likelihood ratio estimated between 2.21 and 3.3. After tracking window 2, supporting evidence arrives with a likelihood ratio estimated between 2.38 and 4.34. After tracking window 3, supporting evidence arrives with a likelihood ratio estimated between 1.9 and 3.27. After tracking window 4, contradicting evidence arrives with a likelihood ratio estimated between 0.32 and 0.62. What is the posterior probability that the debris field will intersect the orbit after all 4 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 4 sequential Bayesian updates, P(the debris field will intersect the orbit) ranges from 0.707 to 0.956. Point estimate: 0.894.",
+    "point_estimate": 0.894,
+    "confidence_interval": [
+      0.707,
+      0.956
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.43/0.57 = 0.754.",
+    "Update 1: multiply odds by LR \u2208 [2.21, 3.3] (mid: 2.75, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [2.38, 4.34] (mid: 3.36, supporting evidence).",
+    "Update 3: multiply odds by LR \u2208 [1.9, 3.27] (mid: 2.58, supporting evidence).",
+    "Update 4: multiply odds by LR \u2208 [0.32, 0.62] (mid: 0.47, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.707, 0.956], point estimate: 0.894."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

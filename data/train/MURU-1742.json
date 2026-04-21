@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1742",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "An engineer takes 30 measurements of PM2.5 concentration using an air quality sensor. The measurements have a mean of 65.8 \u00b5g/m\u00b3 and a standard deviation of 9.1 \u00b5g/m\u00b3. However, calibration tests reveal that an air quality sensor systematically overestimates the true value by between 1.7% and 6.1%. Estimate the true PM2.5 concentration and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 65.8 \u00b5g/m\u00b3. After correcting for the 3.9% bias: \u2248 63.3 \u00b5g/m\u00b3. Full interval accounting for bias uncertainty (1.7%-6.1%) and sampling variability: [58.7, 68.0]. Point estimate: 63.3 \u00b5g/m\u00b3.",
+    "point_estimate": 63.3,
+    "confidence_interval": [
+      58.7,
+      68.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 65.8 \u00b5g/m\u00b3 (n=30, s=9.1).",
+    "Sampling SE: 9.1/\u221a30 = 1.66. Sampling margin \u2248 \u00b13.3.",
+    "Bias correction: instrument overestimates by 1.7%-6.1%.",
+    "At 3.9% correction: true value \u2248 63.3 \u00b5g/m\u00b3.",
+    "At 1.7% correction: true value \u2248 64.7 \u00b5g/m\u00b3.",
+    "At 6.1% correction: true value \u2248 62.0 \u00b5g/m\u00b3.",
+    "Combined interval (bias range + sampling): [58.7, 68.0]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

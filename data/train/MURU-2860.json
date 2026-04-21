@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2860",
+  "category": "conditional_probability_chains",
+  "difficulty": 3,
+  "stem": "In a legal proceeding, a defendant begins at 'arrest'. At the first stage, 58% of cases take Path A (the legal fast track) and 42% take Path B (the standard route). In Path A, the probability of advancing to the next stage is uncertain, estimated between 52% and 72%. In Path B, the advancement probability is 67%. At the final stage, regardless of path, the probability of conviction is between 74% and 85% (uncertain due to evaluator variability). What is the overall probability of conviction?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(conviction) = P(A)\u00d7P(advance|A)\u00d7P(final) + P(B)\u00d7P(advance|B)\u00d7P(final). Range: [0.431, 0.594]. Point estimate: 0.506.",
+    "point_estimate": 0.506,
+    "confidence_interval": [
+      0.431,
+      0.594
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Total probability via law of total probability over the two paths.",
+    "Path A contribution: 0.58 \u00d7 P(advance|A) \u00d7 P(final).",
+    "Path B contribution: 0.42 \u00d7 0.67 \u00d7 P(final).",
+    "At mid-range estimates: 0.58 \u00d7 0.62 \u00d7 0.79 + 0.42 \u00d7 0.67 \u00d7 0.79 = 0.506.",
+    "At lower bounds: 0.58 \u00d7 0.52 \u00d7 0.74 + 0.42 \u00d7 0.67 \u00d7 0.74 = 0.431.",
+    "At upper bounds: 0.58 \u00d7 0.72 \u00d7 0.85 + 0.42 \u00d7 0.67 \u00d7 0.85 = 0.594.",
+    "The two sources of uncertainty (Path A advancement and final stage) compound to create the interval [0.431, 0.594]."
+  ],
+  "common_failure_modes": [
+    "Computing only one path's probability instead of summing over all paths",
+    "Not weighting each path by its probability of being taken",
+    "Using a single rate for uncertain stages without computing the range"
+  ],
+  "metadata": {
+    "author": "generator_conditional_cascade",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

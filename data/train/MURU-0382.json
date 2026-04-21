@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0382",
+  "category": "distribution_estimation",
+  "difficulty": 1,
+  "stem": "A agriculture study measures the yield per hectare (tonnes) for a sample of 30 farms. The sample mean is 471.7 tonnes with a sample standard deviation of 64.1 tonnes. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 471.7 tonnes. 95% CI = [447.8, 495.6]. Point estimate: 471.7 tonnes.",
+    "point_estimate": 471.7,
+    "confidence_interval": [
+      447.8,
+      495.6
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 64.1/\u221a30 = 11.7.",
+    "Degrees of freedom: df = 30 - 1 = 29.",
+    "t-critical value: t(29, 0.025) \u2248 2.045.",
+    "Margin of error: 2.045 \u00d7 11.7 = 23.93.",
+    "95% CI: 471.7 \u00b1 23.93 = [447.8, 495.6]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 64.1/n instead of 64.1/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

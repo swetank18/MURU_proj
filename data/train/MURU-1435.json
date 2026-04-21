@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1435",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A climate monitoring study measures daily temperature readings for 20 samples to determine if the process variability is within \u00b10.5\u00b0C of the calibration standard. The sample standard deviation is 4.37 \u00b0C (sample variance = 19.09). A second measurement method on 20 samples gives a sample variance of 14.22 (SD = 3.77 \u00b0C). The two methods may have different measurement precision.  Estimate the true population standard deviation of daily temperature readings and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Method 1: s=4.37, 95% CI for \u03c3 = [3.32, 6.38]. Method 2: s=3.77, 95% CI for \u03c3 = [2.87, 5.51]. Combined interval: [2.87, 6.38]. Point estimate: 4.08 \u00b0C.",
+    "point_estimate": 4.08,
+    "confidence_interval": [
+      2.87,
+      6.38
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample variance s\u00b2 = 19.09, df = 19.",
+    "\u03c7\u00b2 CI for \u03c3\u00b2: [(n-1)s\u00b2/\u03c7\u00b2_upper, (n-1)s\u00b2/\u03c7\u00b2_lower] = [19\u00d719.09/32.852, 19\u00d719.09/8.907] = [11.04, 40.72].",
+    "CI for \u03c3: [\u221a11.04, \u221a40.72] = [3.32, 6.38].",
+    "Method 2: s\u00b2=14.22, n=20, df=19. CI for \u03c3: [2.87, 5.51].",
+    "Combined interval accounting for method uncertainty: [2.87, 6.38]."
+  ],
+  "common_failure_modes": [
+    "Using z-based CI for the mean instead of \u03c7\u00b2-based CI for the variance",
+    "Reporting the sample SD (4.37) as the population SD without uncertainty",
+    "Not recognizing that confidence intervals for variance are asymmetric",
+    "Averaging the two sample variances without considering they may represent different measurement precisions"
+  ],
+  "metadata": {
+    "author": "generator_variance_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

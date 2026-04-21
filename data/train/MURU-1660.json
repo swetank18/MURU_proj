@@ -1,0 +1,33 @@
+{
+  "id": "MURU-1660",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "In a satellite tracking scenario, a researcher begins with a prior probability of 51% that the debris field will intersect the orbit, based on radar pings. After tracking window 1, contradicting evidence arrives with a likelihood ratio estimated between 0.43 and 0.76. After tracking window 2, supporting evidence arrives with a likelihood ratio estimated between 1.76 and 2.83. What is the posterior probability that the debris field will intersect the orbit after all 2 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 2 sequential Bayesian updates, P(the debris field will intersect the orbit) ranges from 0.441 to 0.691. Point estimate: 0.584.",
+    "point_estimate": 0.584,
+    "confidence_interval": [
+      0.441,
+      0.691
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.51/0.49 = 1.041.",
+    "Update 1: multiply odds by LR \u2208 [0.43, 0.76] (mid: 0.59, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [1.76, 2.83] (mid: 2.29, supporting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.441, 0.691], point estimate: 0.584."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

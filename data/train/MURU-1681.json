@@ -1,0 +1,33 @@
+{
+  "id": "MURU-1681",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "In a A/B testing scenario, a researcher begins with a prior probability of 24% that variant B outperforms A, based on user conversion data. After day of data 1, contradicting evidence arrives with a likelihood ratio estimated between 0.51 and 0.81. After day of data 2, supporting evidence arrives with a likelihood ratio estimated between 2.95 and 3.89. What is the posterior probability that variant B outperforms A after all 2 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 2 sequential Bayesian updates, P(variant B outperforms A) ranges from 0.322 to 0.499. Point estimate: 0.416.",
+    "point_estimate": 0.416,
+    "confidence_interval": [
+      0.322,
+      0.499
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.24/0.76 = 0.316.",
+    "Update 1: multiply odds by LR \u2208 [0.51, 0.81] (mid: 0.66, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [2.95, 3.89] (mid: 3.42, supporting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.322, 0.499], point estimate: 0.416."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

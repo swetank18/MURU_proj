@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1478",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose among 4 drug treatment options. The probability of favorable patient genotype is uncertain, estimated between 31% and 43%. The payoffs (in $K) for each option are: Drug A: $163K in good patient genotype, $24K in bad patient genotype. Drug B: $98K in good patient genotype, $53K in bad patient genotype. Drug C: $112K in good patient genotype, $29K in bad patient genotype. combination therapy: $169K in good patient genotype, $57K in bad patient genotype. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.37: best option is combination therapy with EV=$98.4K. combination therapy is optimal across the entire uncertainty range. EV range of best option: [91.7, 105.2].",
+    "point_estimate": 98.4,
+    "confidence_interval": [
+      91.7,
+      105.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "Drug A: EV = 0.37\u00d7163 + 0.63\u00d724 = $75.4K.",
+    "Drug B: EV = 0.37\u00d798 + 0.63\u00d753 = $69.7K.",
+    "Drug C: EV = 0.37\u00d7112 + 0.63\u00d729 = $59.7K.",
+    "combination therapy: EV = 0.37\u00d7169 + 0.63\u00d757 = $98.4K.",
+    "Best at mid-range: combination therapy ($98.4K).",
+    "Sensitivity: check endpoints P(good)=0.31 and 0.43.",
+    "combination therapy is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

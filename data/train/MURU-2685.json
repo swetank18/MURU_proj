@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2685",
+  "category": "decision_under_uncertainty",
+  "difficulty": 1,
+  "stem": "A decision-maker must choose between two options. Option A (the premium version) yields a guaranteed return of $78K. Option B (the budget version) depends on market demand: with probability 44-60% (uncertain), it yields $157K; otherwise it yields $17K. Compute the expected value of each option and determine which is better. How does the uncertainty in market demand affect the recommendation?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV(A) = $78K (fixed). EV(B) ranges from $78.6K to $101.0K. Point estimate: $89.8K. Option B is preferred at most assumptions (EV_B > EV_A when P(good) > 43.6%).",
+    "point_estimate": 89.8,
+    "confidence_interval": [
+      78.6,
+      101.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV(A) = $78K (guaranteed).",
+    "EV(B) = P(good)\u00d7$157K + (1-P(good))\u00d7$17K.",
+    "At P(good)=0.52: EV(B) = 0.52\u00d7157 + 0.48\u00d717 = $89.8K.",
+    "At P(good)=0.44: EV(B) = $78.6K.",
+    "At P(good)=0.6: EV(B) = $101.0K.",
+    "Breakeven probability: P(good) = (78-17) / (157-17) = 0.436.",
+    "The decision switches at P(good) = 43.6%, which falls outside the uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Picking a single probability and giving a definitive recommendation without sensitivity analysis",
+    "Not computing the breakeven probability where the optimal decision switches",
+    "Ignoring the range of outcomes and focusing only on expected values (risk-neutral assumption)"
+  ],
+  "metadata": {
+    "author": "generator_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

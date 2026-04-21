@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1686",
+  "category": "distribution_estimation",
+  "difficulty": 5,
+  "stem": "A astronomy dataset contains 100 observations of apparent magnitude. The data is believed to come from a mixture of two populations: foreground stars (mean \u2248 59.9 mag, SD \u2248 8.2) and background galaxies (mean \u2248 135.0 mag, SD \u2248 21.2). The proportion of foreground stars in the sample is uncertain, estimated between 41% and 52%. The observed overall mean is 100.5 mag with SD = 40.9. Estimate the true population mean of apparent magnitude, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d759.9 + (1-w)\u00d7135.0. As w varies from 0.41 to 0.52, the mixture mean ranges from 95.9 to 104.2. With sampling variability, CI = [87.9, 112.2]. Point estimate at w=0.46: 100.5 mag.",
+    "point_estimate": 100.5,
+    "confidence_interval": [
+      87.9,
+      112.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.46: \u03bc_mix = 0.46\u00d759.9 + 0.54\u00d7135.0 = 100.5.",
+    "At w=0.41: \u03bc_mix = 104.2 (more of background galaxies).",
+    "At w=0.52: \u03bc_mix = 95.9 (more of foreground stars).",
+    "Mixture SD \u2248 40.9. SE = 40.9/\u221a100 = 4.09.",
+    "Combined interval [87.9, 112.2] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (40.9) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation",
+    "Failing to propagate the uncertainty in mixing weights through to the final interval"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

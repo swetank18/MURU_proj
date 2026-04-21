@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1632",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A factory produces textile rolls using two sources. Loom Section East handles 73% of production with a known defect rate of 2.3%. Loom Section West handles 27% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 7.3% and 12.3%, depending on raw material batch quality. A randomly selected textile roll is found to be defective. What is the probability it came from Loom Section West?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Loom Section West | defective) ranges from 0.54 to 0.664 as Loom Section West's defect rate varies from 7.3% to 12.3%. Point estimate at 9.8%: 0.612.",
+    "point_estimate": 0.612,
+    "confidence_interval": [
+      0.54,
+      0.664
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 9.8%: P(B|def) = 0.098\u00d70.27 / (0.023\u00d70.73 + 0.098\u00d70.27) \u2248 0.612.",
+    "At defect rate 7.3%: P(B|def) \u2248 0.54.",
+    "At defect rate 12.3%: P(B|def) \u2248 0.664.",
+    "The interval [0.54, 0.664] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (73/27 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

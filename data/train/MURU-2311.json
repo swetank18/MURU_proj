@@ -1,0 +1,33 @@
+{
+  "id": "MURU-2311",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "In a environmental monitoring scenario, a researcher begins with a prior probability of 31% that pollution exceeds safe limits, based on sensor readings. After sampling period 1, supporting evidence arrives with a likelihood ratio estimated between 1.88 and 2.93. After sampling period 2, contradicting evidence arrives with a likelihood ratio estimated between 0.29 and 0.5. What is the posterior probability that pollution exceeds safe limits after all 2 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 2 sequential Bayesian updates, P(pollution exceeds safe limits) ranges from 0.197 to 0.397. Point estimate: 0.302.",
+    "point_estimate": 0.302,
+    "confidence_interval": [
+      0.197,
+      0.397
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.31/0.69 = 0.449.",
+    "Update 1: multiply odds by LR \u2208 [1.88, 2.93] (mid: 2.41, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.29, 0.5] (mid: 0.4, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.197, 0.397], point estimate: 0.302."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

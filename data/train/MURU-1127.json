@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1127",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A hospital uses a TSH blood test to screen for hypothyroidism. The test has a sensitivity of 90% and a specificity of 92%. The prevalence of hypothyroidism in the patient population is estimated to be between 2.0% and 4.8%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has hypothyroidism? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(hypothyroidism | positive test) ranges from 0.187 to 0.362 as prevalence varies from 2.0% to 4.8%. Point estimate at 3.4% prevalence: 0.284.",
+    "point_estimate": 0.284,
+    "confidence_interval": [
+      0.187,
+      0.362
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.08.",
+    "At prevalence 3.4%: P(D|+) = 0.9\u00d70.034 / (0.9\u00d70.034 + 0.08\u00d70.966) \u2248 0.284.",
+    "At prevalence 2.0%: P(D|+) = 0.9\u00d70.02 / (0.9\u00d70.02 + 0.08\u00d70.98) \u2248 0.187.",
+    "At prevalence 4.8%: P(D|+) = 0.9\u00d70.048 / (0.9\u00d70.048 + 0.08\u00d70.952) \u2248 0.362.",
+    "The confidence interval [0.187, 0.362] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (90%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

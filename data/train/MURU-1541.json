@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1541",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose among 4 marketing channel options. The probability of favorable target demographic response is uncertain, estimated between 33% and 44%. The payoffs (in $K) for each option are: social media: $264K in good target demographic response, $144K in bad target demographic response. TV ads: $233K in good target demographic response, $55K in bad target demographic response. email: $75K in good target demographic response, $11K in bad target demographic response. influencer: $274K in good target demographic response, $131K in bad target demographic response. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.39: best option is social media with EV=$190.8K. social media is optimal across the entire uncertainty range. EV range of best option: [183.6, 196.8].",
+    "point_estimate": 190.8,
+    "confidence_interval": [
+      183.6,
+      196.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "social media: EV = 0.39\u00d7264 + 0.61\u00d7144 = $190.8K.",
+    "TV ads: EV = 0.39\u00d7233 + 0.61\u00d755 = $124.4K.",
+    "email: EV = 0.39\u00d775 + 0.61\u00d711 = $36.0K.",
+    "influencer: EV = 0.39\u00d7274 + 0.61\u00d7131 = $186.8K.",
+    "Best at mid-range: social media ($190.8K).",
+    "Sensitivity: check endpoints P(good)=0.33 and 0.44.",
+    "social media is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

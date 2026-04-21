@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2885",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose among 3 crop selection options. The probability of favorable weather patterns is uncertain, estimated between 42% and 55%. The payoffs (in $K) for each option are: rice: $199K in good weather patterns, $64K in bad weather patterns. wheat: $209K in good weather patterns, $21K in bad weather patterns. soybeans: $165K in good weather patterns, $35K in bad weather patterns. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.48: best option is rice with EV=$128.8K. rice is optimal across the entire uncertainty range. EV range of best option: [120.7, 138.2].",
+    "point_estimate": 128.8,
+    "confidence_interval": [
+      120.7,
+      138.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "rice: EV = 0.48\u00d7199 + 0.52\u00d764 = $128.8K.",
+    "wheat: EV = 0.48\u00d7209 + 0.52\u00d721 = $111.2K.",
+    "soybeans: EV = 0.48\u00d7165 + 0.52\u00d735 = $97.4K.",
+    "Best at mid-range: rice ($128.8K).",
+    "Sensitivity: check endpoints P(good)=0.42 and 0.55.",
+    "rice is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1135",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "In a financial forecasting scenario, a researcher begins with a prior probability of 48% that the company will beat annual targets, based on quarterly earnings. After quarter 1, supporting evidence arrives with a likelihood ratio estimated between 1.51 and 2.46. After quarter 2, contradicting evidence arrives with a likelihood ratio estimated between 0.38 and 0.67. After quarter 3, contradicting evidence arrives with a likelihood ratio estimated between 0.46 and 0.73. What is the posterior probability that the company will beat annual targets after all 3 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 3 sequential Bayesian updates, P(the company will beat annual targets) ranges from 0.196 to 0.526. Point estimate: 0.364.",
+    "point_estimate": 0.364,
+    "confidence_interval": [
+      0.196,
+      0.526
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.48/0.52 = 0.923.",
+    "Update 1: multiply odds by LR \u2208 [1.51, 2.46] (mid: 1.98, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.38, 0.67] (mid: 0.53, contradicting evidence).",
+    "Update 3: multiply odds by LR \u2208 [0.46, 0.73] (mid: 0.59, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.196, 0.526], point estimate: 0.364."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

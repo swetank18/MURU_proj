@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2686",
+  "category": "distribution_estimation",
+  "difficulty": 1,
+  "stem": "A ISP analysis study measures the download speed (Mbps) for a sample of 50 subscribers. The sample mean is 243.7 Mbps with a sample standard deviation of 34.2 Mbps. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 243.7 Mbps. 95% CI = [234.0, 253.4]. Point estimate: 243.7 Mbps.",
+    "point_estimate": 243.7,
+    "confidence_interval": [
+      234.0,
+      253.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 34.2/\u221a50 = 4.84.",
+    "Degrees of freedom: df = 50 - 1 = 49.",
+    "t-critical value: t(49, 0.025) \u2248 2.01.",
+    "Margin of error: 2.01 \u00d7 4.84 = 9.73.",
+    "95% CI: 243.7 \u00b1 9.73 = [234.0, 253.4]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 34.2/n instead of 34.2/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

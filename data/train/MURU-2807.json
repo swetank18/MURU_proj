@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2807",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A hospital uses a blood screening test to screen for a rare genetic condition. The test has a sensitivity of 90% and a specificity of 93%. The prevalence of a rare genetic condition in the patient population is estimated to be between 0.5% and 1.5%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has a rare genetic condition? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(a rare genetic condition | positive test) ranges from 0.0607 to 0.164 as prevalence varies from 0.5% to 1.5%. Point estimate at 1.0% prevalence: 0.115.",
+    "point_estimate": 0.115,
+    "confidence_interval": [
+      0.0607,
+      0.164
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.07.",
+    "At prevalence 1.0%: P(D|+) = 0.9\u00d70.01 / (0.9\u00d70.01 + 0.07\u00d70.99) \u2248 0.115.",
+    "At prevalence 0.5%: P(D|+) = 0.9\u00d70.005 / (0.9\u00d70.005 + 0.07\u00d70.995) \u2248 0.0607.",
+    "At prevalence 1.5%: P(D|+) = 0.9\u00d70.015 / (0.9\u00d70.015 + 0.07\u00d70.985) \u2248 0.164.",
+    "The confidence interval [0.0607, 0.164] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (90%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

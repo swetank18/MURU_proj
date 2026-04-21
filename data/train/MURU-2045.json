@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2045",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose among 4 energy source options. The probability of favorable regional climate data is uncertain, estimated between 42% and 60%. The payoffs (in $K) for each option are: solar: $121K in good regional climate data, $16K in bad regional climate data. wind: $217K in good regional climate data, $66K in bad regional climate data. natural gas: $135K in good regional climate data, $14K in bad regional climate data. geothermal: $119K in good regional climate data, $23K in bad regional climate data. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.51: best option is wind with EV=$143.0K. wind is optimal across the entire uncertainty range. EV range of best option: [129.4, 156.6].",
+    "point_estimate": 143.0,
+    "confidence_interval": [
+      129.4,
+      156.6
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "solar: EV = 0.51\u00d7121 + 0.49\u00d716 = $69.5K.",
+    "wind: EV = 0.51\u00d7217 + 0.49\u00d766 = $143.0K.",
+    "natural gas: EV = 0.51\u00d7135 + 0.49\u00d714 = $75.7K.",
+    "geothermal: EV = 0.51\u00d7119 + 0.49\u00d723 = $72.0K.",
+    "Best at mid-range: wind ($143.0K).",
+    "Sensitivity: check endpoints P(good)=0.42 and 0.6.",
+    "wind is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

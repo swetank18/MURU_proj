@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1546",
+  "category": "adversarial_ambiguity",
+  "difficulty": 4,
+  "stem": "In project estimation, you are asked to estimate the project completion time. You are first told that a sales team's promise to the client puts the value at 77.0 months. You then collect your own data: historical data on similar projects based on 20 observations give a mean of 48.0 months with SD = 8.0 months. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (77.0 months) likely overestimates the true value. Data-based estimate: 48.0 months, CI = [44.5, 51.5]. If the anchor receives 0-25% weight, the estimate ranges from 52.1 to 55.2. Point estimate: 48.0 months (data-only, unanchored).",
+    "point_estimate": 48.0,
+    "confidence_interval": [
+      44.5,
+      55.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 77.0 months (from a sales team's promise to the client \u2014 potentially biased).",
+    "Data: mean = 48.0, SD = 8.0, n = 20. SE = 1.8.",
+    "Data-based 95% CI: [44.5, 51.5].",
+    "The anchor overestimates relative to the data by 29 months (60%).",
+    "If we assign the anchor weight w \u2208 [0, 0.25]: estimate = w\u00d777.0 + (1-w)\u00d748.0.",
+    "At w=0.2: estimate = 53.8.",
+    "Best practice: the data-based estimate (48.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (77.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (77.0) and data (48.0) are substantially different, suggesting bias in the anchor",
+    "Not computing the data-based confidence interval and relying on intuitive adjustment from the anchor",
+    "Failing to consider the source credibility: data from systematic measurement should outweigh a single expert estimate or listing price"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

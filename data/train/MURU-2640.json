@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2640",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A factory produces microchips using two sources. Fabrication Line A handles 50% of production with a known defect rate of 4.2%. Fabrication Line B handles 50% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 6.9% and 11.0%, depending on raw material batch quality. A randomly selected microchip is found to be defective. What is the probability it came from Fabrication Line B?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Fabrication Line B | defective) ranges from 0.622 to 0.724 as Fabrication Line B's defect rate varies from 6.9% to 11.0%. Point estimate at 8.9%: 0.679.",
+    "point_estimate": 0.679,
+    "confidence_interval": [
+      0.622,
+      0.724
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 8.9%: P(B|def) = 0.089\u00d70.5 / (0.042\u00d70.5 + 0.089\u00d70.5) \u2248 0.679.",
+    "At defect rate 6.9%: P(B|def) \u2248 0.622.",
+    "At defect rate 11.0%: P(B|def) \u2248 0.724.",
+    "The interval [0.622, 0.724] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (50/50 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

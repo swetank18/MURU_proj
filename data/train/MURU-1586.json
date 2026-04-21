@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1586",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In a legal outcomes study comparing Judge A vs. Judge B: Overall, Treatment Y has a higher acquittal rate (67.5% vs 55.0%). However, when stratified by case severity: In misdemeanors (n_X=20, n_Y=100): Treatment X achieves 80% vs Treatment Y's 73%. In felonies (n_X=80, n_Y=20): Treatment X achieves 49% vs Treatment Y's 40%. The true population proportion of misdemeanors is uncertain, estimated between 43% and 61%. Which treatment is actually better, and by how much?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to felonies (harder cases). Adjusted difference (X - Y): [0.078, 0.081], point estimate: 0.079. Treatment X is genuinely better by 7.9 percentage points.",
+    "point_estimate": 0.079,
+    "confidence_interval": [
+      0.078,
+      0.081
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=55.0%, Y=67.5% (Y appears better).",
+    "Stratified: In misdemeanors: X=80% > Y=73%. In felonies: X=49% > Y=40%.",
+    "X is better in BOTH subgroups \u2014 this is Simpson's Paradox.",
+    "The paradox arises because Judge A is applied more to felonies (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A\u00d70.8 + (1-w_A)\u00d70.49.",
+    "Population-adjusted rate for Y: w_A\u00d70.73 + (1-w_A)\u00d70.4.",
+    "Difference X-Y at w_A=0.52: 0.079. Range: [0.078, 0.081]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

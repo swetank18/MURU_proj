@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2694",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A income study dataset contains 150 observations of monthly income. The data is believed to come from a mixture of two populations: part-time workers (mean \u2248 96.7 $, SD \u2248 23.0) and full-time workers (mean \u2248 227.4 $, SD \u2248 23.1). The proportion of part-time workers in the sample is uncertain, estimated between 33% and 48%. The observed overall mean is 173.8 $ with SD = 68.3. Estimate the true population mean of monthly income, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d796.7 + (1-w)\u00d7227.4. As w varies from 0.33 to 0.48, the mixture mean ranges from 164.7 to 184.3. With sampling variability, CI = [153.8, 195.2]. Point estimate at w=0.41: 173.8 $.",
+    "point_estimate": 173.8,
+    "confidence_interval": [
+      153.8,
+      195.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.41: \u03bc_mix = 0.41\u00d796.7 + 0.59\u00d7227.4 = 173.8.",
+    "At w=0.33: \u03bc_mix = 184.3 (more of full-time workers).",
+    "At w=0.48: \u03bc_mix = 164.7 (more of part-time workers).",
+    "Mixture SD \u2248 68.3. SE = 68.3/\u221a150 = 5.58.",
+    "Combined interval [153.8, 195.2] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (68.3) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

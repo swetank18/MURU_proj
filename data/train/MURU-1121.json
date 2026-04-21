@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1121",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose among 3 investment portfolio options. The probability of favorable market conditions is uncertain, estimated between 30% and 45%. The payoffs (in $K) for each option are: bonds: $269K in good market conditions, $19K in bad market conditions. index fund: $174K in good market conditions, $52K in bad market conditions. tech stocks: $138K in good market conditions, $17K in bad market conditions. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.38: best option is bonds with EV=$114.0K. bonds is optimal across the entire uncertainty range. EV range of best option: [94.0, 131.5].",
+    "point_estimate": 114.0,
+    "confidence_interval": [
+      94.0,
+      131.5
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "bonds: EV = 0.38\u00d7269 + 0.62\u00d719 = $114.0K.",
+    "index fund: EV = 0.38\u00d7174 + 0.62\u00d752 = $98.4K.",
+    "tech stocks: EV = 0.38\u00d7138 + 0.62\u00d717 = $63.0K.",
+    "Best at mid-range: bonds ($114.0K).",
+    "Sensitivity: check endpoints P(good)=0.3 and 0.45.",
+    "bonds is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1765",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "In a clinical trial scenario, a researcher begins with a prior probability of 35% that the drug is effective, based on patient outcomes. After batch of patients 1, contradicting evidence arrives with a likelihood ratio estimated between 0.43 and 0.68. After batch of patients 2, supporting evidence arrives with a likelihood ratio estimated between 2.45 and 3.62. After batch of patients 3, supporting evidence arrives with a likelihood ratio estimated between 2.77 and 4.8. After batch of patients 4, supporting evidence arrives with a likelihood ratio estimated between 2.22 and 3.75. After batch of patients 5, contradicting evidence arrives with a likelihood ratio estimated between 0.47 and 0.77. What is the posterior probability that the drug is effective after all 5 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 5 sequential Bayesian updates, P(the drug is effective) ranges from 0.621 to 0.948. Point estimate: 0.866.",
+    "point_estimate": 0.866,
+    "confidence_interval": [
+      0.621,
+      0.948
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.35/0.65 = 0.538.",
+    "Update 1: multiply odds by LR \u2208 [0.43, 0.68] (mid: 0.56, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [2.45, 3.62] (mid: 3.04, supporting evidence).",
+    "Update 3: multiply odds by LR \u2208 [2.77, 4.8] (mid: 3.79, supporting evidence).",
+    "Update 4: multiply odds by LR \u2208 [2.22, 3.75] (mid: 2.99, supporting evidence).",
+    "Update 5: multiply odds by LR \u2208 [0.47, 0.77] (mid: 0.62, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.621, 0.948], point estimate: 0.866."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates",
+    "Failing to account for compounding uncertainty across multiple uncertain LRs"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

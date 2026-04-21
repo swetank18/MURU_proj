@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2652",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A customer analytics dataset contains 100 observations of purchase amount. The data is believed to come from a mixture of two populations: casual buyers (mean \u2248 93.6 $, SD \u2248 11.9) and power users (mean \u2248 213.4 $, SD \u2248 26.1). The proportion of casual buyers in the sample is uncertain, estimated between 47% and 65%. The observed overall mean is 146.3 $ with SD = 62.6. Estimate the true population mean of purchase amount, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d793.6 + (1-w)\u00d7213.4. As w varies from 0.47 to 0.65, the mixture mean ranges from 135.5 to 157.1. With sampling variability, CI = [123.2, 169.4]. Point estimate at w=0.56: 146.3 $.",
+    "point_estimate": 146.3,
+    "confidence_interval": [
+      123.2,
+      169.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.56: \u03bc_mix = 0.56\u00d793.6 + 0.44\u00d7213.4 = 146.3.",
+    "At w=0.47: \u03bc_mix = 157.1 (more of power users).",
+    "At w=0.65: \u03bc_mix = 135.5 (more of casual buyers).",
+    "Mixture SD \u2248 62.6. SE = 62.6/\u221a100 = 6.26.",
+    "Combined interval [123.2, 169.4] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (62.6) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

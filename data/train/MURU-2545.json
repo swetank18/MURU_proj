@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2545",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "In a supply chain, a shipment begins at 'order placed'. At the first stage, 39% of cases take Path A (the logistics fast track) and 61% take Path B (the standard route). In Path A, the probability of advancing to the next stage is uncertain, estimated between 58% and 70%. In Path B, the advancement probability is 83%. At the final stage, regardless of path, the probability of on-time delivery is between 74% and 86% (uncertain due to evaluator variability). What is the overall probability of on-time delivery?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(on-time delivery) = P(A)\u00d7P(advance|A)\u00d7P(final) + P(B)\u00d7P(advance|B)\u00d7P(final). Range: [0.542, 0.67]. Point estimate: 0.605.",
+    "point_estimate": 0.605,
+    "confidence_interval": [
+      0.542,
+      0.67
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Total probability via law of total probability over the two paths.",
+    "Path A contribution: 0.39 \u00d7 P(advance|A) \u00d7 P(final).",
+    "Path B contribution: 0.61 \u00d7 0.83 \u00d7 P(final).",
+    "At mid-range estimates: 0.39 \u00d7 0.64 \u00d7 0.8 + 0.61 \u00d7 0.83 \u00d7 0.8 = 0.605.",
+    "At lower bounds: 0.39 \u00d7 0.58 \u00d7 0.74 + 0.61 \u00d7 0.83 \u00d7 0.74 = 0.542.",
+    "At upper bounds: 0.39 \u00d7 0.7 \u00d7 0.86 + 0.61 \u00d7 0.83 \u00d7 0.86 = 0.67.",
+    "The two sources of uncertainty (Path A advancement and final stage) compound to create the interval [0.542, 0.67]."
+  ],
+  "common_failure_modes": [
+    "Computing only one path's probability instead of summing over all paths",
+    "Not weighting each path by its probability of being taken",
+    "Using a single rate for uncertain stages without computing the range",
+    "Assuming the paths are independent when they share a common final stage uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_conditional_cascade",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

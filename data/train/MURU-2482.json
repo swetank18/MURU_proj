@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2482",
+  "category": "conditional_probability_chains",
+  "difficulty": 5,
+  "stem": "In a talent pipeline, a candidate begins at 'application'. At the first stage, 43% of cases take Path A (the assessment fast track) and 57% take Path B (the standard route). In Path A, the probability of advancing to the next stage is uncertain, estimated between 61% and 72%. In Path B, the advancement probability is 73%. At the final stage, regardless of path, the probability of successful hire is between 67% and 79% (uncertain due to evaluator variability). What is the overall probability of successful hire?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(successful hire) = P(A)\u00d7P(advance|A)\u00d7P(final) + P(B)\u00d7P(advance|B)\u00d7P(final). Range: [0.455, 0.573]. Point estimate: 0.514.",
+    "point_estimate": 0.514,
+    "confidence_interval": [
+      0.455,
+      0.573
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Total probability via law of total probability over the two paths.",
+    "Path A contribution: 0.43 \u00d7 P(advance|A) \u00d7 P(final).",
+    "Path B contribution: 0.57 \u00d7 0.73 \u00d7 P(final).",
+    "At mid-range estimates: 0.43 \u00d7 0.67 \u00d7 0.73 + 0.57 \u00d7 0.73 \u00d7 0.73 = 0.514.",
+    "At lower bounds: 0.43 \u00d7 0.61 \u00d7 0.67 + 0.57 \u00d7 0.73 \u00d7 0.67 = 0.455.",
+    "At upper bounds: 0.43 \u00d7 0.72 \u00d7 0.79 + 0.57 \u00d7 0.73 \u00d7 0.79 = 0.573.",
+    "The two sources of uncertainty (Path A advancement and final stage) compound to create the interval [0.455, 0.573]."
+  ],
+  "common_failure_modes": [
+    "Computing only one path's probability instead of summing over all paths",
+    "Not weighting each path by its probability of being taken",
+    "Using a single rate for uncertain stages without computing the range",
+    "Assuming the paths are independent when they share a common final stage uncertainty",
+    "Not recognizing the multiplicative uncertainty compounding across multiple levels"
+  ],
+  "metadata": {
+    "author": "generator_conditional_cascade",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

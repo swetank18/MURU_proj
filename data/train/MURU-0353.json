@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0353",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A hospital uses a CT scan screening to screen for early-stage lung cancer. The test has a sensitivity of 93% and a specificity of 84%. The prevalence of early-stage lung cancer in the patient population is estimated to be between 1.4% and 3.8%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has early-stage lung cancer? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(early-stage lung cancer | positive test) ranges from 0.0762 to 0.187 as prevalence varies from 1.4% to 3.8%. Point estimate at 2.6% prevalence: 0.134.",
+    "point_estimate": 0.134,
+    "confidence_interval": [
+      0.0762,
+      0.187
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.16.",
+    "At prevalence 2.6%: P(D|+) = 0.93\u00d70.026 / (0.93\u00d70.026 + 0.16\u00d70.974) \u2248 0.134.",
+    "At prevalence 1.4%: P(D|+) = 0.93\u00d70.014 / (0.93\u00d70.014 + 0.16\u00d70.986) \u2248 0.0762.",
+    "At prevalence 3.8%: P(D|+) = 0.93\u00d70.038 / (0.93\u00d70.038 + 0.16\u00d70.962) \u2248 0.187.",
+    "The confidence interval [0.0762, 0.187] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (93%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

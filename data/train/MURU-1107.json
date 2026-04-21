@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1107",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A factory produces PCB boards using two sources. SMT Line 1 handles 79% of production with a known defect rate of 2.8%. SMT Line 2 handles 21% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 5.2% and 11.0%, depending on raw material batch quality. A randomly selected PCB board is found to be defective. What is the probability it came from SMT Line 2?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(SMT Line 2 | defective) ranges from 0.331 to 0.511 as SMT Line 2's defect rate varies from 5.2% to 11.0%. Point estimate at 8.1%: 0.435.",
+    "point_estimate": 0.435,
+    "confidence_interval": [
+      0.331,
+      0.511
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 8.1%: P(B|def) = 0.081\u00d70.21 / (0.028\u00d70.79 + 0.081\u00d70.21) \u2248 0.435.",
+    "At defect rate 5.2%: P(B|def) \u2248 0.331.",
+    "At defect rate 11.0%: P(B|def) \u2248 0.511.",
+    "The interval [0.331, 0.511] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (79/21 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

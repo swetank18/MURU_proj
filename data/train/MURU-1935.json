@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1935",
+  "category": "conditional_probability_chains",
+  "difficulty": 3,
+  "stem": "A telecommunications communication network uses 3 parallel relays for redundancy. The message delivered requires at least one relay to function. relay 1 has a reliability of 78%. relay 2 has a reliability of 86%. relay 3 has a reliability between 73% and 84% (uncertain due to limited operational data). What is the overall probability that the message delivered?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(message delivered) ranges from 0.9917 to 0.9951. Point estimate: 0.9932.",
+    "point_estimate": 0.9932,
+    "confidence_interval": [
+      0.9917,
+      0.9951
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 3 relays fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2) \u00d7 (1-R_3).",
+    "At mid-range: P(all fail) = 0.22 \u00d7 0.14 \u00d7 0.22 = 0.0068. P(works) = 0.9932.",
+    "At lower bound: P(all fail) = 0.22 \u00d7 0.14 \u00d7 0.27 = 0.0083. P(works) = 0.9917.",
+    "At upper bound: P(all fail) = 0.22 \u00d7 0.14 \u00d7 0.16 = 0.0049. P(works) = 0.9951."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

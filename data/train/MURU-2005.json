@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2005",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "An insurer is pricing a agricultural insurance policy for agricultural land in a fire-prone region. Historical data suggests the annual frequency of wildfire events follows a Poisson distribution with rate \u03bb estimated between 1.61 and 2.83 events/year. Each event causes a loss estimated between $151K and $242K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 28% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $243.1K to $684.9K. Point estimate: $435.1K. With 28% loading: premium range [$311.2K, $876.7K]. Point estimate premium: $556.9K.",
+    "point_estimate": 556.9,
+    "confidence_interval": [
+      311.2,
+      876.7
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=2.22, severity=$196K: EL = 2.22\u00d7196 = $435.1K.",
+    "At \u03bb=1.61, severity=$151K: EL = $243.1K (lower bound).",
+    "At \u03bb=2.83, severity=$242K: EL = $684.9K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.28.",
+    "Premium range: [$311.2K, $876.7K]. Mid: $556.9K."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

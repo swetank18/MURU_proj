@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1812",
+  "category": "distribution_estimation",
+  "difficulty": 5,
+  "stem": "A customer analytics dataset contains 100 observations of purchase amount. The data is believed to come from a mixture of two populations: casual buyers (mean \u2248 26.9 $, SD \u2248 4.3) and power users (mean \u2248 49.3 $, SD \u2248 11.6). The proportion of casual buyers in the sample is uncertain, estimated between 33% and 57%. The observed overall mean is 39.2 $ with SD = 14.4. Estimate the true population mean of purchase amount, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d726.9 + (1-w)\u00d749.3. As w varies from 0.33 to 0.57, the mixture mean ranges from 36.5 to 41.9. With sampling variability, CI = [33.7, 44.7]. Point estimate at w=0.45: 39.2 $.",
+    "point_estimate": 39.2,
+    "confidence_interval": [
+      33.7,
+      44.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.45: \u03bc_mix = 0.45\u00d726.9 + 0.55\u00d749.3 = 39.2.",
+    "At w=0.33: \u03bc_mix = 41.9 (more of power users).",
+    "At w=0.57: \u03bc_mix = 36.5 (more of casual buyers).",
+    "Mixture SD \u2248 14.4. SE = 14.4/\u221a100 = 1.44.",
+    "Combined interval [33.7, 44.7] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (14.4) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation",
+    "Failing to propagate the uncertainty in mixing weights through to the final interval"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

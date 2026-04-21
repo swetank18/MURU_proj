@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2302",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In salary negotiation, you are asked to estimate the fair compensation. You are first told that an initial offer from the employer puts the value at 362.0 $K/year. You then collect your own data: industry salary surveys and cost-of-living data based on 25 observations give a mean of 249.0 $K/year with SD = 59.0 $K/year. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (362.0 $K/year) likely overestimates the true value. Data-based estimate: 249.0 $K/year, CI = [225.9, 272.1]. If the anchor receives 0-34% weight, the estimate ranges from 265.9 to 287.4. Point estimate: 249.0 $K/year (data-only, unanchored).",
+    "point_estimate": 249.0,
+    "confidence_interval": [
+      225.9,
+      287.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 362.0 $K/year (from an initial offer from the employer \u2014 potentially biased).",
+    "Data: mean = 249.0, SD = 59.0, n = 25. SE = 11.8.",
+    "Data-based 95% CI: [225.9, 272.1].",
+    "The anchor overestimates relative to the data by 113 $K/year (45%).",
+    "If we assign the anchor weight w \u2208 [0, 0.34]: estimate = w\u00d7362.0 + (1-w)\u00d7249.0.",
+    "At w=0.24: estimate = 276.1.",
+    "Best practice: the data-based estimate (249.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (362.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (362.0) and data (249.0) are substantially different, suggesting bias in the anchor",
+    "Not computing the data-based confidence interval and relying on intuitive adjustment from the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

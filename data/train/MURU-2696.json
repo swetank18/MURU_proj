@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2696",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "A decision-maker must choose among 4 crop selection options. The probability of favorable weather patterns is uncertain, estimated between 33% and 48%. The payoffs (in $K) for each option are: rice: $130K in good weather patterns, $35K in bad weather patterns. wheat: $137K in good weather patterns, $32K in bad weather patterns. soybeans: $273K in good weather patterns, $65K in bad weather patterns. corn: $210K in good weather patterns, $113K in bad weather patterns. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.41: best option is corn with EV=$152.8K. The optimal choice switches: corn at P(good)=0.33, soybeans at P(good)=0.48. EV range of best option: [145.0, 164.8].",
+    "point_estimate": 152.8,
+    "confidence_interval": [
+      145.0,
+      164.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "rice: EV = 0.41\u00d7130 + 0.59\u00d735 = $74.0K.",
+    "wheat: EV = 0.41\u00d7137 + 0.59\u00d732 = $75.0K.",
+    "soybeans: EV = 0.41\u00d7273 + 0.59\u00d765 = $150.3K.",
+    "corn: EV = 0.41\u00d7210 + 0.59\u00d7113 = $152.8K.",
+    "Best at mid-range: corn ($152.8K).",
+    "Sensitivity: check endpoints P(good)=0.33 and 0.48.",
+    "The optimal choice switches: corn at P(good)=0.33, soybeans at P(good)=0.48."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value",
+    "Not performing minimax regret analysis to find the most robust choice"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

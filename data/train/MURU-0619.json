@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0619",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A application enters the immigration pipeline. The probability of passing document verification is between 69% and 86% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing background check is 84%. If the previous stage is passed, the probability of passing interview is 75%. If the previous stage is passed, the probability of passing visa issuance is 81%. What is the overall probability that the application is approved?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(approved) ranges from 0.352 to 0.439 as the document verification pass rate varies from 69% to 86%. Point estimate: 0.393.",
+    "point_estimate": 0.393,
+    "confidence_interval": [
+      0.352,
+      0.439
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The application must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.77 \u00d7 0.84 \u00d7 0.75 \u00d7 0.81 = 0.393.",
+    "At lower bound: P(success) = 0.69 \u00d7 0.84 \u00d7 0.75 \u00d7 0.81 = 0.352.",
+    "At upper bound: P(success) = 0.86 \u00d7 0.84 \u00d7 0.75 \u00d7 0.81 = 0.439.",
+    "The uncertainty in the document verification stage creates a 8.7 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the document verification rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

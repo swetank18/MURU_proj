@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0563",
+  "category": "conditional_probability_chains",
+  "difficulty": 3,
+  "stem": "A proposal enters the grant application pipeline. The probability of passing departmental review is 93%. If the previous stage is passed, the probability of passing external peer review is between 78% and 96% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing panel discussion is 81%. If the previous stage is passed, the probability of passing funding decision is 89%. What is the overall probability that the proposal is funded?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(funded) ranges from 0.523 to 0.644 as the external peer review pass rate varies from 78% to 96%. Point estimate: 0.583.",
+    "point_estimate": 0.583,
+    "confidence_interval": [
+      0.523,
+      0.644
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The proposal must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.93 \u00d7 0.87 \u00d7 0.81 \u00d7 0.89 = 0.583.",
+    "At lower bound: P(success) = 0.93 \u00d7 0.78 \u00d7 0.81 \u00d7 0.89 = 0.523.",
+    "At upper bound: P(success) = 0.93 \u00d7 0.96 \u00d7 0.81 \u00d7 0.89 = 0.644.",
+    "The uncertainty in the external peer review stage creates a 12.1 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the external peer review rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

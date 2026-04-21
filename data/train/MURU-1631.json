@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1631",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses an anti-HCV screening test to screen for hepatitis C. The test has a sensitivity of 79% and a specificity of 94%. The prevalence of hepatitis C in the patient population is estimated to be between 9.9% and 29.3%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has hepatitis C? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(hepatitis C | positive test) ranges from 0.591 to 0.845 as prevalence varies from 9.9% to 29.3%. Point estimate at 19.6% prevalence: 0.762.",
+    "point_estimate": 0.762,
+    "confidence_interval": [
+      0.591,
+      0.845
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.06.",
+    "At prevalence 19.6%: P(D|+) = 0.79\u00d70.196 / (0.79\u00d70.196 + 0.06\u00d70.804) \u2248 0.762.",
+    "At prevalence 9.9%: P(D|+) = 0.79\u00d70.099 / (0.79\u00d70.099 + 0.06\u00d70.901) \u2248 0.591.",
+    "At prevalence 29.3%: P(D|+) = 0.79\u00d70.293 / (0.79\u00d70.293 + 0.06\u00d70.707) \u2248 0.845.",
+    "The confidence interval [0.591, 0.845] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (79%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

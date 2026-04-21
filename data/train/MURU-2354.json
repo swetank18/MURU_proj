@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2354",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A manufacturing study measures defect rate across 4 factorys, each containing multiple production lines. factory A has 10 observations with mean 69.7 % (within-factory SD = 7.5). factory B has 8 observations with mean 56.7 % (within-factory SD = 8.9). factory C has 10 observations with mean 66.7 % (within-factory SD = 8.0). factory D has 5 observations with mean 60.1 % (within-factory SD = 7.8). The between-factory standard deviation is uncertain, estimated between 6.8 and 17.1 %. Using a hierarchical Bayesian model, estimate the true defect rate for factory D, accounting for shrinkage toward the grand mean and the uncertainty in the between-factory variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for factory D: 60.5 % (shrunk from raw 60.1). Range [60.3, 61.0] as between-factory SD varies from 6.8 to 17.1. Pooled mean: 64.2.",
+    "point_estimate": 60.5,
+    "confidence_interval": [
+      60.3,
+      61.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 64.2 % (weighted average of 4 factory means).",
+    "Shrinkage factor for factory D: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/5). At \u03c3_between=11.4: B = 0.914.",
+    "Shrunk estimate = B \u00d7 60.1 + (1-B) \u00d7 64.2 = 60.5.",
+    "At \u03c3_between=6.8: more shrinkage \u2192 estimate = 61.0.",
+    "At \u03c3_between=17.1: less shrinkage \u2192 estimate = 60.3.",
+    "Interval [60.3, 61.0] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (60.1) without shrinkage",
+    "Using only the grand mean (64.2) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

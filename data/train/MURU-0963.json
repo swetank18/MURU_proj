@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0963",
+  "category": "conditional_probability_chains",
+  "difficulty": 1,
+  "stem": "A application enters the immigration pipeline. The probability of passing document verification is 82%. If the previous stage is passed, the probability of passing background check is between 58% and 76% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing interview is 95%. What is the overall probability that the application is approved?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(approved) ranges from 0.452 to 0.592 as the background check pass rate varies from 58% to 76%. Point estimate: 0.522.",
+    "point_estimate": 0.522,
+    "confidence_interval": [
+      0.452,
+      0.592
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The application must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.82 \u00d7 0.67 \u00d7 0.95 = 0.522.",
+    "At lower bound: P(success) = 0.82 \u00d7 0.58 \u00d7 0.95 = 0.452.",
+    "At upper bound: P(success) = 0.82 \u00d7 0.76 \u00d7 0.95 = 0.592.",
+    "The uncertainty in the background check stage creates a 14.0 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the background check rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

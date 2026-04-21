@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1847",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "An engineer takes 20 measurements of fuel level using a fuel gauge. The measurements have a mean of 58.6 % and a standard deviation of 3.8 %. However, calibration tests reveal that a fuel gauge systematically underestimates the true value by between 1.4% and 5.2%. Estimate the true fuel level and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 58.6 %. After correcting for the 3.3% bias: \u2248 60.6 %. Full interval accounting for bias uncertainty (1.4%-5.2%) and sampling variability: [57.7, 63.5]. Point estimate: 60.6 %.",
+    "point_estimate": 60.6,
+    "confidence_interval": [
+      57.7,
+      63.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 58.6 % (n=20, s=3.8).",
+    "Sampling SE: 3.8/\u221a20 = 0.85. Sampling margin \u2248 \u00b11.7.",
+    "Bias correction: instrument underestimates by 1.4%-5.2%.",
+    "At 3.3% correction: true value \u2248 60.6 %.",
+    "At 1.4% correction: true value \u2248 59.4 %.",
+    "At 5.2% correction: true value \u2248 61.8 %.",
+    "Combined interval (bias range + sampling): [57.7, 63.5]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

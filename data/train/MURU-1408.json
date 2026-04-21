@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1408",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "In a seismology scenario, a researcher begins with a prior probability of 47% that a major earthquake is imminent, based on tremor measurements. After monitoring period 1, supporting evidence arrives with a likelihood ratio estimated between 1.3 and 1.94. After monitoring period 2, supporting evidence arrives with a likelihood ratio estimated between 2.13 and 3.63. After monitoring period 3, supporting evidence arrives with a likelihood ratio estimated between 2.53 and 4.32. After monitoring period 4, contradicting evidence arrives with a likelihood ratio estimated between 0.49 and 0.84. After monitoring period 5, contradicting evidence arrives with a likelihood ratio estimated between 0.2 and 0.34. What is the posterior probability that a major earthquake is imminent after all 5 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 5 sequential Bayesian updates, P(a major earthquake is imminent) ranges from 0.378 to 0.885. Point estimate: 0.719.",
+    "point_estimate": 0.719,
+    "confidence_interval": [
+      0.378,
+      0.885
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.47/0.53 = 0.887.",
+    "Update 1: multiply odds by LR \u2208 [1.3, 1.94] (mid: 1.62, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [2.13, 3.63] (mid: 2.88, supporting evidence).",
+    "Update 3: multiply odds by LR \u2208 [2.53, 4.32] (mid: 3.42, supporting evidence).",
+    "Update 4: multiply odds by LR \u2208 [0.49, 0.84] (mid: 0.67, contradicting evidence).",
+    "Update 5: multiply odds by LR \u2208 [0.2, 0.34] (mid: 0.27, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.378, 0.885], point estimate: 0.719."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates",
+    "Failing to account for compounding uncertainty across multiple uncertain LRs"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1833",
+  "category": "distribution_estimation",
+  "difficulty": 5,
+  "stem": "A traffic analysis dataset contains 80 observations of page load time. The data is believed to come from a mixture of two populations: mobile users (mean \u2248 30.0 ms, SD \u2248 6.7) and desktop users (mean \u2248 47.4 ms, SD \u2248 6.8). The proportion of mobile users in the sample is uncertain, estimated between 31% and 51%. The observed overall mean is 40.3 ms with SD = 10.9. Estimate the true population mean of page load time, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d730.0 + (1-w)\u00d747.4. As w varies from 0.31 to 0.51, the mixture mean ranges from 38.5 to 42.0. With sampling variability, CI = [36.1, 44.4]. Point estimate at w=0.41: 40.3 ms.",
+    "point_estimate": 40.3,
+    "confidence_interval": [
+      36.1,
+      44.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.41: \u03bc_mix = 0.41\u00d730.0 + 0.59\u00d747.4 = 40.3.",
+    "At w=0.31: \u03bc_mix = 42.0 (more of desktop users).",
+    "At w=0.51: \u03bc_mix = 38.5 (more of mobile users).",
+    "Mixture SD \u2248 10.9. SE = 10.9/\u221a80 = 1.22.",
+    "Combined interval [36.1, 44.4] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (10.9) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation",
+    "Failing to propagate the uncertainty in mixing weights through to the final interval"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

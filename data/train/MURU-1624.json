@@ -1,0 +1,32 @@
+{
+  "id": "MURU-1624",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A medical device testing study measures blood glucose measurements for 30 samples to determine if the process variability is within \u00b115% of the reference method. The sample standard deviation is 2.75 mg/dL (sample variance = 7.55). Estimate the true population standard deviation of blood glucose measurements and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Sample SD = 2.75 mg/dL. 95% CI for \u03c3 (chi-squared): [2.19, 3.69]. Point estimate: 2.75 mg/dL.",
+    "point_estimate": 2.75,
+    "confidence_interval": [
+      2.19,
+      3.69
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample variance s\u00b2 = 7.55, df = 29.",
+    "\u03c7\u00b2 CI for \u03c3\u00b2: [(n-1)s\u00b2/\u03c7\u00b2_upper, (n-1)s\u00b2/\u03c7\u00b2_lower] = [29\u00d77.55/45.722, 29\u00d77.55/16.047] = [4.79, 13.64].",
+    "CI for \u03c3: [\u221a4.79, \u221a13.64] = [2.19, 3.69]."
+  ],
+  "common_failure_modes": [
+    "Using z-based CI for the mean instead of \u03c7\u00b2-based CI for the variance",
+    "Reporting the sample SD (2.75) as the population SD without uncertainty",
+    "Not recognizing that confidence intervals for variance are asymmetric"
+  ],
+  "metadata": {
+    "author": "generator_variance_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

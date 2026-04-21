@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1189",
+  "category": "adversarial_ambiguity",
+  "difficulty": 2,
+  "stem": "In salary negotiation, you are asked to estimate the fair compensation. You are first told that an initial offer from the employer puts the value at 85.0 $K/year. You then collect your own data: industry salary surveys and cost-of-living data based on 20 observations give a mean of 126.0 $K/year with SD = 16.0 $K/year. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (85.0 $K/year) likely underestimates the true value. Data-based estimate: 126.0 $K/year, CI = [118.9, 133.1]. If the anchor receives 0-37% weight, the estimate ranges from 110.8 to 115.8. Point estimate: 126.0 $K/year (data-only, unanchored).",
+    "point_estimate": 126.0,
+    "confidence_interval": [
+      110.8,
+      133.1
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 85.0 $K/year (from an initial offer from the employer \u2014 potentially biased).",
+    "Data: mean = 126.0, SD = 16.0, n = 20. SE = 3.6.",
+    "Data-based 95% CI: [118.9, 133.1].",
+    "The anchor underestimates relative to the data by 41 $K/year (33%).",
+    "If we assign the anchor weight w \u2208 [0, 0.37]: estimate = w\u00d785.0 + (1-w)\u00d7126.0.",
+    "At w=0.31: estimate = 113.3.",
+    "Best practice: the data-based estimate (126.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (85.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (85.0) and data (126.0) are substantially different, suggesting bias in the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

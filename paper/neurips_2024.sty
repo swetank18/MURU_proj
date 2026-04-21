@@ -1,0 +1,79 @@
+% NeurIPS 2024 style file (compatible with 2026 submission)
+% Simplified version for local compilation
+% Full version available at: https://neurips.cc/Conferences/2024/PaperInformation/StyleFiles
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{neurips_2024}[2024/01/01 NeurIPS 2024 submission style]
+
+\newif\if@neuripsfinal\@neuripsfinalfalse
+\DeclareOption{final}{\@neuripsfinaltrue}
+\DeclareOption{preprint}{\@neuripsfinalfalse}
+\DeclareOption{nonatbib}{}
+\ProcessOptions\relax
+
+% Page geometry
+\RequirePackage[
+  letterpaper,
+  textwidth=6.5in,
+  textheight=9in,
+  top=1in,
+  headheight=12pt,
+  headsep=25pt,
+  footskip=30pt
+]{geometry}
+
+% Font and spacing
+\RequirePackage{times}
+\RequirePackage{lineno}
+\renewcommand{\baselinestretch}{1.0}
+
+% Title formatting
+\def\@maketitle{%
+  \vbox to 2.5in{%
+    \vspace*{0.5in}
+    \begin{center}%
+      {\LARGE\bfseries \@title \par}%
+      \vskip 0.3in%
+      \if@neuripsfinal
+        {\large\lineskip .5em%
+          \begin{tabular}[t]{c}%
+            \@author
+          \end{tabular}\par}%
+      \else
+        {\large Anonymous Author(s)\par}%
+        {\large Submitted to NeurIPS 2026\par}%
+      \fi
+      \vskip 0.3in%
+    \end{center}%
+    \vfil
+  }%
+}
+
+% Section formatting
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-3.5ex \@plus -1ex \@minus -.2ex}%
+  {2.3ex \@plus.2ex}%
+  {\normalfont\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\normalfont\large\bfseries}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\normalfont\normalsize\bfseries}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {3.25ex \@plus 1ex \@minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
+
+% Abstract formatting
+\renewenvironment{abstract}%
+  {\vskip.075in\centerline{\large\bfseries Abstract}\vspace{0.5ex}%
+    \begin{quote}}%
+  {\par\end{quote}\vskip 1ex}
+
+% Natbib compatibility
+\RequirePackage[numbers]{natbib}
+
+\endinput

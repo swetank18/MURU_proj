@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0601",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A hospital uses a PSA blood test to screen for prostate cancer. The test has a sensitivity of 89% and a specificity of 98%. The prevalence of prostate cancer in the patient population is estimated to be between 1.6% and 4.8%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has prostate cancer? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(prostate cancer | positive test) ranges from 0.42 to 0.692 as prevalence varies from 1.6% to 4.8%. Point estimate at 3.2% prevalence: 0.595.",
+    "point_estimate": 0.595,
+    "confidence_interval": [
+      0.42,
+      0.692
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.02.",
+    "At prevalence 3.2%: P(D|+) = 0.89\u00d70.032 / (0.89\u00d70.032 + 0.02\u00d70.968) \u2248 0.595.",
+    "At prevalence 1.6%: P(D|+) = 0.89\u00d70.016 / (0.89\u00d70.016 + 0.02\u00d70.984) \u2248 0.42.",
+    "At prevalence 4.8%: P(D|+) = 0.89\u00d70.048 / (0.89\u00d70.048 + 0.02\u00d70.952) \u2248 0.692.",
+    "The confidence interval [0.42, 0.692] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (89%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

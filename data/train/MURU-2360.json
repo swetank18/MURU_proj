@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2360",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose among 3 project methodology options. The probability of favorable team experience and project size is uncertain, estimated between 35% and 55%. The payoffs (in $K) for each option are: Agile: $249K in good team experience and project size, $22K in bad team experience and project size. Waterfall: $248K in good team experience and project size, $21K in bad team experience and project size. Hybrid: $183K in good team experience and project size, $102K in bad team experience and project size. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.45: best option is Hybrid with EV=$138.5K. The optimal choice switches: Hybrid at P(good)=0.35, Agile at P(good)=0.55. EV range of best option: [130.3, 146.9].",
+    "point_estimate": 138.5,
+    "confidence_interval": [
+      130.3,
+      146.9
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "Agile: EV = 0.45\u00d7249 + 0.55\u00d722 = $124.2K.",
+    "Waterfall: EV = 0.45\u00d7248 + 0.55\u00d721 = $123.2K.",
+    "Hybrid: EV = 0.45\u00d7183 + 0.55\u00d7102 = $138.5K.",
+    "Best at mid-range: Hybrid ($138.5K).",
+    "Sensitivity: check endpoints P(good)=0.35 and 0.55.",
+    "The optimal choice switches: Hybrid at P(good)=0.35, Agile at P(good)=0.55."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

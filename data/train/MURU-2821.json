@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2821",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A pharmaceutical QC study measures drug dosage concentration for 25 samples to determine if the process variability is within \u00b12% of the labeled value. The sample standard deviation is 6.19 mg/mL (sample variance = 38.29). A second measurement method on 15 samples gives a sample variance of 26.89 (SD = 5.19 mg/mL). The two methods may have different measurement precision.  Estimate the true population standard deviation of drug dosage concentration and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Method 1: s=6.19, 95% CI for \u03c3 = [4.83, 8.61]. Method 2: s=5.19, 95% CI for \u03c3 = [3.8, 8.18]. Combined interval: [3.8, 8.61]. Point estimate: 5.71 mg/mL.",
+    "point_estimate": 5.71,
+    "confidence_interval": [
+      3.8,
+      8.61
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample variance s\u00b2 = 38.29, df = 24.",
+    "\u03c7\u00b2 CI for \u03c3\u00b2: [(n-1)s\u00b2/\u03c7\u00b2_upper, (n-1)s\u00b2/\u03c7\u00b2_lower] = [24\u00d738.29/39.364, 24\u00d738.29/12.401] = [23.35, 74.1].",
+    "CI for \u03c3: [\u221a23.35, \u221a74.1] = [4.83, 8.61].",
+    "Method 2: s\u00b2=26.89, n=15, df=14. CI for \u03c3: [3.8, 8.18].",
+    "Combined interval accounting for method uncertainty: [3.8, 8.61]."
+  ],
+  "common_failure_modes": [
+    "Using z-based CI for the mean instead of \u03c7\u00b2-based CI for the variance",
+    "Reporting the sample SD (6.19) as the population SD without uncertainty",
+    "Not recognizing that confidence intervals for variance are asymmetric",
+    "Averaging the two sample variances without considering they may represent different measurement precisions"
+  ],
+  "metadata": {
+    "author": "generator_variance_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

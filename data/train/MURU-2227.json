@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2227",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "In a seismology scenario, a researcher begins with a prior probability of 34% that a major earthquake is imminent, based on tremor measurements. After monitoring period 1, supporting evidence arrives with a likelihood ratio estimated between 2.89 and 4.01. After monitoring period 2, supporting evidence arrives with a likelihood ratio estimated between 2.05 and 3.62. After monitoring period 3, supporting evidence arrives with a likelihood ratio estimated between 2.15 and 3.22. What is the posterior probability that a major earthquake is imminent after all 3 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 3 sequential Bayesian updates, P(a major earthquake is imminent) ranges from 0.868 to 0.96. Point estimate: 0.931.",
+    "point_estimate": 0.931,
+    "confidence_interval": [
+      0.868,
+      0.96
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.34/0.66 = 0.515.",
+    "Update 1: multiply odds by LR \u2208 [2.89, 4.01] (mid: 3.45, supporting evidence).",
+    "Update 2: multiply odds by LR \u2208 [2.05, 3.62] (mid: 2.83, supporting evidence).",
+    "Update 3: multiply odds by LR \u2208 [2.15, 3.22] (mid: 2.69, supporting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.868, 0.96], point estimate: 0.931."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

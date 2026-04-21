@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0958",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A industrial engineering study measures the assembly time (seconds) for a sample of 40 factory workers. The sample mean is 196.2 sec with a sample standard deviation of 39.9 sec. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 196.2 sec. 95% CI = [183.4, 209.0]. Point estimate: 196.2 sec.",
+    "point_estimate": 196.2,
+    "confidence_interval": [
+      183.4,
+      209.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 39.9/\u221a40 = 6.31.",
+    "Degrees of freedom: df = 40 - 1 = 39.",
+    "t-critical value: t(39, 0.025) \u2248 2.023.",
+    "Margin of error: 2.023 \u00d7 6.31 = 12.77.",
+    "95% CI: 196.2 \u00b1 12.77 = [183.4, 209.0]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 39.9/n instead of 39.9/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

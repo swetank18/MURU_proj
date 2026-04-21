@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2234",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "A decision-maker must choose among 4 energy source options. The probability of favorable regional climate data is uncertain, estimated between 30% and 46%. The payoffs (in $K) for each option are: solar: $277K in good regional climate data, $103K in bad regional climate data. wind: $147K in good regional climate data, $58K in bad regional climate data. natural gas: $291K in good regional climate data, $110K in bad regional climate data. geothermal: $212K in good regional climate data, $77K in bad regional climate data. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.38: best option is natural gas with EV=$178.8K. natural gas is optimal across the entire uncertainty range. EV range of best option: [164.3, 193.3].",
+    "point_estimate": 178.8,
+    "confidence_interval": [
+      164.3,
+      193.3
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "solar: EV = 0.38\u00d7277 + 0.62\u00d7103 = $169.1K.",
+    "wind: EV = 0.38\u00d7147 + 0.62\u00d758 = $91.8K.",
+    "natural gas: EV = 0.38\u00d7291 + 0.62\u00d7110 = $178.8K.",
+    "geothermal: EV = 0.38\u00d7212 + 0.62\u00d777 = $128.3K.",
+    "Best at mid-range: natural gas ($178.8K).",
+    "Sensitivity: check endpoints P(good)=0.3 and 0.46.",
+    "natural gas is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value",
+    "Not performing minimax regret analysis to find the most robust choice"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

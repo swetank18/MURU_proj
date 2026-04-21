@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2601",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose between two options. Option A (horizontal scaling) yields a guaranteed return of $134K. Option B (vertical scaling) depends on traffic load patterns: with probability 37-62% (uncertain), it yields $279K; otherwise it yields $31K. Compute the expected value of each option and determine which is better. How does the uncertainty in traffic load patterns affect the recommendation?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV(A) = $134K (fixed). EV(B) ranges from $122.8K to $184.8K. Point estimate: $152.5K. Option B is preferred at most assumptions (EV_B > EV_A when P(good) > 41.5%).",
+    "point_estimate": 152.5,
+    "confidence_interval": [
+      122.8,
+      184.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV(A) = $134K (guaranteed).",
+    "EV(B) = P(good)\u00d7$279K + (1-P(good))\u00d7$31K.",
+    "At P(good)=0.49: EV(B) = 0.49\u00d7279 + 0.51\u00d731 = $152.5K.",
+    "At P(good)=0.37: EV(B) = $122.8K.",
+    "At P(good)=0.62: EV(B) = $184.8K.",
+    "Breakeven probability: P(good) = (134-31) / (279-31) = 0.415.",
+    "The decision switches at P(good) = 41.5%, which falls within the uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Picking a single probability and giving a definitive recommendation without sensitivity analysis",
+    "Not computing the breakeven probability where the optimal decision switches",
+    "Ignoring the range of outcomes and focusing only on expected values (risk-neutral assumption)"
+  ],
+  "metadata": {
+    "author": "generator_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

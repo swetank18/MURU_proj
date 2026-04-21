@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1295",
+  "category": "bayesian_updating",
+  "difficulty": 2,
+  "stem": "A hospital uses an HbA1c test to screen for Type 2 diabetes. The test has a sensitivity of 98% and a specificity of 82%. The prevalence of Type 2 diabetes in the patient population is estimated to be between 1.5% and 2.7%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has Type 2 diabetes? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Type 2 diabetes | positive test) ranges from 0.0766 to 0.131 as prevalence varies from 1.5% to 2.7%. Point estimate at 2.1% prevalence: 0.105.",
+    "point_estimate": 0.105,
+    "confidence_interval": [
+      0.0766,
+      0.131
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.18.",
+    "At prevalence 2.1%: P(D|+) = 0.98\u00d70.021 / (0.98\u00d70.021 + 0.18\u00d70.979) \u2248 0.105.",
+    "At prevalence 1.5%: P(D|+) = 0.98\u00d70.015 / (0.98\u00d70.015 + 0.18\u00d70.985) \u2248 0.0766.",
+    "At prevalence 2.7%: P(D|+) = 0.98\u00d70.027 / (0.98\u00d70.027 + 0.18\u00d70.973) \u2248 0.131.",
+    "The confidence interval [0.0766, 0.131] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (98%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "MURU-3001",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "In oil exploration, a decision-maker is at the seismic survey stage and must decide whether to proceed to drill decision. The investment cost is $178K. If the project succeeds (estimated probability 36%-52%), it yields $1382K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a seismic data for $21K. This seismic data correctly predicts success/failure with accuracy 71%-87%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $430.1K. EV with info at mid-range: $376.6K. Value of information: $-53.5K. VOI range: [$-65.8K, $-28.0K]. Information may not be worth the cost.",
+    "point_estimate": -53.5,
+    "confidence_interval": [
+      -65.8,
+      -28.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$1382K - $178K).",
+    "At P=0.44: EV_no_info = max(0, 0.44\u00d71382 - 178) = $430.1K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d71382 - 178) - 21.",
+    "At mid-range: EV_with_info = $376.6K.",
+    "VOI = EV_with_info - EV_no_info = $-53.5K.",
+    "Range across uncertain parameters: [$-65.8K, $-28.0K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1329",
+  "category": "distribution_estimation",
+  "difficulty": 5,
+  "stem": "A customer analytics dataset contains 50 observations of purchase amount. The data is believed to come from a mixture of two populations: casual buyers (mean \u2248 65.3 $, SD \u2248 14.7) and power users (mean \u2248 149.2 $, SD \u2248 22.0). The proportion of casual buyers in the sample is uncertain, estimated between 31% and 45%. The observed overall mean is 117.3 $ with SD = 45.2. Estimate the true population mean of purchase amount, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d765.3 + (1-w)\u00d7149.2. As w varies from 0.31 to 0.45, the mixture mean ranges from 111.4 to 123.2. With sampling variability, CI = [98.9, 135.7]. Point estimate at w=0.38: 117.3 $.",
+    "point_estimate": 117.3,
+    "confidence_interval": [
+      98.9,
+      135.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.38: \u03bc_mix = 0.38\u00d765.3 + 0.62\u00d7149.2 = 117.3.",
+    "At w=0.31: \u03bc_mix = 123.2 (more of power users).",
+    "At w=0.45: \u03bc_mix = 111.4 (more of casual buyers).",
+    "Mixture SD \u2248 45.2. SE = 45.2/\u221a50 = 6.39.",
+    "Combined interval [98.9, 135.7] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (45.2) is inflated by the between-component variation",
+    "Not recognizing that the mixture variance includes both within-component and between-component variation",
+    "Failing to propagate the uncertainty in mixing weights through to the final interval"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

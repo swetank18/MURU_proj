@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0726",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A clinical study study measures the diastolic blood pressure (mmHg) for a sample of 30 patients. The sample mean is 304.3 mmHg with a sample standard deviation of 88.5 mmHg. However, 3 of the 30 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 27 observations have a mean of 282.2 mmHg and standard deviation of 63.9 mmHg. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 304.3, 95% CI = [271.2, 337.4]. Without outliers: mean = 282.2, 95% CI = [257.6, 306.8]. Combined interval accounting for analytic uncertainty: [257.6, 337.4]. Point estimate: 293.2 mmHg.",
+    "point_estimate": 293.2,
+    "confidence_interval": [
+      257.6,
+      337.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=30): SE = 88.5/\u221a30 = 16.16. Margin = t(29,0.025) \u00d7 16.16 = 2.045 \u00d7 16.16 \u2248 33.05.",
+    "Full sample 95% CI: 304.3 \u00b1 33.05 = [271.2, 337.4].",
+    "With trimmed sample (n=27): SE = 63.9/\u221a27 = 12.3. Margin = 2.0 \u00d7 12.3 \u2248 24.6.",
+    "Trimmed 95% CI: 282.2 \u00b1 24.6 = [257.6, 306.8].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [257.6, 337.4]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "MURU-0433",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses a D-dimer blood test to screen for deep vein thrombosis. The test has a sensitivity of 95% and a specificity of 76%. The prevalence of deep vein thrombosis in the patient population is estimated to be between 7.2% and 14.3%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has deep vein thrombosis? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(deep vein thrombosis | positive test) ranges from 0.235 to 0.398 as prevalence varies from 7.2% to 14.3%. Point estimate at 10.7% prevalence: 0.322.",
+    "point_estimate": 0.322,
+    "confidence_interval": [
+      0.235,
+      0.398
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.24.",
+    "At prevalence 10.7%: P(D|+) = 0.95\u00d70.107 / (0.95\u00d70.107 + 0.24\u00d70.893) \u2248 0.322.",
+    "At prevalence 7.2%: P(D|+) = 0.95\u00d70.072 / (0.95\u00d70.072 + 0.24\u00d70.928) \u2248 0.235.",
+    "At prevalence 14.3%: P(D|+) = 0.95\u00d70.143 / (0.95\u00d70.143 + 0.24\u00d70.857) \u2248 0.398.",
+    "The confidence interval [0.235, 0.398] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (95%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

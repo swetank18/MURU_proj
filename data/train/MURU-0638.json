@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0638",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A industrial engineering study measures the assembly time (seconds) for a sample of 15 factory workers. The sample mean is 391.6 sec with a sample standard deviation of 94.3 sec. However, 2 of the 15 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 13 observations have a mean of 360.8 sec and standard deviation of 70.2 sec. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 391.6, 95% CI = [339.4, 443.8]. Without outliers: mean = 360.8, 95% CI = [321.9, 399.7]. Combined interval accounting for analytic uncertainty: [321.9, 443.8]. Point estimate: 376.2 sec.",
+    "point_estimate": 376.2,
+    "confidence_interval": [
+      321.9,
+      443.8
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=15): SE = 94.3/\u221a15 = 24.35. Margin = t(14,0.025) \u00d7 24.35 = 2.145 \u00d7 24.35 \u2248 52.23.",
+    "Full sample 95% CI: 391.6 \u00b1 52.23 = [339.4, 443.8].",
+    "With trimmed sample (n=13): SE = 70.2/\u221a13 = 19.47. Margin = 2.0 \u00d7 19.47 \u2248 38.94.",
+    "Trimmed 95% CI: 360.8 \u00b1 38.94 = [321.9, 399.7].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [321.9, 443.8]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

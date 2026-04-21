@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0346",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A factory produces steel beams using two sources. Mill A handles 70% of production with a known defect rate of 1.8%. Mill B handles 30% of production, but its defect rate is uncertain \u2014 recent quality audits suggest it lies between 7.5% and 10.7%, depending on raw material batch quality. A randomly selected steel beam is found to be defective. What is the probability it came from Mill B?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Mill B | defective) ranges from 0.641 to 0.718 as Mill B's defect rate varies from 7.5% to 10.7%. Point estimate at 9.1%: 0.684.",
+    "point_estimate": 0.684,
+    "confidence_interval": [
+      0.641,
+      0.718
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(B|def) = P(def|B)\u00d7P(B) / [P(def|A)\u00d7P(A) + P(def|B)\u00d7P(B)].",
+    "At defect rate 9.1%: P(B|def) = 0.091\u00d70.3 / (0.018\u00d70.7 + 0.091\u00d70.3) \u2248 0.684.",
+    "At defect rate 7.5%: P(B|def) \u2248 0.641.",
+    "At defect rate 10.7%: P(B|def) \u2248 0.718.",
+    "The interval [0.641, 0.718] captures the range of posterior probabilities."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint defect rate and providing a single answer",
+    "Ignoring the production proportions (70/30 split)",
+    "Comparing defect rates directly without applying Bayes' theorem"
+  ],
+  "metadata": {
+    "author": "generator_quality_control",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

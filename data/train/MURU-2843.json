@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2843",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "A decision-maker must choose among 4 marketing channel options. The probability of favorable target demographic response is uncertain, estimated between 32% and 52%. The payoffs (in $K) for each option are: social media: $217K in good target demographic response, $111K in bad target demographic response. TV ads: $298K in good target demographic response, $44K in bad target demographic response. email: $96K in good target demographic response, $45K in bad target demographic response. influencer: $171K in good target demographic response, $66K in bad target demographic response. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.42: best option is social media with EV=$155.5K. The optimal choice switches: social media at P(good)=0.32, TV ads at P(good)=0.52. EV range of best option: [144.9, 176.1].",
+    "point_estimate": 155.5,
+    "confidence_interval": [
+      144.9,
+      176.1
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "social media: EV = 0.42\u00d7217 + 0.58\u00d7111 = $155.5K.",
+    "TV ads: EV = 0.42\u00d7298 + 0.58\u00d744 = $150.7K.",
+    "email: EV = 0.42\u00d796 + 0.58\u00d745 = $66.4K.",
+    "influencer: EV = 0.42\u00d7171 + 0.58\u00d766 = $110.1K.",
+    "Best at mid-range: social media ($155.5K).",
+    "Sensitivity: check endpoints P(good)=0.32 and 0.52.",
+    "The optimal choice switches: social media at P(good)=0.32, TV ads at P(good)=0.52."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

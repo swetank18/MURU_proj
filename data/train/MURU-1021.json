@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1021",
+  "category": "adversarial_ambiguity",
+  "difficulty": 4,
+  "stem": "In salary negotiation, you are asked to estimate the fair compensation. You are first told that an initial offer from the employer puts the value at 352.0 $K/year. You then collect your own data: industry salary surveys and cost-of-living data based on 25 observations give a mean of 232.0 $K/year with SD = 51.0 $K/year. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (352.0 $K/year) likely overestimates the true value. Data-based estimate: 232.0 $K/year, CI = [212.0, 252.0]. If the anchor receives 0-31% weight, the estimate ranges from 245.2 to 269.2. Point estimate: 232.0 $K/year (data-only, unanchored).",
+    "point_estimate": 232.0,
+    "confidence_interval": [
+      212.0,
+      269.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 352.0 $K/year (from an initial offer from the employer \u2014 potentially biased).",
+    "Data: mean = 232.0, SD = 51.0, n = 25. SE = 10.2.",
+    "Data-based 95% CI: [212.0, 252.0].",
+    "The anchor overestimates relative to the data by 120 $K/year (52%).",
+    "If we assign the anchor weight w \u2208 [0, 0.31]: estimate = w\u00d7352.0 + (1-w)\u00d7232.0.",
+    "At w=0.21: estimate = 257.2.",
+    "Best practice: the data-based estimate (232.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (352.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (352.0) and data (232.0) are substantially different, suggesting bias in the anchor",
+    "Not computing the data-based confidence interval and relying on intuitive adjustment from the anchor",
+    "Failing to consider the source credibility: data from systematic measurement should outweigh a single expert estimate or listing price"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

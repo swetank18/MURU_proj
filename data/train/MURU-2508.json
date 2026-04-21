@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2508",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "In startup funding, a decision-maker is at the seed round stage and must decide whether to proceed to Series A decision. The investment cost is $274K. If the project succeeds (estimated probability 40%-58%), it yields $1431K; if it fails, the investment is lost. Before deciding, the decision-maker can purchase a product-market fit data for $37K. This product-market fit data correctly predicts success/failure with accuracy 66%-82%. Should the decision-maker buy the information? What is the value of this information, and how does it depend on the uncertain success probability and information accuracy?",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV without info at mid-range: $427.2K. EV with info at mid-range: $346.2K. Value of information: $-81.0K. VOI range: [$-85.8K, $-63.4K]. Information may not be worth the cost.",
+    "point_estimate": -81.0,
+    "confidence_interval": [
+      -85.8,
+      -63.4
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV without info: max(0, P(success)\u00d7$1431K - $274K).",
+    "At P=0.49: EV_no_info = max(0, 0.49\u00d71431 - 274) = $427.2K.",
+    "With info: P(positive signal) = P(success)\u00d7accuracy + P(failure)\u00d7(1-accuracy).",
+    "P(success|positive) = P(success)\u00d7accuracy / P(positive signal).",
+    "EV_with_info = P(pos)\u00d7max(0, P(success|pos)\u00d71431 - 274) - 37.",
+    "At mid-range: EV_with_info = $346.2K.",
+    "VOI = EV_with_info - EV_no_info = $-81.0K.",
+    "Range across uncertain parameters: [$-85.8K, $-63.4K]."
+  ],
+  "common_failure_modes": [
+    "Not computing the conditional probability P(success|positive signal) correctly",
+    "Forgetting to subtract the information cost from the EV with info",
+    "Assuming perfect information and overestimating VoI",
+    "Not recognizing that VoI depends on both the prior probability and information accuracy"
+  ],
+  "metadata": {
+    "author": "generator_sequential_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

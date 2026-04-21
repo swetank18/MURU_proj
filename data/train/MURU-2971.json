@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2971",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "An insurer is pricing a product liability policy for consumer products in the US market. Historical data suggests the annual frequency of product liability claim events follows a Poisson distribution with rate \u03bb estimated between 0.81 and 2.35 events/year. Each event causes a loss estimated between $103K and $256K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 25% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $83.4K to $601.6K. Point estimate: $284.4K. With 25% loading: premium range [$104.2K, $752.0K]. Point estimate premium: $355.5K.",
+    "point_estimate": 355.5,
+    "confidence_interval": [
+      104.2,
+      752.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=1.58, severity=$180K: EL = 1.58\u00d7180 = $284.4K.",
+    "At \u03bb=0.81, severity=$103K: EL = $83.4K (lower bound).",
+    "At \u03bb=2.35, severity=$256K: EL = $601.6K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.25.",
+    "Premium range: [$104.2K, $752.0K]. Mid: $355.5K."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0718",
+  "category": "distribution_estimation",
+  "difficulty": 1,
+  "stem": "A electronics testing study measures the battery life (hours) for a sample of 40 smartphone models. The sample mean is 190.6 hours with a sample standard deviation of 24.2 hours. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 190.6 hours. 95% CI = [182.8, 198.3]. Point estimate: 190.6 hours.",
+    "point_estimate": 190.6,
+    "confidence_interval": [
+      182.8,
+      198.3
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 24.2/\u221a40 = 3.83.",
+    "Degrees of freedom: df = 40 - 1 = 39.",
+    "t-critical value: t(39, 0.025) \u2248 2.023.",
+    "Margin of error: 2.023 \u00d7 3.83 = 7.75.",
+    "95% CI: 190.6 \u00b1 7.75 = [182.8, 198.3]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 24.2/n instead of 24.2/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

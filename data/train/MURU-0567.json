@@ -1,0 +1,37 @@
+{
+  "id": "MURU-0567",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "An engineer takes 10 measurements of tire pressure using a pressure gauge. The measurements have a mean of 40.2 psi and a standard deviation of 2.1 psi. However, calibration tests reveal that a pressure gauge systematically overestimates the true value by between 3.3% and 7.7%. Estimate the true tire pressure and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 40.2 psi. After correcting for the 5.5% bias: \u2248 38.1 psi. Full interval accounting for bias uncertainty (3.3%-7.7%) and sampling variability: [36.0, 40.2]. Point estimate: 38.1 psi.",
+    "point_estimate": 38.1,
+    "confidence_interval": [
+      36.0,
+      40.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 40.2 psi (n=10, s=2.1).",
+    "Sampling SE: 2.1/\u221a10 = 0.66. Sampling margin \u2248 \u00b11.3.",
+    "Bias correction: instrument overestimates by 3.3%-7.7%.",
+    "At 5.5% correction: true value \u2248 38.1 psi.",
+    "At 3.3% correction: true value \u2248 38.9 psi.",
+    "At 7.7% correction: true value \u2248 37.3 psi.",
+    "Combined interval (bias range + sampling): [36.0, 40.2]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2278",
+  "category": "decision_under_uncertainty",
+  "difficulty": 3,
+  "stem": "An insurer is pricing a earthquake insurance policy for commercial buildings in a seismically active zone. Historical data suggests the annual frequency of earthquake events follows a Poisson distribution with rate \u03bb estimated between 1.93 and 2.95 events/year. Each event causes a loss estimated between $157K and $282K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 26% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $303.0K to $831.9K. Point estimate: $536.8K. With 26% loading: premium range [$381.8K, $1048.2K]. Point estimate premium: $676.4K.",
+    "point_estimate": 676.4,
+    "confidence_interval": [
+      381.8,
+      1048.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=2.44, severity=$220K: EL = 2.44\u00d7220 = $536.8K.",
+    "At \u03bb=1.93, severity=$157K: EL = $303.0K (lower bound).",
+    "At \u03bb=2.95, severity=$282K: EL = $831.9K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.26.",
+    "Premium range: [$381.8K, $1048.2K]. Mid: $676.4K."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

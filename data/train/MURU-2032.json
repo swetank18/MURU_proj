@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2032",
+  "category": "conditional_probability_chains",
+  "difficulty": 3,
+  "stem": "A product enters the manufacturing pipeline. The probability of passing raw material inspection is 98%. If the previous stage is passed, the probability of passing machining is 97%. If the previous stage is passed, the probability of passing assembly is 76%. If the previous stage is passed, the probability of passing final QA is between 68% and 81% (uncertain due to evaluator variability). What is the overall probability that the product is shipped?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(shipped) ranges from 0.491 to 0.585 as the final QA pass rate varies from 68% to 81%. Point estimate: 0.542.",
+    "point_estimate": 0.542,
+    "confidence_interval": [
+      0.491,
+      0.585
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The product must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.98 \u00d7 0.97 \u00d7 0.76 \u00d7 0.75 = 0.542.",
+    "At lower bound: P(success) = 0.98 \u00d7 0.97 \u00d7 0.76 \u00d7 0.68 = 0.491.",
+    "At upper bound: P(success) = 0.98 \u00d7 0.97 \u00d7 0.76 \u00d7 0.81 = 0.585.",
+    "The uncertainty in the final QA stage creates a 9.4 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the final QA rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

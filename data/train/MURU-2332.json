@@ -1,0 +1,33 @@
+{
+  "id": "MURU-2332",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "In a seismology scenario, a researcher begins with a prior probability of 22% that a major earthquake is imminent, based on tremor measurements. After monitoring period 1, contradicting evidence arrives with a likelihood ratio estimated between 0.55 and 0.7. After monitoring period 2, contradicting evidence arrives with a likelihood ratio estimated between 0.33 and 0.53. What is the posterior probability that a major earthquake is imminent after all 2 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 2 sequential Bayesian updates, P(a major earthquake is imminent) ranges from 0.0487 to 0.0947. Point estimate: 0.0699.",
+    "point_estimate": 0.0699,
+    "confidence_interval": [
+      0.0487,
+      0.0947
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.22/0.78 = 0.282.",
+    "Update 1: multiply odds by LR \u2208 [0.55, 0.7] (mid: 0.62, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.33, 0.53] (mid: 0.43, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.0487, 0.0947], point estimate: 0.0699."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2543",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A retail study measures customer satisfaction score across 5 chains, each containing multiple stores. chain A has 10 observations with mean 44.7 /10 (within-chain SD = 8.1). chain B has 8 observations with mean 73.0 /10 (within-chain SD = 6.4). chain C has 15 observations with mean 52.9 /10 (within-chain SD = 5.4). chain D has 8 observations with mean 50.0 /10 (within-chain SD = 5.7). chain E has 10 observations with mean 48.7 /10 (within-chain SD = 4.2). The between-chain standard deviation is uncertain, estimated between 6.2 and 15.5 /10. Using a hierarchical Bayesian model, estimate the true customer satisfaction score for chain C, accounting for shrinkage toward the grand mean and the uncertainty in the between-chain variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for chain C: 52.9 /10 (shrunk from raw 52.9). Range [52.9, 53.0] as between-chain SD varies from 6.2 to 15.5. Pooled mean: 53.2.",
+    "point_estimate": 52.9,
+    "confidence_interval": [
+      52.9,
+      53.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 53.2 /10 (weighted average of 5 chain means).",
+    "Shrinkage factor for chain C: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/15). At \u03c3_between=10.3: B = 0.982.",
+    "Shrunk estimate = B \u00d7 52.9 + (1-B) \u00d7 53.2 = 52.9.",
+    "At \u03c3_between=6.2: more shrinkage \u2192 estimate = 52.9.",
+    "At \u03c3_between=15.5: less shrinkage \u2192 estimate = 52.9.",
+    "Interval [52.9, 53.0] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (52.9) without shrinkage",
+    "Using only the grand mean (53.2) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

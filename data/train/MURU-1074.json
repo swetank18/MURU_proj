@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1074",
+  "category": "conditional_probability_chains",
+  "difficulty": 2,
+  "stem": "A cloud computing server cluster uses 2 parallel nodes for redundancy. The request served requires at least one node to function. node 1 has a reliability between 74% and 86% (uncertain due to limited operational data). node 2 has a reliability of 89%. What is the overall probability that the request served?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(request served) ranges from 0.9714 to 0.9846. Point estimate: 0.978.",
+    "point_estimate": 0.978,
+    "confidence_interval": [
+      0.9714,
+      0.9846
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 2 nodes fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2).",
+    "At mid-range: P(all fail) = 0.2 \u00d7 0.11 = 0.022. P(works) = 0.978.",
+    "At lower bound: P(all fail) = 0.26 \u00d7 0.11 = 0.0286. P(works) = 0.9714.",
+    "At upper bound: P(all fail) = 0.14 \u00d7 0.11 = 0.0154. P(works) = 0.9846."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

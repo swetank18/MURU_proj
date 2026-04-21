@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2326",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A product enters the manufacturing pipeline. The probability of passing raw material inspection is 84%. If the previous stage is passed, the probability of passing machining is 97%. If the previous stage is passed, the probability of passing assembly is between 60% and 75% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing final QA is 87%. What is the overall probability that the product is shipped?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(shipped) ranges from 0.425 to 0.532 as the assembly pass rate varies from 60% to 75%. Point estimate: 0.482.",
+    "point_estimate": 0.482,
+    "confidence_interval": [
+      0.425,
+      0.532
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The product must pass all 4 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3)\u00d7P(stage 4).",
+    "At mid-range: P(success) = 0.84 \u00d7 0.97 \u00d7 0.68 \u00d7 0.87 = 0.482.",
+    "At lower bound: P(success) = 0.84 \u00d7 0.97 \u00d7 0.6 \u00d7 0.87 = 0.425.",
+    "At upper bound: P(success) = 0.84 \u00d7 0.97 \u00d7 0.75 \u00d7 0.87 = 0.532.",
+    "The uncertainty in the assembly stage creates a 10.7 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the assembly rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

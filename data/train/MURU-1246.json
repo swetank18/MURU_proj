@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1246",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "A network performance study measures signal latency for 30 samples to determine if the process variability is below 50ms for 99% of packets. The sample standard deviation is 3.2 ms (sample variance = 10.27). A second measurement method on 20 samples gives a sample variance of 6.38 (SD = 2.53 ms). The two methods may have different measurement precision.  Estimate the true population standard deviation of signal latency and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Method 1: s=3.2, 95% CI for \u03c3 = [2.55, 4.31]. Method 2: s=2.53, 95% CI for \u03c3 = [1.92, 3.69]. Combined interval: [1.92, 4.31]. Point estimate: 2.89 ms.",
+    "point_estimate": 2.89,
+    "confidence_interval": [
+      1.92,
+      4.31
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample variance s\u00b2 = 10.27, df = 29.",
+    "\u03c7\u00b2 CI for \u03c3\u00b2: [(n-1)s\u00b2/\u03c7\u00b2_upper, (n-1)s\u00b2/\u03c7\u00b2_lower] = [29\u00d710.27/45.722, 29\u00d710.27/16.047] = [6.51, 18.56].",
+    "CI for \u03c3: [\u221a6.51, \u221a18.56] = [2.55, 4.31].",
+    "Method 2: s\u00b2=6.38, n=20, df=19. CI for \u03c3: [1.92, 3.69].",
+    "Combined interval accounting for method uncertainty: [1.92, 4.31]."
+  ],
+  "common_failure_modes": [
+    "Using z-based CI for the mean instead of \u03c7\u00b2-based CI for the variance",
+    "Reporting the sample SD (3.2) as the population SD without uncertainty",
+    "Not recognizing that confidence intervals for variance are asymmetric",
+    "Averaging the two sample variances without considering they may represent different measurement precisions"
+  ],
+  "metadata": {
+    "author": "generator_variance_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

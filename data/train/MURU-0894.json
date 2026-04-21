@@ -1,0 +1,34 @@
+{
+  "id": "MURU-0894",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "A urban planning study measures the commute time (minutes) for a sample of 25 city workers. The sample mean is 232.1 min with a sample standard deviation of 38.1 min. Assuming the data are approximately normally distributed, estimate the true population mean and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Population mean \u2248 232.1 min. 95% CI = [216.4, 247.8]. Point estimate: 232.1 min.",
+    "point_estimate": 232.1,
+    "confidence_interval": [
+      216.4,
+      247.8
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Standard error: SE = s/\u221an = 38.1/\u221a25 = 7.62.",
+    "Degrees of freedom: df = 25 - 1 = 24.",
+    "t-critical value: t(24, 0.025) \u2248 2.064.",
+    "Margin of error: 2.064 \u00d7 7.62 = 15.73.",
+    "95% CI: 232.1 \u00b1 15.73 = [216.4, 247.8]."
+  ],
+  "common_failure_modes": [
+    "Using z-critical value instead of t-critical for small samples",
+    "Computing SE as 38.1/n instead of 38.1/\u221an",
+    "Not reporting the confidence interval alongside the point estimate"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

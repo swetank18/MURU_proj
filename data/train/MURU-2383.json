@@ -1,0 +1,38 @@
+{
+  "id": "MURU-2383",
+  "category": "decision_under_uncertainty",
+  "difficulty": 4,
+  "stem": "An insurer is pricing a earthquake insurance policy for commercial buildings in a seismically active zone. Historical data suggests the annual frequency of earthquake events follows a Poisson distribution with rate \u03bb estimated between 0.83 and 3.64 events/year. Each event causes a loss estimated between $113K and $236K (with the average loss being uncertain due to limited historical claims data). The insurer uses a risk loading factor of 18% above the expected loss. What is the fair premium, and what range of premiums is justified given the uncertainty in both frequency and severity?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "Expected loss = \u03bb \u00d7 mean severity. Range: $93.8K to $859.0K. Point estimate: $388.0K. With 18% loading: premium range [$110.7K, $1013.6K]. Point estimate premium: $457.8K.",
+    "point_estimate": 457.8,
+    "confidence_interval": [
+      110.7,
+      1013.6
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Expected loss = E[N] \u00d7 E[X] where N ~ Poisson(\u03bb), X = loss per event.",
+    "At \u03bb=2.23, severity=$174K: EL = 2.23\u00d7174 = $388.0K.",
+    "At \u03bb=0.83, severity=$113K: EL = $93.8K (lower bound).",
+    "At \u03bb=3.64, severity=$236K: EL = $859.0K (upper bound).",
+    "Premium = EL \u00d7 (1 + risk load) = EL \u00d7 1.18.",
+    "Premium range: [$110.7K, $1013.6K]. Mid: $457.8K.",
+    "Note: this assumes independence between frequency and severity. In practice, high-frequency years may also have higher severity (correlation), which would widen the range further."
+  ],
+  "common_failure_modes": [
+    "Using only the midpoint estimates without computing the full range",
+    "Adding frequency and severity instead of multiplying",
+    "Not including the risk loading in the premium calculation",
+    "Treating the expected loss as the premium without risk margin",
+    "Assuming frequency and severity are independent when they may be correlated"
+  ],
+  "metadata": {
+    "author": "generator_insurance_pricing",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

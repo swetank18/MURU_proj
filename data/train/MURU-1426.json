@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1426",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A electronics testing study measures the battery life (hours) for a sample of 30 smartphone models. The sample mean is 140.4 hours with a sample standard deviation of 39.4 hours. However, 3 of the 30 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 27 observations have a mean of 130.6 hours and standard deviation of 24.5 hours. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 140.4, 95% CI = [125.7, 155.1]. Without outliers: mean = 130.6, 95% CI = [121.2, 140.0]. Combined interval accounting for analytic uncertainty: [121.2, 155.1]. Point estimate: 135.5 hours.",
+    "point_estimate": 135.5,
+    "confidence_interval": [
+      121.2,
+      155.1
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=30): SE = 39.4/\u221a30 = 7.19. Margin = t(29,0.025) \u00d7 7.19 = 2.045 \u00d7 7.19 \u2248 14.7.",
+    "Full sample 95% CI: 140.4 \u00b1 14.7 = [125.7, 155.1].",
+    "With trimmed sample (n=27): SE = 24.5/\u221a27 = 4.72. Margin = 2.0 \u00d7 4.72 \u2248 9.44.",
+    "Trimmed 95% CI: 130.6 \u00b1 9.44 = [121.2, 140.0].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [121.2, 155.1]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

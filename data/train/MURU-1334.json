@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1334",
+  "category": "adversarial_ambiguity",
+  "difficulty": 5,
+  "stem": "In a medical treatment study comparing Drug X vs. Drug Y: Overall, Treatment Y has a higher recovery rate (66.0% vs 49.2%). However, when stratified by disease severity: In mild cases (n_X=20, n_Y=80): Treatment X achieves 82% vs Treatment Y's 73%. In severe cases (n_X=100, n_Y=20): Treatment X achieves 43% vs Treatment Y's 36%. The true population proportion of mild cases is uncertain, estimated between 35% and 51%. Which treatment is actually better, and by how much?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to severe cases (harder cases). Adjusted difference (X - Y): [0.078, 0.08], point estimate: 0.079. Treatment X is genuinely better by 7.9 percentage points.",
+    "point_estimate": 0.079,
+    "confidence_interval": [
+      0.078,
+      0.08
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=49.2%, Y=66.0% (Y appears better).",
+    "Stratified: In mild cases: X=82% > Y=73%. In severe cases: X=43% > Y=36%.",
+    "X is better in BOTH subgroups \u2014 this is Simpson's Paradox.",
+    "The paradox arises because Drug X is applied more to severe cases (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A\u00d70.82 + (1-w_A)\u00d70.43.",
+    "Population-adjusted rate for Y: w_A\u00d70.73 + (1-w_A)\u00d70.36.",
+    "Difference X-Y at w_A=0.43: 0.079. Range: [0.078, 0.08]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty",
+    "Not considering that additional unobserved confounders could further modify the comparison"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

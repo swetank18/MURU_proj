@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1600",
+  "category": "conditional_probability_chains",
+  "difficulty": 3,
+  "stem": "In a supply chain, a shipment begins at 'order placed'. At the first stage, 40% of cases take Path A (the logistics fast track) and 60% take Path B (the standard route). In Path A, the probability of advancing to the next stage is uncertain, estimated between 67% and 87%. In Path B, the advancement probability is 86%. At the final stage, regardless of path, the probability of on-time delivery is between 74% and 88% (uncertain due to evaluator variability). What is the overall probability of on-time delivery?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(on-time delivery) = P(A)\u00d7P(advance|A)\u00d7P(final) + P(B)\u00d7P(advance|B)\u00d7P(final). Range: [0.58, 0.76]. Point estimate: 0.667.",
+    "point_estimate": 0.667,
+    "confidence_interval": [
+      0.58,
+      0.76
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Total probability via law of total probability over the two paths.",
+    "Path A contribution: 0.4 \u00d7 P(advance|A) \u00d7 P(final).",
+    "Path B contribution: 0.6 \u00d7 0.86 \u00d7 P(final).",
+    "At mid-range estimates: 0.4 \u00d7 0.77 \u00d7 0.81 + 0.6 \u00d7 0.86 \u00d7 0.81 = 0.667.",
+    "At lower bounds: 0.4 \u00d7 0.67 \u00d7 0.74 + 0.6 \u00d7 0.86 \u00d7 0.74 = 0.58.",
+    "At upper bounds: 0.4 \u00d7 0.87 \u00d7 0.88 + 0.6 \u00d7 0.86 \u00d7 0.88 = 0.76.",
+    "The two sources of uncertainty (Path A advancement and final stage) compound to create the interval [0.58, 0.76]."
+  ],
+  "common_failure_modes": [
+    "Computing only one path's probability instead of summing over all paths",
+    "Not weighting each path by its probability of being taken",
+    "Using a single rate for uncertain stages without computing the range"
+  ],
+  "metadata": {
+    "author": "generator_conditional_cascade",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

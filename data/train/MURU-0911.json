@@ -1,0 +1,37 @@
+{
+  "id": "MURU-0911",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "An engineer takes 25 measurements of PM2.5 concentration using an air quality sensor. The measurements have a mean of 174.2 \u00b5g/m\u00b3 and a standard deviation of 11.3 \u00b5g/m\u00b3. However, calibration tests reveal that an air quality sensor systematically overestimates the true value by between 3.4% and 9.3%. Estimate the true PM2.5 concentration and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 174.2 \u00b5g/m\u00b3. After correcting for the 6.4% bias: \u2248 163.7 \u00b5g/m\u00b3. Full interval accounting for bias uncertainty (3.4%-9.3%) and sampling variability: [154.9, 173.0]. Point estimate: 163.7 \u00b5g/m\u00b3.",
+    "point_estimate": 163.7,
+    "confidence_interval": [
+      154.9,
+      173.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 174.2 \u00b5g/m\u00b3 (n=25, s=11.3).",
+    "Sampling SE: 11.3/\u221a25 = 2.26. Sampling margin \u2248 \u00b14.5.",
+    "Bias correction: instrument overestimates by 3.4%-9.3%.",
+    "At 6.4% correction: true value \u2248 163.7 \u00b5g/m\u00b3.",
+    "At 3.4% correction: true value \u2248 168.5 \u00b5g/m\u00b3.",
+    "At 9.3% correction: true value \u2248 159.4 \u00b5g/m\u00b3.",
+    "Combined interval (bias range + sampling): [154.9, 173.0]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1157",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A clinical research study measures treatment response rate across 3 trial sites, each containing multiple patient cohorts. trial site A has 5 observations with mean 63.8 % (within-trial site SD = 6.3). trial site B has 10 observations with mean 21.0 % (within-trial site SD = 6.6). trial site C has 5 observations with mean 53.2 % (within-trial site SD = 7.8). The between-trial site standard deviation is uncertain, estimated between 8.3 and 20.9 %. Using a hierarchical Bayesian model, estimate the true treatment response rate for trial site A, accounting for shrinkage toward the grand mean and the uncertainty in the between-trial site variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for trial site A: 62.9 % (shrunk from raw 63.8). Range [61.3, 63.4] as between-trial site SD varies from 8.3 to 20.9. Pooled mean: 39.8.",
+    "point_estimate": 62.9,
+    "confidence_interval": [
+      61.3,
+      63.4
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 39.8 % (weighted average of 3 trial site means).",
+    "Shrinkage factor for trial site A: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/5). At \u03c3_between=13.9: B = 0.961.",
+    "Shrunk estimate = B \u00d7 63.8 + (1-B) \u00d7 39.8 = 62.9.",
+    "At \u03c3_between=8.3: more shrinkage \u2192 estimate = 61.3.",
+    "At \u03c3_between=20.9: less shrinkage \u2192 estimate = 63.4.",
+    "Interval [61.3, 63.4] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (63.8) without shrinkage",
+    "Using only the grand mean (39.8) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

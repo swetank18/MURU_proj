@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1048",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A agriculture study measures the yield per hectare (tonnes) for a sample of 25 farms. The sample mean is 45.4 tonnes with a sample standard deviation of 13.5 tonnes. However, 2 of the 25 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 23 observations have a mean of 42.2 tonnes and standard deviation of 8.9 tonnes. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 45.4, 95% CI = [39.8, 51.0]. Without outliers: mean = 42.2, 95% CI = [38.5, 45.9]. Combined interval accounting for analytic uncertainty: [38.5, 51.0]. Point estimate: 43.8 tonnes.",
+    "point_estimate": 43.8,
+    "confidence_interval": [
+      38.5,
+      51.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=25): SE = 13.5/\u221a25 = 2.7. Margin = t(24,0.025) \u00d7 2.7 = 2.064 \u00d7 2.7 \u2248 5.57.",
+    "Full sample 95% CI: 45.4 \u00b1 5.57 = [39.8, 51.0].",
+    "With trimmed sample (n=23): SE = 8.9/\u221a23 = 1.86. Margin = 2.0 \u00d7 1.86 \u2248 3.72.",
+    "Trimmed 95% CI: 42.2 \u00b1 3.72 = [38.5, 45.9].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [38.5, 51.0]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

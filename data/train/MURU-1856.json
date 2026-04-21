@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1856",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose among 3 marketing channel options. The probability of favorable target demographic response is uncertain, estimated between 40% and 54%. The payoffs (in $K) for each option are: social media: $299K in good target demographic response, $152K in bad target demographic response. TV ads: $72K in good target demographic response, $21K in bad target demographic response. email: $80K in good target demographic response, $15K in bad target demographic response. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.47: best option is social media with EV=$221.1K. social media is optimal across the entire uncertainty range. EV range of best option: [210.8, 231.4].",
+    "point_estimate": 221.1,
+    "confidence_interval": [
+      210.8,
+      231.4
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "social media: EV = 0.47\u00d7299 + 0.53\u00d7152 = $221.1K.",
+    "TV ads: EV = 0.47\u00d772 + 0.53\u00d721 = $45.0K.",
+    "email: EV = 0.47\u00d780 + 0.53\u00d715 = $45.5K.",
+    "Best at mid-range: social media ($221.1K).",
+    "Sensitivity: check endpoints P(good)=0.4 and 0.54.",
+    "social media is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2259",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "For insurance claim prediction, the base rate for a homeowner depends on which reference class is used: Reference Class A (all homeowners nationally, n=500): base rate = 19%. Reference Class B (homeowners in this ZIP code, n=50): base rate = 37%. Reference Class C (homeowners with this specific home profile, n=15): base rate = 52%. Each reference class has a different level of specificity and sample size. What is the appropriate base rate to use, and how should the choice of reference class affect the uncertainty in the prediction?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The reference class problem: different classes give rates of 19%, 37%, 52%. No single class is objectively 'correct'. Combined interval spanning all classes: [0.158, 0.742]. Weighted point estimate (specificity-weighted): 0.402.",
+    "point_estimate": 0.402,
+    "confidence_interval": [
+      0.158,
+      0.742
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Class A (all homeowners nationally): rate=0.19, n=500, CI=[0.158, 0.227]. Large sample but least specific.",
+    "Class B (homeowners in this ZIP code): rate=0.37, n=50, CI=[0.25, 0.509]. Moderate specificity and sample size.",
+    "Class C (homeowners with this specific home profile): rate=0.52, n=15, CI=[0.29, 0.742]. Most specific but smallest sample (widest CI).",
+    "The reference class problem has no definitive solution \u2014 the 'correct' base rate depends on which class membership is considered most relevant.",
+    "Weighted estimate (weights reflecting specificity): 0.2\u00d70.19 + 0.35\u00d70.37 + 0.45\u00d70.52 = 0.402.",
+    "Full uncertainty range spanning all reference classes: [0.158, 0.742]."
+  ],
+  "common_failure_modes": [
+    "Choosing one reference class without acknowledging the others",
+    "Using only the most specific class (Class C) despite its small sample size",
+    "Using only the broadest class (Class A) despite its low relevance",
+    "Not recognizing that the choice of reference class is itself a source of fundamental uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_reference_class",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

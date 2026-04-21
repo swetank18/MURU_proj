@@ -1,0 +1,35 @@
+{
+  "id": "MURU-0705",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses a CT scan screening to screen for early-stage lung cancer. The test has a sensitivity of 76% and a specificity of 93%. The prevalence of early-stage lung cancer in the patient population is estimated to be between 8.3% and 16.0%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has early-stage lung cancer? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(early-stage lung cancer | positive test) ranges from 0.496 to 0.674 as prevalence varies from 8.3% to 16.0%. Point estimate at 12.1% prevalence: 0.599.",
+    "point_estimate": 0.599,
+    "confidence_interval": [
+      0.496,
+      0.674
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.07.",
+    "At prevalence 12.1%: P(D|+) = 0.76\u00d70.121 / (0.76\u00d70.121 + 0.07\u00d70.879) \u2248 0.599.",
+    "At prevalence 8.3%: P(D|+) = 0.76\u00d70.083 / (0.76\u00d70.083 + 0.07\u00d70.917) \u2248 0.496.",
+    "At prevalence 16.0%: P(D|+) = 0.76\u00d70.16 / (0.76\u00d70.16 + 0.07\u00d70.84) \u2248 0.674.",
+    "The confidence interval [0.496, 0.674] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (76%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

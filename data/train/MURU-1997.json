@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1997",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A agriculture study measures crop yield across 5 regions, each containing multiple farms. region A has 20 observations with mean 83.2 tonnes/hectare (within-region SD = 7.9). region B has 5 observations with mean 72.9 tonnes/hectare (within-region SD = 5.5). region C has 15 observations with mean 68.8 tonnes/hectare (within-region SD = 5.0). region D has 15 observations with mean 75.4 tonnes/hectare (within-region SD = 6.5). region E has 10 observations with mean 84.3 tonnes/hectare (within-region SD = 8.0). The between-region standard deviation is uncertain, estimated between 6.1 and 15.1 tonnes/hectare. Using a hierarchical Bayesian model, estimate the true crop yield for region D, accounting for shrinkage toward the grand mean and the uncertainty in the between-region variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for region D: 75.5 tonnes/hectare (shrunk from raw 75.4). Range [75.4, 75.5] as between-region SD varies from 6.1 to 15.1. Pooled mean: 77.5.",
+    "point_estimate": 75.5,
+    "confidence_interval": [
+      75.4,
+      75.5
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 77.5 tonnes/hectare (weighted average of 5 region means).",
+    "Shrinkage factor for region D: B = \u03c3\u00b2_between / (\u03c3\u00b2_between + \u03c3\u00b2_within/15). At \u03c3_between=10.1: B = 0.973.",
+    "Shrunk estimate = B \u00d7 75.4 + (1-B) \u00d7 77.5 = 75.5.",
+    "At \u03c3_between=6.1: more shrinkage \u2192 estimate = 75.5.",
+    "At \u03c3_between=15.1: less shrinkage \u2192 estimate = 75.4.",
+    "Interval [75.4, 75.5] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (75.4) without shrinkage",
+    "Using only the grand mean (77.5) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

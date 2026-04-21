@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2801",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose among 3 project methodology options. The probability of favorable team experience and project size is uncertain, estimated between 31% and 42%. The payoffs (in $K) for each option are: Agile: $295K in good team experience and project size, $136K in bad team experience and project size. Waterfall: $111K in good team experience and project size, $51K in bad team experience and project size. Hybrid: $116K in good team experience and project size, $19K in bad team experience and project size. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.36: best option is Agile with EV=$193.2K. Agile is optimal across the entire uncertainty range. EV range of best option: [185.3, 202.8].",
+    "point_estimate": 193.2,
+    "confidence_interval": [
+      185.3,
+      202.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "Agile: EV = 0.36\u00d7295 + 0.64\u00d7136 = $193.2K.",
+    "Waterfall: EV = 0.36\u00d7111 + 0.64\u00d751 = $72.6K.",
+    "Hybrid: EV = 0.36\u00d7116 + 0.64\u00d719 = $53.9K.",
+    "Best at mid-range: Agile ($193.2K).",
+    "Sensitivity: check endpoints P(good)=0.31 and 0.42.",
+    "Agile is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

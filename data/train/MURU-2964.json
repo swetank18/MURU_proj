@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2964",
+  "category": "conditional_probability_chains",
+  "difficulty": 4,
+  "stem": "A energy power grid uses 3 parallel generators for redundancy. The power maintained requires at least one generator to function. generator 1 has a reliability between 60% and 72% (uncertain due to limited operational data). generator 2 has a reliability of 82%. generator 3 has a reliability of 83%. Additionally, there is a common-cause failure probability (e.g., power outage, shared software bug) that could disable all generators simultaneously, estimated between 1.7% and 6.0%. What is the overall probability that the power maintained?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(power maintained) ranges from 0.9285 to 0.9745. Point estimate: 0.952.",
+    "point_estimate": 0.952,
+    "confidence_interval": [
+      0.9285,
+      0.9745
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "P(system works) = 1 - P(all 3 generators fail simultaneously).",
+    "P(all fail) = (1-R_1) \u00d7 (1-R_2) \u00d7 (1-R_3).",
+    "At mid-range: P(all fail) = 0.34 \u00d7 0.18 \u00d7 0.17 = 0.0104. P(works) = 0.9896.",
+    "At lower bound: P(all fail) = 0.4 \u00d7 0.18 \u00d7 0.17 = 0.0122. P(works) = 0.9878.",
+    "At upper bound: P(all fail) = 0.28 \u00d7 0.18 \u00d7 0.17 = 0.0086. P(works) = 0.9914.",
+    "With common-cause failure (1.7%-6.0%): P(works) = (1-P_cc) \u00d7 P(independent works). Range: [0.9285, 0.9745]."
+  ],
+  "common_failure_modes": [
+    "Multiplying individual reliabilities instead of computing 1 - P(all fail)",
+    "Using a single reliability for the uncertain component without propagating uncertainty",
+    "Treating the system as a series (all must work) rather than parallel (any one suffices)",
+    "Ignoring common-cause failures that can disable all paths simultaneously"
+  ],
+  "metadata": {
+    "author": "generator_parallel_redundancy",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

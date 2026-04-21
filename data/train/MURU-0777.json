@@ -1,0 +1,35 @@
+{
+  "id": "MURU-0777",
+  "category": "bayesian_updating",
+  "difficulty": 3,
+  "stem": "A hospital uses a PSA blood test to screen for prostate cancer. The test has a sensitivity of 95% and a specificity of 75%. The prevalence of prostate cancer in the patient population is estimated to be between 7.5% and 12.8%, with uncertainty due to regional variation and demographic differences in the hospital's catchment area. A patient receives a positive test result. What is the probability that the patient actually has prostate cancer? Provide your answer as a probability with a confidence interval reflecting the uncertainty in prevalence.",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(prostate cancer | positive test) ranges from 0.236 to 0.358 as prevalence varies from 7.5% to 12.8%. Point estimate at 10.2% prevalence: 0.301.",
+    "point_estimate": 0.301,
+    "confidence_interval": [
+      0.236,
+      0.358
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem: P(D|+) = P(+|D)\u00d7P(D) / [P(+|D)\u00d7P(D) + P(+|\u00acD)\u00d7P(\u00acD)], where P(+|\u00acD) = 1-specificity = 0.25.",
+    "At prevalence 10.2%: P(D|+) = 0.95\u00d70.102 / (0.95\u00d70.102 + 0.25\u00d70.898) \u2248 0.301.",
+    "At prevalence 7.5%: P(D|+) = 0.95\u00d70.075 / (0.95\u00d70.075 + 0.25\u00d70.925) \u2248 0.236.",
+    "At prevalence 12.8%: P(D|+) = 0.95\u00d70.128 / (0.95\u00d70.128 + 0.25\u00d70.872) \u2248 0.358.",
+    "The confidence interval [0.236, 0.358] reflects the range of posterior probabilities over plausible prevalence values."
+  ],
+  "common_failure_modes": [
+    "Confusing sensitivity (95%) with positive predictive value",
+    "Providing only a point estimate without acknowledging the prevalence uncertainty",
+    "Ignoring the base rate (prevalence) and using the test sensitivity as the answer",
+    "Not recognizing the strong base rate effect when prevalence is low"
+  ],
+  "metadata": {
+    "author": "generator_medical_test",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1993",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A web performance study measures the response time (ms) for a sample of 15 website users. The sample mean is 40.5 ms with a sample standard deviation of 14.1 ms. However, 2 of the 15 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 13 observations have a mean of 39.2 ms and standard deviation of 8.7 ms. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 40.5, 95% CI = [32.7, 48.3]. Without outliers: mean = 39.2, 95% CI = [34.4, 44.0]. Combined interval accounting for analytic uncertainty: [32.7, 48.3]. Point estimate: 39.9 ms.",
+    "point_estimate": 39.9,
+    "confidence_interval": [
+      32.7,
+      48.3
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=15): SE = 14.1/\u221a15 = 3.64. Margin = t(14,0.025) \u00d7 3.64 = 2.145 \u00d7 3.64 \u2248 7.81.",
+    "Full sample 95% CI: 40.5 \u00b1 7.81 = [32.7, 48.3].",
+    "With trimmed sample (n=13): SE = 8.7/\u221a13 = 2.41. Margin = 2.0 \u00d7 2.41 \u2248 4.82.",
+    "Trimmed 95% CI: 39.2 \u00b1 4.82 = [34.4, 44.0].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [32.7, 48.3]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

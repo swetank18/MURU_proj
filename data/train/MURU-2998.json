@@ -1,0 +1,34 @@
+{
+  "id": "MURU-2998",
+  "category": "conditional_probability_chains",
+  "difficulty": 1,
+  "stem": "A proposal enters the grant application pipeline. The probability of passing departmental review is between 75% and 84% (uncertain due to evaluator variability). If the previous stage is passed, the probability of passing external peer review is 96%. If the previous stage is passed, the probability of passing panel discussion is 81%. What is the overall probability that the proposal is funded?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(funded) ranges from 0.583 to 0.653 as the departmental review pass rate varies from 75% to 84%. Point estimate: 0.614.",
+    "point_estimate": 0.614,
+    "confidence_interval": [
+      0.583,
+      0.653
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The proposal must pass all 3 stages sequentially: P(success) = P(stage 1)\u00d7P(stage 2)\u00d7P(stage 3).",
+    "At mid-range: P(success) = 0.79 \u00d7 0.96 \u00d7 0.81 = 0.614.",
+    "At lower bound: P(success) = 0.75 \u00d7 0.96 \u00d7 0.81 = 0.583.",
+    "At upper bound: P(success) = 0.84 \u00d7 0.96 \u00d7 0.81 = 0.653.",
+    "The uncertainty in the departmental review stage creates a 7.0 percentage point range in the overall success probability."
+  ],
+  "common_failure_modes": [
+    "Adding probabilities instead of multiplying for sequential stages",
+    "Using a single value for the departmental review rate without acknowledging uncertainty",
+    "Not recognizing that uncertainty at one stage propagates through all subsequent stages"
+  ],
+  "metadata": {
+    "author": "generator_pipeline",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "MURU-2444",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose among 3 energy source options. The probability of favorable regional climate data is uncertain, estimated between 39% and 51%. The payoffs (in $K) for each option are: solar: $242K in good regional climate data, $22K in bad regional climate data. wind: $55K in good regional climate data, $18K in bad regional climate data. natural gas: $111K in good regional climate data, $52K in bad regional climate data. Which option maximizes expected value? Does the optimal choice change across the range of probability estimates? What is the expected value of the best option?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "At P(good)=0.45: best option is solar with EV=$121.0K. solar is optimal across the entire uncertainty range. EV range of best option: [107.8, 134.2].",
+    "point_estimate": 121.0,
+    "confidence_interval": [
+      107.8,
+      134.2
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute EV for each option: EV = P(good)\u00d7payoff_good + P(bad)\u00d7payoff_bad.",
+    "solar: EV = 0.45\u00d7242 + 0.55\u00d722 = $121.0K.",
+    "wind: EV = 0.45\u00d755 + 0.55\u00d718 = $34.6K.",
+    "natural gas: EV = 0.45\u00d7111 + 0.55\u00d752 = $78.6K.",
+    "Best at mid-range: solar ($121.0K).",
+    "Sensitivity: check endpoints P(good)=0.39 and 0.51.",
+    "solar is optimal across the entire uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Evaluating options only at the midpoint probability without sensitivity analysis",
+    "Not identifying the breakeven probability where the optimal choice switches",
+    "Ignoring downside risk and focusing only on expected value"
+  ],
+  "metadata": {
+    "author": "generator_multi_option_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

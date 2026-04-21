@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1588",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In risk assessment, you are asked to estimate the annual probability of failure. You are first told that an expert's quick estimate during a meeting puts the value at 209.0 %. You then collect your own data: actuarial records and failure databases based on 25 observations give a mean of 147.0 % with SD = 33.0 %. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (209.0 %) likely overestimates the true value. Data-based estimate: 147.0 %, CI = [134.1, 159.9]. If the anchor receives 0-33% weight, the estimate ranges from 157.5 to 167.5. Point estimate: 147.0 % (data-only, unanchored).",
+    "point_estimate": 147.0,
+    "confidence_interval": [
+      134.1,
+      167.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 209.0 % (from an expert's quick estimate during a meeting \u2014 potentially biased).",
+    "Data: mean = 147.0, SD = 33.0, n = 25. SE = 6.6.",
+    "Data-based 95% CI: [134.1, 159.9].",
+    "The anchor overestimates relative to the data by 62 % (42%).",
+    "If we assign the anchor weight w \u2208 [0, 0.33]: estimate = w\u00d7209.0 + (1-w)\u00d7147.0.",
+    "At w=0.25: estimate = 162.5.",
+    "Best practice: the data-based estimate (147.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (209.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (209.0) and data (147.0) are substantially different, suggesting bias in the anchor",
+    "Not computing the data-based confidence interval and relying on intuitive adjustment from the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

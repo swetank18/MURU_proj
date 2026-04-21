@@ -1,0 +1,35 @@
+{
+  "id": "MURU-1771",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A food production study measures package weight for 25 samples to determine if the process variability is within \u00b15g of the nominal weight. The sample standard deviation is 5.77 grams (sample variance = 33.25). A second measurement method on 10 samples gives a sample variance of 26.12 (SD = 5.11 grams). The two methods may have different measurement precision.  Estimate the true population standard deviation of package weight and provide a 95% confidence interval.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Method 1: s=5.77, 95% CI for \u03c3 = [4.5, 8.02]. Method 2: s=5.11, 95% CI for \u03c3 = [3.81, 7.23]. Combined interval: [3.81, 8.02]. Point estimate: 5.45 grams.",
+    "point_estimate": 5.45,
+    "confidence_interval": [
+      3.81,
+      8.02
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Sample variance s\u00b2 = 33.25, df = 24.",
+    "\u03c7\u00b2 CI for \u03c3\u00b2: [(n-1)s\u00b2/\u03c7\u00b2_upper, (n-1)s\u00b2/\u03c7\u00b2_lower] = [24\u00d733.25/39.364, 24\u00d733.25/12.401] = [20.27, 64.35].",
+    "CI for \u03c3: [\u221a20.27, \u221a64.35] = [4.5, 8.02].",
+    "Method 2: s\u00b2=26.12, n=10, df=9. CI for \u03c3: [3.81, 7.23].",
+    "Combined interval accounting for method uncertainty: [3.81, 8.02]."
+  ],
+  "common_failure_modes": [
+    "Using z-based CI for the mean instead of \u03c7\u00b2-based CI for the variance",
+    "Reporting the sample SD (5.77) as the population SD without uncertainty",
+    "Not recognizing that confidence intervals for variance are asymmetric",
+    "Averaging the two sample variances without considering they may represent different measurement precisions"
+  ],
+  "metadata": {
+    "author": "generator_variance_estimation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

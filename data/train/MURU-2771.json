@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2771",
+  "category": "distribution_estimation",
+  "difficulty": 2,
+  "stem": "An engineer takes 30 measurements of vehicle speed using a speedometer. The measurements have a mean of 38.6 km/h and a standard deviation of 4.3 km/h. However, calibration tests reveal that a speedometer systematically underestimates the true value by between 1.1% and 3.4%. Estimate the true vehicle speed and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 38.6 km/h. After correcting for the 2.2% bias: \u2248 39.5 km/h. Full interval accounting for bias uncertainty (1.1%-3.4%) and sampling variability: [37.4, 41.6]. Point estimate: 39.5 km/h.",
+    "point_estimate": 39.5,
+    "confidence_interval": [
+      37.4,
+      41.6
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 38.6 km/h (n=30, s=4.3).",
+    "Sampling SE: 4.3/\u221a30 = 0.79. Sampling margin \u2248 \u00b11.6.",
+    "Bias correction: instrument underestimates by 1.1%-3.4%.",
+    "At 2.2% correction: true value \u2248 39.5 km/h.",
+    "At 1.1% correction: true value \u2248 39.0 km/h.",
+    "At 3.4% correction: true value \u2248 40.0 km/h.",
+    "Combined interval (bias range + sampling): [37.4, 41.6]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

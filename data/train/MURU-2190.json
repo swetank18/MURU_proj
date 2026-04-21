@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2190",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A income study dataset contains 50 observations of monthly income. The data is believed to come from a mixture of two populations: part-time workers (mean \u2248 75.6 $, SD \u2248 14.5) and full-time workers (mean \u2248 140.9 $, SD \u2248 20.7). The proportion of part-time workers in the sample is uncertain, estimated between 37% and 49%. The observed overall mean is 112.8 $ with SD = 37.1. Estimate the true population mean of monthly income, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d775.6 + (1-w)\u00d7140.9. As w varies from 0.37 to 0.49, the mixture mean ranges from 108.9 to 116.7. With sampling variability, CI = [98.6, 127.0]. Point estimate at w=0.43: 112.8 $.",
+    "point_estimate": 112.8,
+    "confidence_interval": [
+      98.6,
+      127.0
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.43: \u03bc_mix = 0.43\u00d775.6 + 0.57\u00d7140.9 = 112.8.",
+    "At w=0.37: \u03bc_mix = 116.7 (more of full-time workers).",
+    "At w=0.49: \u03bc_mix = 108.9 (more of part-time workers).",
+    "Mixture SD \u2248 37.1. SE = 37.1/\u221a50 = 5.25.",
+    "Combined interval [98.6, 127.0] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (37.1) is inflated by the between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

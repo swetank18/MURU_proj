@@ -1,0 +1,37 @@
+{
+  "id": "MURU-0775",
+  "category": "distribution_estimation",
+  "difficulty": 4,
+  "stem": "An engineer takes 25 measurements of water flow rate using a flow meter. The measurements have a mean of 115.2 L/min and a standard deviation of 9.6 L/min. However, calibration tests reveal that a flow meter systematically underestimates the true value by between 1.7% and 6.8%. Estimate the true water flow rate and provide a confidence interval that accounts for both the sampling variability and the uncertain systematic bias.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "Raw mean: 115.2 L/min. After correcting for the 4.2% bias: \u2248 120.3 L/min. Full interval accounting for bias uncertainty (1.7%-6.8%) and sampling variability: [113.4, 127.4]. Point estimate: 120.3 L/min.",
+    "point_estimate": 120.3,
+    "confidence_interval": [
+      113.4,
+      127.4
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Raw sample mean: 115.2 L/min (n=25, s=9.6).",
+    "Sampling SE: 9.6/\u221a25 = 1.92. Sampling margin \u2248 \u00b13.8.",
+    "Bias correction: instrument underestimates by 1.7%-6.8%.",
+    "At 4.2% correction: true value \u2248 120.3 L/min.",
+    "At 1.7% correction: true value \u2248 117.2 L/min.",
+    "At 6.8% correction: true value \u2248 123.6 L/min.",
+    "Combined interval (bias range + sampling): [113.4, 127.4]."
+  ],
+  "common_failure_modes": [
+    "Using the raw mean without correcting for the systematic bias",
+    "Correcting for bias at a single value instead of treating it as a range",
+    "Not combining the sampling variability with the bias uncertainty",
+    "Treating the systematic bias as random noise instead of a directional shift"
+  ],
+  "metadata": {
+    "author": "generator_measurement_bias",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

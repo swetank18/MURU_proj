@@ -1,0 +1,36 @@
+{
+  "id": "MURU-1655",
+  "category": "bayesian_updating",
+  "difficulty": 1,
+  "stem": "A naval search team is looking for a submarine. Based on initial analysis, they estimate a 44% probability that a submarine is in Sector Alpha and a 56% probability it is in Sector Bravo. They search Sector Alpha first and do not find a submarine. However, their search effectiveness is uncertain \u2014 conditions vary, and they estimate their detection probability in Sector Alpha is between 52% and 74%. Given they did not find a submarine in Sector Alpha, what is the updated probability that a submarine is in Sector Bravo?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "P(Sector Bravo | not found in Sector Alpha) ranges from 0.726 to 0.83 as detection probability varies from 52% to 74%. Point estimate at 63% detection: 0.775.",
+    "point_estimate": 0.775,
+    "confidence_interval": [
+      0.726,
+      0.83
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Apply Bayes' theorem for negative evidence: P(B|\u00acfound_A) = P(\u00acfound_A|B)\u00d7P(B) / P(\u00acfound_A).",
+    "If target is in B: P(\u00acfound in A | in B) = 1 (cannot find what isn't there).",
+    "If target is in A: P(\u00acfound in A | in A) = 1 - detection_probability.",
+    "P(\u00acfound_A) = (1-det)\u00d70.44 + 1\u00d70.56.",
+    "At detection 63%: P(B|\u00acfound) = 0.56 / (0.37\u00d70.44 + 0.56) \u2248 0.775.",
+    "At detection 52%: P(B|\u00acfound) \u2248 0.726.",
+    "At detection 74%: P(B|\u00acfound) \u2248 0.83."
+  ],
+  "common_failure_modes": [
+    "Assuming not finding in Sector Alpha means it is definitely in Sector Bravo",
+    "Ignoring the uncertain detection probability and using a single value",
+    "Not applying Bayes' theorem correctly for negative evidence (absence of detection)"
+  ],
+  "metadata": {
+    "author": "generator_search",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

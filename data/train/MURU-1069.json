@@ -1,0 +1,34 @@
+{
+  "id": "MURU-1069",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A automotive testing study measures the fuel consumption (L/100km) for a sample of 25 vehicles. The sample mean is 393.0 L/100km with a sample standard deviation of 119.5 L/100km. However, 3 of the 25 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 22 observations have a mean of 373.1 L/100km and standard deviation of 87.5 L/100km. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 393.0, 95% CI = [343.7, 442.3]. Without outliers: mean = 373.1, 95% CI = [335.8, 410.4]. Combined interval accounting for analytic uncertainty: [335.8, 442.3]. Point estimate: 383.1 L/100km.",
+    "point_estimate": 383.1,
+    "confidence_interval": [
+      335.8,
+      442.3
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=25): SE = 119.5/\u221a25 = 23.9. Margin = t(24,0.025) \u00d7 23.9 = 2.064 \u00d7 23.9 \u2248 49.33.",
+    "Full sample 95% CI: 393.0 \u00b1 49.33 = [343.7, 442.3].",
+    "With trimmed sample (n=22): SE = 87.5/\u221a22 = 18.66. Margin = 2.0 \u00d7 18.66 \u2248 37.32.",
+    "Trimmed 95% CI: 373.1 \u00b1 37.32 = [335.8, 410.4].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [335.8, 442.3]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

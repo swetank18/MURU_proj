@@ -1,0 +1,36 @@
+{
+  "id": "MURU-0669",
+  "category": "decision_under_uncertainty",
+  "difficulty": 2,
+  "stem": "A decision-maker must choose between two options. Option A (solar panels) yields a guaranteed return of $107K. Option B (wind turbines) depends on weather patterns: with probability 37-56% (uncertain), it yields $306K; otherwise it yields $50K. Compute the expected value of each option and determine which is better. How does the uncertainty in weather patterns affect the recommendation?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "decision_theory",
+  "ground_truth": {
+    "answer": "EV(A) = $107K (fixed). EV(B) ranges from $144.7K to $193.4K. Point estimate: $170.3K. Option B is preferred at most assumptions (EV_B > EV_A when P(good) > 22.3%).",
+    "point_estimate": 170.3,
+    "confidence_interval": [
+      144.7,
+      193.4
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "EV(A) = $107K (guaranteed).",
+    "EV(B) = P(good)\u00d7$306K + (1-P(good))\u00d7$50K.",
+    "At P(good)=0.47: EV(B) = 0.47\u00d7306 + 0.53\u00d750 = $170.3K.",
+    "At P(good)=0.37: EV(B) = $144.7K.",
+    "At P(good)=0.56: EV(B) = $193.4K.",
+    "Breakeven probability: P(good) = (107-50) / (306-50) = 0.223.",
+    "The decision switches at P(good) = 22.3%, which falls outside the uncertainty range."
+  ],
+  "common_failure_modes": [
+    "Picking a single probability and giving a definitive recommendation without sensitivity analysis",
+    "Not computing the breakeven probability where the optimal decision switches",
+    "Ignoring the range of outcomes and focusing only on expected values (risk-neutral assumption)"
+  ],
+  "metadata": {
+    "author": "generator_decision",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

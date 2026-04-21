@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2568",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A biology dataset contains 80 observations of cell size. The data is believed to come from a mixture of two populations: healthy cells (mean \u2248 77.9 \u00b5m, SD \u2248 9.5) and abnormal cells (mean \u2248 175.3 \u00b5m, SD \u2248 37.2). The proportion of healthy cells in the sample is uncertain, estimated between 40% and 62%. The observed overall mean is 125.6 \u00b5m with SD = 55.6. Estimate the true population mean of cell size, accounting for the uncertainty in the mixing proportion.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Mixture mean = w\u00d777.9 + (1-w)\u00d7175.3. As w varies from 0.4 to 0.62, the mixture mean ranges from 114.9 to 136.3. With sampling variability, CI = [102.7, 148.5]. Point estimate at w=0.51: 125.6 \u00b5m.",
+    "point_estimate": 125.6,
+    "confidence_interval": [
+      102.7,
+      148.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Mixture mean formula: \u03bc_mix = w \u00d7 \u03bc_A + (1-w) \u00d7 \u03bc_B.",
+    "At w=0.51: \u03bc_mix = 0.51\u00d777.9 + 0.49\u00d7175.3 = 125.6.",
+    "At w=0.4: \u03bc_mix = 136.3 (more of abnormal cells).",
+    "At w=0.62: \u03bc_mix = 114.9 (more of healthy cells).",
+    "Mixture SD \u2248 55.6. SE = 55.6/\u221a80 = 6.22.",
+    "Combined interval [102.7, 148.5] accounts for both mixing uncertainty and sampling variability."
+  ],
+  "common_failure_modes": [
+    "Using the simple average of the two component means without weighting",
+    "Treating the mixing proportion as known instead of uncertain",
+    "Ignoring that the overall SD (55.6) is inflated by the between-component variation"
+  ],
+  "metadata": {
+    "author": "generator_mixture_distribution",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

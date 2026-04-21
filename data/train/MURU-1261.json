@@ -1,0 +1,37 @@
+{
+  "id": "MURU-1261",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "In a environmental monitoring scenario, a researcher begins with a prior probability of 29% that pollution exceeds safe limits, based on sensor readings. After sampling period 1, contradicting evidence arrives with a likelihood ratio estimated between 0.28 and 0.4. After sampling period 2, contradicting evidence arrives with a likelihood ratio estimated between 0.38 and 0.66. After sampling period 3, contradicting evidence arrives with a likelihood ratio estimated between 0.26 and 0.36. After sampling period 4, supporting evidence arrives with a likelihood ratio estimated between 1.88 and 2.72. What is the posterior probability that pollution exceeds safe limits after all 4 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 4 sequential Bayesian updates, P(pollution exceeds safe limits) ranges from 0.0208 to 0.0955. Point estimate: 0.049.",
+    "point_estimate": 0.049,
+    "confidence_interval": [
+      0.0208,
+      0.0955
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.29/0.71 = 0.408.",
+    "Update 1: multiply odds by LR \u2208 [0.28, 0.4] (mid: 0.34, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.38, 0.66] (mid: 0.52, contradicting evidence).",
+    "Update 3: multiply odds by LR \u2208 [0.26, 0.36] (mid: 0.31, contradicting evidence).",
+    "Update 4: multiply odds by LR \u2208 [1.88, 2.72] (mid: 2.3, supporting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.0208, 0.0955], point estimate: 0.049."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates",
+    "Failing to account for compounding uncertainty across multiple uncertain LRs"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

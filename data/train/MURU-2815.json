@@ -1,0 +1,35 @@
+{
+  "id": "MURU-2815",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "In a clinical trial scenario, a researcher begins with a prior probability of 56% that the drug is effective, based on patient outcomes. After batch of patients 1, contradicting evidence arrives with a likelihood ratio estimated between 0.36 and 0.54. After batch of patients 2, contradicting evidence arrives with a likelihood ratio estimated between 0.51 and 0.75. After batch of patients 3, contradicting evidence arrives with a likelihood ratio estimated between 0.45 and 0.62. What is the posterior probability that the drug is effective after all 3 observations, accounting for the uncertainty in each likelihood ratio?",
+  "uncertainty_type": "parameter_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "After 3 sequential Bayesian updates, P(the drug is effective) ranges from 0.0951 to 0.242. Point estimate: 0.163.",
+    "point_estimate": 0.163,
+    "confidence_interval": [
+      0.0951,
+      0.242
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Start with prior odds = 0.56/0.44 = 1.273.",
+    "Update 1: multiply odds by LR \u2208 [0.36, 0.54] (mid: 0.45, contradicting evidence).",
+    "Update 2: multiply odds by LR \u2208 [0.51, 0.75] (mid: 0.63, contradicting evidence).",
+    "Update 3: multiply odds by LR \u2208 [0.45, 0.62] (mid: 0.54, contradicting evidence).",
+    "Convert final odds back to probability: P = odds/(1+odds). Range: [0.0951, 0.242], point estimate: 0.163."
+  ],
+  "common_failure_modes": [
+    "Treating each update independently instead of applying them sequentially to the running posterior",
+    "Using a single LR value for each observation without propagating uncertainty",
+    "Confusing likelihood ratios with probabilities",
+    "Not recognizing that conflicting evidence partially offsets prior updates"
+  ],
+  "metadata": {
+    "author": "generator_sequential_updating",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

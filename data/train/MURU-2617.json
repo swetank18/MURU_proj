@@ -1,0 +1,37 @@
+{
+  "id": "MURU-2617",
+  "category": "adversarial_ambiguity",
+  "difficulty": 3,
+  "stem": "In real estate, you are asked to estimate the property value. You are first told that a listing price set by a motivated seller puts the value at 586.0 $K. You then collect your own data: recent comparable sales in the neighborhood based on 20 observations give a mean of 399.0 $K with SD = 87.0 $K. How should you combine the anchor with your data? How much, if at all, should the anchor influence your estimate? Provide a point estimate and confidence interval.",
+  "uncertainty_type": "epistemic_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The anchor (586.0 $K) likely overestimates the true value. Data-based estimate: 399.0 $K, CI = [360.8, 437.2]. If the anchor receives 0-41% weight, the estimate ranges from 438.3 to 475.7. Point estimate: 399.0 $K (data-only, unanchored).",
+    "point_estimate": 399.0,
+    "confidence_interval": [
+      360.8,
+      475.7
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "Anchor: 586.0 $K (from a listing price set by a motivated seller \u2014 potentially biased).",
+    "Data: mean = 399.0, SD = 87.0, n = 20. SE = 19.5.",
+    "Data-based 95% CI: [360.8, 437.2].",
+    "The anchor overestimates relative to the data by 187 $K (47%).",
+    "If we assign the anchor weight w \u2208 [0, 0.41]: estimate = w\u00d7586.0 + (1-w)\u00d7399.0.",
+    "At w=0.31: estimate = 457.0.",
+    "Best practice: the data-based estimate (399.0) should dominate since it has an objective basis. The anchor should receive minimal weight."
+  ],
+  "common_failure_modes": [
+    "Being anchored by the initial value (586.0) and insufficiently adjusting toward the data",
+    "Giving equal weight to the anchor and data despite the anchor's questionable provenance",
+    "Not recognizing that the anchor (586.0) and data (399.0) are substantially different, suggesting bias in the anchor",
+    "Not computing the data-based confidence interval and relying on intuitive adjustment from the anchor"
+  ],
+  "metadata": {
+    "author": "generator_anchoring_manipulation",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}

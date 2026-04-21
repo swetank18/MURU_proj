@@ -1,0 +1,38 @@
+{
+  "id": "MURU-1901",
+  "category": "adversarial_ambiguity",
+  "difficulty": 5,
+  "stem": "In a employee training study comparing Training Program X vs. Y: Overall, Treatment Y has a higher performance improvement (65.7% vs 60.0%). However, when stratified by initial skill level: In junior employees (n_X=20, n_Y=100): Treatment X achieves 80% vs Treatment Y's 74%. In senior employees (n_X=80, n_Y=40): Treatment X achieves 55% vs Treatment Y's 46%. The true population proportion of junior employees is uncertain, estimated between 41% and 58%. Which treatment is actually better, and by how much?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to senior employees (harder cases). Adjusted difference (X - Y): [0.073, 0.078], point estimate: 0.076. Treatment X is genuinely better by 7.6 percentage points.",
+    "point_estimate": 0.076,
+    "confidence_interval": [
+      0.073,
+      0.078
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=60.0%, Y=65.7% (Y appears better).",
+    "Stratified: In junior employees: X=80% > Y=74%. In senior employees: X=55% > Y=46%.",
+    "X is better in BOTH subgroups \u2014 this is Simpson's Paradox.",
+    "The paradox arises because Training Program X is applied more to senior employees (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A\u00d70.8 + (1-w_A)\u00d70.55.",
+    "Population-adjusted rate for Y: w_A\u00d70.74 + (1-w_A)\u00d70.46.",
+    "Difference X-Y at w_A=0.49: 0.076. Range: [0.073, 0.078]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty",
+    "Not considering that additional unobserved confounders could further modify the comparison"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original"
+  }
+}
