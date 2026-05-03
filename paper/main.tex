@@ -24,6 +24,8 @@
 \usepackage{multirow}
 \usepackage{enumitem}
 \usepackage{wrapfig}
+\usepackage{pifont}
+\usepackage{amsthm}
 
 \emergencystretch=3em
 
@@ -100,7 +102,31 @@ The ML community has extensively studied predictive uncertainty through Bayesian
 \paragraph{Adversarial and Ambiguous Evaluation.}
 TruthfulQA~\citep{lin2022} tests whether models produce truthful answers versus popular misconceptions, which relates to our Adversarial Ambiguity category. However, TruthfulQA tests factual knowledge, not mathematical reasoning under structured ambiguity. Our adversarial problems are mathematically precise: the ambiguity lies in the \emph{formalization} (e.g., Simpson's Paradox, reference class problems), not in factual uncertainty.
 
-\muru{} is, to our knowledge, the first benchmark that combines formal mathematical reasoning with genuine uncertainty quantification, requiring both correct computation \emph{and} calibrated confidence across a structured difficulty hierarchy.
+\paragraph{Positioning.}
+Table~\ref{tab:comparison} positions \muru{} relative to existing benchmarks. To our knowledge, it is the first benchmark that combines formal mathematical reasoning with genuine uncertainty quantification, requiring both correct computation \emph{and} calibrated confidence across a structured difficulty hierarchy.
+
+\begin{table}[t]
+\centering
+\caption{Comparison of \muru{} with existing mathematical reasoning benchmarks. \muru{} is the only benchmark that requires calibrated confidence intervals, tests adversarial ambiguity, and measures calibration quality. {\footnotesize\ding{51}} = yes, {\footnotesize\ding{55}} = no, {\footnotesize$\sim$} = partial.}
+\label{tab:comparison}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Benchmark} & \textbf{Size} & \textbf{Math} & \textbf{Uncertainty} & \textbf{CI Required} & \textbf{Calibration} & \textbf{Adversarial} & \textbf{Difficulty} \\
+ & & \textbf{Reasoning} & \textbf{Reasoning} & \textbf{in Answer} & \textbf{Measured} & \textbf{Ambiguity} & \textbf{Levels} \\
+\midrule
+GSM8K & 8.5K & \ding{51} & \ding{55} & \ding{55} & \ding{55} & \ding{55} & 1 \\
+MATH & 12.5K & \ding{51} & \ding{55} & \ding{55} & \ding{55} & \ding{55} & 5 \\
+MMLU & 15.9K & $\sim$ & \ding{55} & \ding{55} & \ding{55} & \ding{55} & 1 \\
+BIG-Bench Hard & 6.5K & $\sim$ & \ding{55} & \ding{55} & \ding{55} & \ding{55} & 1 \\
+TheoremQA & 800 & \ding{51} & \ding{55} & \ding{55} & \ding{55} & \ding{55} & 1 \\
+TruthfulQA & 817 & \ding{55} & \ding{55} & \ding{55} & \ding{55} & \ding{51} & 1 \\
+MathBench & 3.7K & \ding{51} & \ding{55} & \ding{55} & \ding{55} & \ding{55} & 3 \\
+\midrule
+\textbf{\muru{}} & \textbf{3{,}000} & \textbf{\ding{51}} & \textbf{\ding{51}} & \textbf{\ding{51}} & \textbf{\ding{51}} & \textbf{\ding{51}} & \textbf{5} \\
+\bottomrule
+\end{tabular}}
+\end{table}
 
 
 % ═══════════════════════════════════════════════════════════════════
@@ -120,6 +146,15 @@ Each \muru{} problem satisfies five design criteria:
     \item \textbf{Active reasoning}: The problem cannot be solved by retrieval or pattern matching alone; it requires applying a probabilistic framework to novel numerical inputs.
     \item \textbf{Non-trivial intervals}: The ground-truth confidence interval is non-degenerate (CI width $> 0$), ensuring that the problem genuinely involves uncertainty.
 \end{enumerate}
+
+\subsection{Formal Problem Definition}
+\label{sec:formalization}
+
+We formalize the evaluation task. A \muru{} problem $p$ consists of a natural-language stem $s_p$ and ground-truth tuple $(y_p^*, [\ell_p, u_p], \alpha_p, f_p)$, where $y_p^*$ is the point estimate, $[\ell_p, u_p]$ is the confidence interval at level $\alpha_p$, and $f_p \in \mathcal{F}$ is the correct reasoning framework from the set $\mathcal{F} = \{\texttt{bayesian}, \texttt{frequentist}, \texttt{decision\_theory}, \texttt{information\_theory}, \texttt{monte\_carlo}\}$.
+
+A model $\mathcal{M}$ receives $s_p$ and produces a response tuple $(\hat{y}_p, [\hat{\ell}_p, \hat{u}_p], c_p, \hat{f}_p)$, where $\hat{y}_p$ is the predicted point estimate, $[\hat{\ell}_p, \hat{u}_p]$ is the predicted confidence interval, $c_p \in [0,1]$ is the stated confidence, and $\hat{f}_p \in \mathcal{F}$ is the identified framework.
+
+The evaluation metrics (Section~\ref{sec:evaluation}) are then functions of the ground-truth and response tuples across the test set $\mathcal{T} = \{p_1, \ldots, p_N\}$. This formalization makes explicit that \muru{} evaluates four output dimensions per problem---point accuracy, interval coverage, metacognitive calibration, and process correctness---rather than the single-number evaluation of traditional benchmarks.
 
 \subsection{Problem Categories}
 \label{sec:categories}
