@@ -16,10 +16,8 @@ Usage:
     results = metrics.compute_all()
 """
 
-import json
-import math
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass

@@ -99,6 +99,15 @@ python evaluation/analyze_results.py
 python evaluation/run_baselines.py --save
 ```
 
+### Run Tests
+
+```bash
+make test         # 26 tests: metrics, parser, dataset invariants
+make validate     # Re-validate all 3,000 problem JSONs against the schema
+```
+
+A GitHub Actions workflow ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the same suite against Python 3.10/3.11/3.12 on every push.
+
 ## 📈 Baseline Results
 
 Results on the test set (n=301):

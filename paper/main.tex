@@ -199,8 +199,8 @@ Each problem is stored as a JSON document with the following fields:
     \item \texttt{category}: One of five categories
     \item \texttt{difficulty}: Integer 1--5
     \item \texttt{uncertainty\_type}: Type of uncertainty (e.g., \texttt{epistemic\_prior}, \texttt{parameter\_estimation})
-    \item \texttt{required\_framework}: The mathematically appropriate framework (\texttt{bayesian\_inference}, \texttt{frequentist\_inference}, \texttt{decision\_theory}, \texttt{information\_theory}, or \texttt{monte\_carlo})
-    \item \texttt{ground\_truth}: Object containing \texttt{answer} (text), \texttt{point\_estimate} (float), \texttt{confidence\_interval} ([lower, upper]), and \texttt{ci\_level} (typically 0.95)
+    \item \texttt{required\_framework}: The mathematically appropriate framework; one of five values listed in Section~\ref{sec:metrics}
+    \item \texttt{ground\_truth}: Object with fields \texttt{answer}, \texttt{point\_estimate}, \texttt{confidence\_interval}, and \texttt{ci\_level} (typically 0.95)
     \item \texttt{solution\_steps}: Ordered list of reasoning steps
     \item \texttt{common\_failure\_modes}: List of typical errors a model might make
     \item \texttt{metadata}: Author, review status, source template, and creation timestamp
@@ -246,6 +246,7 @@ Test & 301 & Baseline evaluation (reported results) \\
 \label{sec:evaluation}
 
 \subsection{Metrics}
+\label{sec:metrics}
 
 We evaluate models on six metrics designed to assess orthogonal dimensions of uncertainty reasoning capability.
 
@@ -292,7 +293,7 @@ All models receive a structured system prompt instructing them to:
     \item State a confidence probability between 0 and 1
 \end{enumerate}
 
-Responses are parsed using regular expressions to extract four structured fields: \texttt{FRAMEWORK}, \texttt{POINT\_ESTIMATE}, \texttt{CONFIDENCE\_INTERVAL}, and \texttt{CONFIDENCE}. Temperature is set to 0 for reproducibility. Full prompts are provided in Appendix~\ref{app:prompts}.
+Responses are parsed via regular expressions to extract four structured fields (\texttt{FRAMEWORK}, \texttt{POINT\_ESTIMATE}, \texttt{CONFIDENCE\_INTERVAL}, \texttt{CONFIDENCE}). Temperature is set to 0 for reproducibility; full prompts are in Appendix~\ref{app:prompts}.
 
 \subsection{Model-Agnostic Evaluation API}
 
@@ -783,6 +784,11 @@ python evaluation/run_eval.py --model gpt-4o --save
 # Generate analysis and figures
 python evaluation/analyze_results.py
 python scripts/generate_figures.py
+
+# Run the test suite (metrics, parsing, dataset invariants)
+make test
 \end{verbatim}
+
+A continuous-integration workflow (\texttt{.github/workflows/ci.yml}) runs the test suite and dataset validation against Python 3.10, 3.11, and 3.12 on every push and pull request.
 
 \end{document}
