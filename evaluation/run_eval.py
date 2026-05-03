@@ -7,16 +7,22 @@ and scores them using the metrics module.
 
 Usage:
     python evaluation/run_eval.py --model gpt-4o --subset data/test/
-    python evaluation/run_eval.py --model claude-3.5-sonnet --n 50
-    python evaluation/run_eval.py --model gemini-1.5-pro --subset data/test/ --save
+    python evaluation/run_eval.py --model llama-3.1-70b --n 50 --save
+    python evaluation/run_eval.py --model gemini-1.5-flash --subset data/test/ --save
 
-API keys should be set as environment variables:
-    OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY
+API keys (set as environment variables):
+    OPENAI_API_KEY       — for GPT models
+    ANTHROPIC_API_KEY    — for Claude models
+    GOOGLE_API_KEY       — for Gemini models (free at aistudio.google.com)
+    GROQ_API_KEY         — for Llama/Mixtral via Groq (free at console.groq.com)
+    TOGETHER_API_KEY     — for Llama/Mistral via Together AI
 
 Supported models:
-    OpenAI:     gpt-4o, gpt-4-turbo, gpt-3.5-turbo
+    OpenAI:     gpt-4o, gpt-4o-mini, gpt-4-turbo, gpt-3.5-turbo
     Anthropic:  claude-3.5-sonnet, claude-3-opus, claude-3-haiku
-    Google:     gemini-1.5-pro, gemini-1.5-flash
+    Google:     gemini-1.5-pro, gemini-1.5-flash, gemini-2.0-flash
+    Groq (FREE): llama-3.1-70b, llama-3.1-8b, mixtral-8x7b, gemma2-9b
+    Together:   meta-llama/Llama-3-70b, mistralai/Mixtral-8x7B
 """
 
 import argparse
@@ -129,19 +135,120 @@ class GoogleClient(ModelClient):
         return response.text or ""
 
 
+class GroqClient(ModelClient):
+    """Groq API client — FREE tier for Llama 3, Mixtral, Gemma.
+
+    Get your free API key at: https://console.groq.com
+    Supports: llama-3.1-70b-versatile, llama-3.1-8b-instant,
+              mixtral-8x7b-32768, gemma2-9b-it
+    """
+    # Map short names to Groq model IDs
+    MODEL_MAP = {
+        "llama-3.1-70b": "llama-3.1-70b-versatile",
+        "llama-3.1-8b": "llama-3.1-8b-instant",
+        "llama-3-70b": "llama-3.1-70b-versatile",
+        "llama-3-8b": "llama-3.1-8b-instant",
+        "mixtral-8x7b": "mixtral-8x7b-32768",
+        "gemma2-9b": "gemma2-9b-it",
+    }
+
+    def __init__(self, model: str):
+        api_key = os.environ.get("GROQ_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "GROQ_API_KEY not set. Get a FREE key at https://console.groq.com"
+            )
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise ImportError("Install openai: pip install openai>=1.12.0")
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.groq.com/openai/v1",
+        )
+        self.model = self.MODEL_MAP.get(model.lower(), model)
+
+    def query(self, prompt: str, system: str = "") -> str:
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=0.0,
+            max_tokens=2048,
+        )
+        return response.choices[0].message.content or ""
+
+
+class TogetherClient(ModelClient):
+    """Together AI client — cheap Llama/Mistral models.
+
+    Get your API key at: https://together.ai ($5 free credits on signup)
+    """
+
+    def __init__(self, model: str):
+        api_key = os.environ.get("TOGETHER_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "TOGETHER_API_KEY not set. Get $5 free credits at https://together.ai"
+            )
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise ImportError("Install openai: pip install openai>=1.12.0")
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.together.xyz/v1",
+        )
+        self.model = model
+
+    def query(self, prompt: str, system: str = "") -> str:
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=0.0,
+            max_tokens=2048,
+        )
+        return response.choices[0].message.content or ""
+
+
 def get_client(model_name: str) -> ModelClient:
     """Create the appropriate API client for the given model name."""
     model_lower = model_name.lower()
 
+    # OpenAI
     if any(x in model_lower for x in ["gpt", "o1", "o3"]):
         return OpenAIClient(model_name)
-    elif any(x in model_lower for x in ["claude"]):
+    # Anthropic
+    elif "claude" in model_lower:
         return AnthropicClient(model_name)
-    elif any(x in model_lower for x in ["gemini"]):
+    # Gemini (Google AI Studio — free)
+    elif "gemini" in model_lower:
         return GoogleClient(model_name)
+    # Groq (free Llama/Mixtral)
+    elif any(x in model_lower for x in ["llama", "mixtral", "gemma"]):
+        if os.environ.get("TOGETHER_API_KEY") and not os.environ.get("GROQ_API_KEY"):
+            return TogetherClient(model_name)
+        return GroqClient(model_name)
+    # Together AI (explicit)
+    elif "/" in model_name:  # Together uses org/model format
+        return TogetherClient(model_name)
     else:
         print(f"ERROR: Unknown model provider for '{model_name}'.")
-        print("Supported prefixes: gpt/o1/o3 (OpenAI), claude (Anthropic), gemini (Google)")
+        print("Supported models:")
+        print("  OpenAI:    gpt-4o, gpt-4o-mini, gpt-3.5-turbo")
+        print("  Anthropic: claude-3.5-sonnet, claude-3-opus")
+        print("  Google:    gemini-1.5-pro, gemini-1.5-flash (FREE)")
+        print("  Groq:      llama-3.1-70b, mixtral-8x7b, gemma2-9b (FREE)")
+        print("  Together:  meta-llama/Llama-3-70b (org/model format)")
         sys.exit(1)
 
 
