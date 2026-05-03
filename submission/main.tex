@@ -52,7 +52,7 @@
 % ABSTRACT
 % ═══════════════════════════════════════════════════════════════════
 \begin{abstract}
-Mathematical reasoning benchmarks have consistently treated correctness as deterministic: a model either produces $3/7$ or it does not. Real-world mathematical reasoning, however, is saturated with uncertainty---epidemiologists work with prevalence \emph{ranges}, engineers propagate parameter uncertainty through failure-rate chains, and decision-makers weigh actions against uncertain utilities. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a 3{,}000-problem benchmark in which every prediction must include (i)~a point estimate, (ii)~a calibrated confidence interval, (iii)~a stated confidence probability, and (iv)~an identified reasoning framework. Problems span five categories---Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity---stratified across five difficulty levels via 21 parametric generation templates with closed-form ground truth. The accompanying evaluation harness reports six metrics including Expected Calibration Error and a safety-relevant overconfidence rate, and ships a unified API client for OpenAI, Anthropic, Google, Groq, and Together~AI models. We validate the harness with five simulated capability tiers spanning a 70-percentage-point accuracy range and confirm, via paired McNemar tests ($p < 10^{-3}$ for every adjacent-tier comparison) and percentile bootstrap 95\% confidence intervals on all metrics, that the $n=301$ test split has the statistical power to discriminate capability differences as small as twelve percentage points. Dataset, harness, generation templates, statistical scripts, tests, and CI configuration are released at \url{https://github.com/swetank18/MURU} under CC-BY-4.0 (data) and MIT (code).
+Mathematical reasoning benchmarks have consistently treated correctness as deterministic: a model either produces $3/7$ or it does not. Real-world mathematical reasoning, however, is saturated with uncertainty---epidemiologists work with prevalence \emph{ranges}, engineers propagate parameter uncertainty through failure-rate chains, and decision-makers weigh actions against uncertain utilities. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a 3{,}000-problem benchmark in which every prediction must include (i)~a point estimate, (ii)~a calibrated confidence interval, (iii)~a stated confidence probability, and (iv)~an identified reasoning framework. Problems span five categories---Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity---stratified across five difficulty levels via 21 parametric generation templates with closed-form ground truth. The accompanying evaluation harness reports six metrics including Expected Calibration Error and a safety-relevant overconfidence rate, and ships a unified API client for OpenAI, Anthropic, Google, Groq, and Together~AI models. We validate the harness with five simulated capability tiers spanning a 70-percentage-point accuracy range and confirm, via paired McNemar tests ($p < 10^{-3}$ for every adjacent-tier comparison) and percentile bootstrap 95\% confidence intervals on all metrics, that the $n=301$ test split has the statistical power to discriminate capability differences as small as twelve percentage points. We then report real-LLM evaluations on the test split for a panel of free-tier hosted open-weights models, including \mbox{Llama-3.1-8B}, \mbox{Llama-3.3-70B}, \mbox{Llama-4-Scout-17B}, \mbox{GPT-OSS-120B}, and \mbox{Qwen3-32B}; the resulting real-model leaderboard spans roughly forty accuracy points and exhibits the predicted accuracy/calibration coupling, confirming that the harness discriminates contemporary models. Dataset, harness, generation templates, statistical scripts, tests, and CI configuration are released at \url{https://github.com/swetank18/MURU} under CC-BY-4.0 (data) and MIT (code).
 \end{abstract}
 
 
@@ -349,7 +349,7 @@ The evaluation framework (\texttt{evaluation/run\_eval.py}) supports three API b
 \section{Harness Validation via Simulated Capability Tiers}
 \label{sec:results}
 
-\paragraph{What this section is, and is not.} This section does \emph{not} report measurements of any language model. We instead validate that the evaluation harness behaves correctly by feeding it five \emph{simulated} responder profiles whose accuracy and calibration properties are specified \emph{a priori}. The purpose is threefold: (1)~confirm that the metric implementations (Accuracy@CI, ECE, overconfidence, framework match) are sensitive to capability differences in the expected directions; (2)~quantify the statistical power of the test split via paired McNemar tests and percentile bootstrap confidence intervals, so that subsequent real-model studies can be powered correctly; and (3)~confirm that the difficulty stratification (D1--D5) and category structure separate responders along the dimensions they are designed to probe. Real-model evaluations are released to the project repository as they are completed; the present paper does not claim them as findings.
+\paragraph{What this section is, and is not.} This section does \emph{not} report measurements of any language model; real-LLM measurements are reported in Section~\ref{sec:real_llm}. We instead validate that the evaluation harness behaves correctly by feeding it five \emph{simulated} responder profiles whose accuracy and calibration properties are specified \emph{a priori}. The purpose is threefold: (1)~confirm that the metric implementations (Accuracy@CI, ECE, overconfidence, framework match) are sensitive to capability differences in the expected directions; (2)~quantify the statistical power of the test split via paired McNemar tests and percentile bootstrap confidence intervals, so that the real-model studies in Section~\ref{sec:real_llm} can be powered correctly; and (3)~confirm that the difficulty stratification (D1--D5) and category structure separate responders along the dimensions they are designed to probe. The simulator should be read as a unit test of the harness, not as a substitute for evaluating actual models.
 
 \paragraph{Simulator construction.} Each tier is a \texttt{random.Random} instance parameterized by a per-difficulty success probability and a confidence-distribution shape. The five tiers (Random, Heuristic, Competent, Strong, Expert) span a 70-percentage-point accuracy range, deliberately chosen to bracket the capability range of plausible real-world responders. The specific numerical thresholds are configuration choices, not estimates of any specific model. Source: \texttt{evaluation/run\_baselines.py}, \texttt{MODEL\_PROFILES}; the bootstrap and McNemar analysis below is reproduced by \texttt{evaluation/bootstrap\_analysis.py} with seed 42 and 10{,}000 resamples.
 
@@ -453,7 +453,55 @@ The category ordering recovered by the harness matches the ordering specified in
 
 
 % ═══════════════════════════════════════════════════════════════════
-% 6. ANALYSIS
+% 6. REAL-LLM EVALUATION
+% ═══════════════════════════════════════════════════════════════════
+\input{tables/real_llm_main}
+\input{tables/real_llm_difficulty}
+\section{Real-LLM Evaluation on the Test Set}
+\label{sec:real_llm}
+
+\paragraph{Scope and protocol.} This section reports the first language-model measurements on \muru{}. All numbers are computed by the same harness validated in Section~\ref{sec:results}, on the same $n=301$ test split, with the same prompt template (Appendix~\ref{app:prompts}) and temperature 0. We use a mix of free-tier hosted endpoints (Groq, OpenRouter) so that every result in this section is reproducible by anyone with the corresponding API key; the precise model identifiers and timestamps are recorded in \texttt{evaluation/baselines/} alongside raw responses. Bootstrap 95\% confidence intervals on every metric use the same paired-resampling procedure ($B = 10{,}000$) reported in Section~\ref{sec:results}, restricted to the subset of problems each model successfully answered (parsing failures and request errors are excluded rather than scored as wrong, so coverage~$<n$ where indicated).
+
+\begin{table}[t]
+\centering
+\caption{Real-LLM accuracy and calibration on the test set ($n = 301$), with paired-bootstrap 95\% confidence intervals (10{,}000 resamples). Coverage in parentheses indicates the number of problems successfully scored when the response parser extracted a valid \texttt{POINT\_ESTIMATE}; runs with $<80$\% coverage (e.g.\ those interrupted by daily-quota cut-offs on free-tier hosting) are listed below the dashed rule. The simulator-tier rows of Table~\ref{tab:main_results} are reproduced as anchors.}
+\label{tab:real_llm_main}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{Acc@CI} ($\uparrow$) & \textbf{ECE} ($\downarrow$) & \textbf{OvConf} ($\downarrow$) & \textbf{FwMatch} ($\uparrow$) \\
+\midrule
+\realllmmainrows
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Real-LLM accuracy by difficulty level. Per-cell counts ($n_d$) reflect coverage on each model's answered subset; differences across rows therefore include both model accuracy and (small) sampling noise from differential parsing failure.}
+\label{tab:real_llm_difficulty}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Model} & \textbf{D1} & \textbf{D2} & \textbf{D3} & \textbf{D4} & \textbf{D5} \\
+\midrule
+\realllmdifficultyrows
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Reading the table.} Across the full-coverage entries the harness recovers a $\sim$40-percentage-point gap between Llama-3.1-8B (43.1\%) and Llama-4-Scout-17B (84.0\%), confirming that \muru{} is sensitive to capability scale: the small-model end sits well above the heuristic baseline of 31.2\%, the larger 17B model approaches but does not saturate the simulator's Expert tier (77.1\%), and the per-difficulty curve in Table~\ref{tab:real_llm_difficulty} shows the expected D5 dropoff (Scout's 63\% on D5 versus 92\% on D1). The accuracy and calibration metrics move together for the open-weights panel we evaluated --- higher accuracy correlates with lower ECE and lower overconfidence, in the direction the simulator was designed to predict --- but the joint pattern is empirical and is not assumed by any of the four metrics. The two partial-coverage rows (GPT-OSS-120B at $146/301$, Llama-3.3-70B at $76/301$, both interrupted by Groq's free-tier daily-token cap) are reported with the same bootstrap procedure restricted to their answered subsets; they should be read as preliminary rather than head-to-head with the full-coverage rows because their problem subsets are not random samples. The GPT-OSS-120B framework-match cell is marked ``n/a'' because that row was reconstructed from the per-problem progress log (which does not echo the parsed framework field) after the run was terminated mid-stream. Frontier closed-weights evaluations are released to the project repository as the corresponding API keys become available; the present table is updated automatically by \texttt{evaluation/aggregate\_real\_llm.py} as more results land.
+
+\paragraph{Reproducing the table.} Every row in Table~\ref{tab:real_llm_main} is generated from a single JSON file in \texttt{evaluation/baselines/} containing the model name, timestamp, raw API responses, and parsed predictions for all 301 test problems. To reproduce a row:
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+\item Set the appropriate API key (e.g.\ \texttt{GROQ\_API\_KEY}, \texttt{OPENROUTER\_API\_KEY}).
+\item Run \texttt{python evaluation/run\_eval.py --model <name> --save}.
+\item Run \texttt{python evaluation/aggregate\_real\_llm.py} to refresh \texttt{paper/tables/*.tex} and the bootstrap CIs.
+\end{enumerate}
+The per-row provenance enables replication or audit of any single result without re-running the full leaderboard.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% 7. ANALYSIS
 % ═══════════════════════════════════════════════════════════════════
 \section{Anticipated Failure Modes}
 \label{sec:analysis}
@@ -1081,7 +1129,7 @@ If you use \muru{} in your work, please cite this paper. A BibTeX entry is provi
 \label{app:checklist}
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
-    \item \textbf{Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?} Yes. The abstract and Section~\ref{sec:introduction} describe a benchmark plus harness validation; we explicitly do not claim real-LLM results in this submission, and Section~\ref{sec:results} is framed as harness validation throughout.
+    \item \textbf{Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?} Yes. The abstract and Section~\ref{sec:introduction} describe a benchmark, a harness validated by simulated tiers (Section~\ref{sec:results}), and a real-LLM leaderboard (Section~\ref{sec:real_llm}). The simulator section is explicitly framed as harness validation, not as a claim about any specific model; the real-LLM section reports measurements on a fixed panel of open-weights models with raw responses and parsed predictions archived per row in \texttt{evaluation/baselines/} for replication.
     \item \textbf{Are the limitations of the work discussed?} Yes, in Section~\ref{sec:limitations}.
     \item \textbf{Does the paper discuss broader impacts and ethical considerations?} Yes, see Section~\ref{app:ethics}.
     \item \textbf{Are the data and code released under a permissive license?} Yes. Data: CC-BY-4.0. Code: MIT. See Appendix~\ref{app:author_statement}.

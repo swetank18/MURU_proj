@@ -223,12 +223,59 @@ class TogetherClient(ModelClient):
         return response.choices[0].message.content or ""
 
 
+class OpenRouterClient(ModelClient):
+    """OpenRouter — unified API for many open and frontier models.
+
+    Get your API key at: https://openrouter.ai (free tier on many models;
+    pay-as-you-go for the rest). OpenAI-compatible endpoint.
+    Use the "or:" prefix or the full org/model[:free] slug to route here.
+    """
+
+    def __init__(self, model: str):
+        api_key = os.environ.get("OPENROUTER_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "OPENROUTER_API_KEY not set. Get a key at https://openrouter.ai"
+            )
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise ImportError("Install openai: pip install openai>=1.12.0")
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://openrouter.ai/api/v1",
+        )
+        # Strip the "or:" routing prefix if present.
+        self.model = model[3:] if model.startswith("or:") else model
+
+    def query(self, prompt: str, system: str = "") -> str:
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=0.0,
+            max_tokens=2048,
+        )
+        return response.choices[0].message.content or ""
+
+
 def get_client(model_name: str) -> ModelClient:
     """Create the appropriate API client for the given model name."""
     model_lower = model_name.lower()
 
+    # Explicit OpenRouter prefix takes priority.
+    if model_name.startswith("or:"):
+        return OpenRouterClient(model_name)
+    # Groq-hosted open models (must be checked before OpenAI/etc. since
+    # gpt-oss-* contains "gpt" and would otherwise route to the OpenAI client).
+    if any(x in model_lower for x in ["gpt-oss", "qwen", "llama-4", "llama-3"]):
+        return GroqClient(model_name)
     # OpenAI
-    if any(x in model_lower for x in ["gpt", "o1", "o3"]):
+    elif any(x in model_lower for x in ["gpt", "o1", "o3"]):
         return OpenAIClient(model_name)
     # Anthropic
     elif "claude" in model_lower:
@@ -236,7 +283,7 @@ def get_client(model_name: str) -> ModelClient:
     # Gemini (Google AI Studio — free)
     elif "gemini" in model_lower:
         return GoogleClient(model_name)
-    # Groq (free Llama/Mixtral)
+    # Groq (free Llama/Mixtral/Gemma)
     elif any(x in model_lower for x in ["llama", "mixtral", "gemma"]):
         if os.environ.get("TOGETHER_API_KEY") and not os.environ.get("GROQ_API_KEY"):
             return TogetherClient(model_name)
@@ -333,8 +380,55 @@ def run_evaluation(
 
         prompt = USER_PROMPT_TEMPLATE.format(stem=problem["stem"])
 
-        try:
-            response = client.query(prompt, system=SYSTEM_PROMPT)
+        # Retry with exponential backoff for rate limits
+        max_retries = 5
+        response = None
+        tpd_exhausted = False
+        for attempt in range(max_retries + 1):
+            try:
+                response = client.query(prompt, system=SYSTEM_PROMPT)
+                break  # Success
+            except Exception as e:
+                err_str = str(e)
+                is_rate_limit = "429" in err_str or "rate_limit" in err_str.lower()
+                # Detect daily-token-budget exhaustion: retrying within the
+                # same calendar day is futile. Exit the loop and let the
+                # outer code save partial results.
+                is_tpd = "tokens per day" in err_str.lower() or "TPD" in err_str
+                if is_tpd:
+                    print(f"✗ (TPD exhausted; saving partial results)")
+                    raw_results.append({
+                        "problem_id": problem["id"],
+                        "response": "",
+                        "parsed": {},
+                        "success": False,
+                        "error": err_str,
+                    })
+                    tpd_exhausted = True
+                    break
+                if is_rate_limit and attempt < max_retries:
+                    wait = 8 * (2 ** attempt)  # 8, 16, 32, 64, 128 seconds
+                    print(f"⏳ rate limited, waiting {wait}s (retry {attempt+1}/{max_retries})... ", end="", flush=True)
+                    time.sleep(wait)
+                    continue
+                else:
+                    print(f"✗ (error: {e})")
+                    raw_results.append({
+                        "problem_id": problem["id"],
+                        "response": "",
+                        "parsed": {},
+                        "success": False,
+                        "error": err_str,
+                    })
+                    response = None
+                    break
+
+        if tpd_exhausted:
+            print(f"  Stopping early: model has exhausted its daily token budget. "
+                  f"Returning {len(predictions)} predictions on {i+1} attempted problems.")
+            break
+
+        if response is not None:
             parsed = parse_response(response)
 
             if parsed["point_estimate"] is not None:
@@ -356,16 +450,6 @@ def run_evaluation(
                 "response": response,
                 "parsed": parsed,
                 "success": parsed["point_estimate"] is not None,
-            })
-
-        except Exception as e:
-            print(f"✗ (error: {e})")
-            raw_results.append({
-                "problem_id": problem["id"],
-                "response": "",
-                "parsed": {},
-                "success": False,
-                "error": str(e),
             })
 
         time.sleep(delay)

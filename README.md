@@ -16,7 +16,7 @@ Existing math benchmarks (GSM8K, MATH, MMLU) test deterministic answers: a singl
 | Generation templates | 21 parametric templates with seeded RNG |
 | Splits | 2,398 train / 301 validation / 301 test (stratified by category × difficulty) |
 | Evaluation metrics | Accuracy@CI, ECE, Overconfidence, Framework Match, plus per-category and per-difficulty breakdowns |
-| Model APIs supported | OpenAI, Anthropic, Google |
+| Model APIs supported | OpenAI, Anthropic, Google, Groq (free tier), Together AI, OpenRouter |
 | Tests | 26 pytest cases, run on Python 3.10 / 3.11 / 3.12 in CI |
 
 ---
@@ -116,9 +116,22 @@ python evaluation/analyze_results.py
 ### Evaluate a real model
 
 ```bash
+# Free tier: Groq hosts Llama-3.x, Llama-4-Scout, GPT-OSS, Qwen3, etc.
+export GROQ_API_KEY=...          # https://console.groq.com (free)
+python evaluation/run_eval.py --model llama-3.3-70b --save
+python evaluation/run_eval.py --model gpt-oss-120b --save
+
+# OpenRouter: unified gateway for many open models incl. Nemotron, GLM, Hermes-405B
+export OPENROUTER_API_KEY=...    # https://openrouter.ai (some free)
+python evaluation/run_eval.py --model "or:nvidia/nemotron-3-super-120b-a12b:free" --save
+
+# Frontier models (paid)
 export OPENAI_API_KEY=...        # or ANTHROPIC_API_KEY / GOOGLE_API_KEY
 python evaluation/run_eval.py --model gpt-4o --save
-python evaluation/analyze_results.py
+
+# Aggregate real-LLM results into paper-ready bootstrap CIs and LaTeX:
+python evaluation/aggregate_real_llm.py
+python evaluation/leaderboard.py --update-readme
 ```
 
 ### Run the test suite
@@ -200,14 +213,19 @@ MIT. See [LICENSE](LICENSE).
 
 ## 🏆 Leaderboard
 
-| Rank | Model | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |
-|------|-------|---------|-------|----------|-----------|--------|--------|
-| 🥇 | **Expert (sim.)** | 77.1% | 0.183 | 9.6% | 89.0% | 21% | 🔧 Sim. |
-| 🥈 | **Strong (sim.)** | 60.8% | 0.178 | 20.3% | 83.7% | 14% | 🔧 Sim. |
-| 🥉 | **Competent (sim.)** | 49.2% | 0.239 | 21.6% | 67.1% | 4% | 🔧 Sim. |
-| 4 | **Heuristic Baseline** | 31.2% | 0.470 | 44.5% | 47.2% | 0% | 🔧 Sim. |
-| 5 | **Random Baseline** | 7.3% | 0.515 | 36.2% | 33.9% | 0% | 🔧 Sim. |
+| Rank | Model | n | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |
+|------|-------|--:|---------|-------|----------|-----------|--------|--------|
+| 🥇 | **Llama-4-Scout-17B** | 300 | 84.0% | 0.092 | 14.0% | 82.3% | 63% | 🤖 API |
+| 🥈 | **Expert (sim.)** | 301 | 77.1% | 0.183 | 9.6% | 89.0% | 21% | 🔧 Sim. |
+| 🥉 | **Strong (sim.)** | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | 🔧 Sim. |
+| 4 | **Competent (sim.)** | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | 🔧 Sim. |
+| 5 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.4% | 30% | 🤖 API |
+| 6 | **Heuristic Baseline** | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | 🔧 Sim. |
+| 7 | **Random Baseline** | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | 🔧 Sim. |
+| — | **GPT-OSS-120B\*** | 146 | 94.5% | 0.038 | 5.5% | 0.0% | 100% | 🤖 API |
+| — | **Llama-3.3-70B\*** | 76 | 89.5% | 0.035 | 9.2% | 90.8% | 100% | 🤖 API |
 
-*Last updated: 2026-05-03*
+*Last updated: 2026-05-04*
 
-**Legend**: Acc@CI = Accuracy (point estimate within ground-truth CI), ECE = Expected Calibration Error, OvConf = Overconfidence Rate, FwMatch = Framework Match Rate, D5 = Difficulty 5 accuracy. 🤖 = real model via API, 🔧 = simulated baseline.
+**Legend**: n = problems answered (test set has 301). Acc@CI = Accuracy (point estimate within ground-truth CI), ECE = Expected Calibration Error, OvConf = Overconfidence Rate, FwMatch = Framework Match Rate, D5 = Difficulty 5 accuracy. 🤖 = real model via API, 🔧 = simulated baseline. \* = partial coverage (rate-limited mid-run); not ranked.
+

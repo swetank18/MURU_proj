@@ -73,8 +73,16 @@ def load_all_results() -> list[dict]:
         except (json.JSONDecodeError, IOError, KeyError):
             pass
 
-    # Sort by accuracy descending
-    results.sort(key=lambda x: -x["accuracy"])
+    # Mark partial runs (real-LLM evals where some problems failed to parse).
+    for r in results:
+        n = r.get("n_problems", 0) or 0
+        # Only meaningful for real-LLM API runs against the n=301 test split.
+        r["coverage"] = n
+        r["partial"] = (r["source"] == "api" and n > 0 and n < 240)
+
+    # Sort: full-coverage entries by accuracy desc; partial runs ranked
+    # separately at the bottom so cherry-picked subsets don't crown the table.
+    results.sort(key=lambda x: (x["partial"], -x["accuracy"]))
     return results
 
 
@@ -93,17 +101,26 @@ def format_model_name(name: str) -> str:
     name = name.replace("_", " ").replace("-", " ")
     # Capitalize known model names
     replacements = {
-        "gpt 4o": "GPT-4o",
         "gpt 4o mini": "GPT-4o-mini",
+        "gpt 4o": "GPT-4o",
         "gpt 3.5 turbo": "GPT-3.5-Turbo",
+        "gpt oss 120b": "GPT-OSS-120B",
+        "gpt oss 20b": "GPT-OSS-20B",
         "claude 3.5 sonnet": "Claude 3.5 Sonnet",
+        "claude 3.5 haiku": "Claude 3.5 Haiku",
         "claude 3 opus": "Claude 3 Opus",
         "gemini 1.5 pro": "Gemini 1.5 Pro",
         "gemini 1.5 flash": "Gemini 1.5 Flash",
         "gemini 2.0 flash": "Gemini 2.0 Flash",
-        "llama 3.1 70b": "Llama 3.1 70B",
-        "llama 3.1 8b": "Llama 3.1 8B",
-        "mixtral 8x7b": "Mixtral 8x7B",
+        "llama 3.3 70b": "Llama-3.3-70B",
+        "llama 3.1 70b": "Llama-3.1-70B",
+        "llama 3.1 8b": "Llama-3.1-8B",
+        "llama 4 scout": "Llama-4-Scout-17B",
+        "qwen3 32b": "Qwen3-32B",
+        "nemotron 3 super 120b": "Nemotron-3-Super-120B",
+        "nemotron 3 nano omni 30b": "Nemotron-3-Nano-Omni-30B",
+        "hermes 3 llama 3.1 405b": "Hermes-3-Llama-3.1-405B",
+        "mixtral 8x7b": "Mixtral-8x7B",
         "random baseline": "Random Baseline",
         "heuristic baseline": "Heuristic Baseline",
         "competent model": "Competent (sim.)",
@@ -121,18 +138,25 @@ def generate_markdown_table(results: list[dict]) -> str:
     lines = [
         "## 🏆 Leaderboard",
         "",
-        "| Rank | Model | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |",
-        "|------|-------|---------|-------|----------|-----------|--------|--------|",
+        "| Rank | Model | n | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |",
+        "|------|-------|--:|---------|-------|----------|-----------|--------|--------|",
     ]
 
-    for i, r in enumerate(results, 1):
+    full_rank = 0
+    for r in results:
         name = format_model_name(r["model"])
         d5 = f"{r['d5_accuracy']:.0%}" if r["d5_accuracy"] is not None else "—"
         source = "🤖 API" if r["source"] == "api" else "🔧 Sim."
-        medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"{i}"
+        n = r.get("coverage", r.get("n_problems", 0))
+        if r.get("partial"):
+            label = "—"  # partial runs are unranked
+            name = name + "\\*"  # asterisk for "partial coverage"
+        else:
+            full_rank += 1
+            label = "🥇" if full_rank == 1 else "🥈" if full_rank == 2 else "🥉" if full_rank == 3 else f"{full_rank}"
 
         lines.append(
-            f"| {medal} | **{name}** | {r['accuracy']:.1%} | "
+            f"| {label} | **{name}** | {n} | {r['accuracy']:.1%} | "
             f"{r['ece']:.3f} | {r['overconfidence']:.1%} | "
             f"{r['framework_match']:.1%} | {d5} | {source} |"
         )
@@ -141,10 +165,11 @@ def generate_markdown_table(results: list[dict]) -> str:
         "",
         f"*Last updated: {datetime.now().strftime('%Y-%m-%d')}*",
         "",
-        "**Legend**: Acc@CI = Accuracy (point estimate within ground-truth CI), "
-        "ECE = Expected Calibration Error, OvConf = Overconfidence Rate, "
-        "FwMatch = Framework Match Rate, D5 = Difficulty 5 accuracy. "
-        "🤖 = real model via API, 🔧 = simulated baseline.",
+        "**Legend**: n = problems answered (test set has 301). Acc@CI = Accuracy "
+        "(point estimate within ground-truth CI), ECE = Expected Calibration "
+        "Error, OvConf = Overconfidence Rate, FwMatch = Framework Match Rate, "
+        "D5 = Difficulty 5 accuracy. 🤖 = real model via API, 🔧 = simulated "
+        "baseline. \\* = partial coverage (rate-limited mid-run); not ranked.",
     ])
 
     return "\n".join(lines)

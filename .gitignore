@@ -29,6 +29,10 @@ Thumbs.db
 
 # Evaluation outputs (large files — regenerated)
 evaluation/baselines/*.json
+evaluation/baselines/logs/
+
+# Claude Code session artifacts
+.claude/scheduled_tasks.lock
 
 # Tectonic binary (install locally via `sh .tectonic_install.sh`)
 tectonic

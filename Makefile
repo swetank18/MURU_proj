@@ -45,10 +45,12 @@ paper:
 submission:
 	cd paper && ../tectonic main.tex
 	rm -f submission/muru-bench-neurips2026.zip
+	rm -rf submission/figures submission/tables
 	mkdir -p submission
 	cp paper/main.tex paper/main.pdf paper/neurips_2024.sty submission/
 	cp -r paper/figures submission/
-	cd submission && zip -r muru-bench-neurips2026.zip main.tex main.pdf neurips_2024.sty figures/
+	cp -r paper/tables submission/
+	cd submission && zip -r muru-bench-neurips2026.zip main.tex main.pdf neurips_2024.sty figures/ tables/
 
 clean:
 	rm -f paper/*.aux paper/*.log paper/*.out paper/*.bbl paper/*.blg
