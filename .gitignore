@@ -30,6 +30,9 @@ Thumbs.db
 # Evaluation outputs (large files — regenerated)
 evaluation/baselines/*.json
 
+# Tectonic binary (install locally via `sh .tectonic_install.sh`)
+tectonic
+
 # LaTeX build artifacts
 paper/*.aux
 paper/*.log

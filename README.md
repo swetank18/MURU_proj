@@ -81,6 +81,13 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+To compile the paper, install the [tectonic](https://tectonic-typesetting.github.io) LaTeX engine into the project root (one-time):
+
+```bash
+sh .tectonic_install.sh
+make paper
+```
+
 ---
 
 ## Quick start
