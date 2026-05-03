@@ -25,6 +25,8 @@
 \usepackage{enumitem}
 \usepackage{wrapfig}
 
+\emergencystretch=3em
+
 \newcommand{\muru}{\textsc{Muru-Bench}}
 \newcommand{\ci}{\mathrm{CI}}
 \newcommand{\ece}{\mathrm{ECE}}
@@ -33,8 +35,11 @@
 
 \author{
   Swetank Kumar \\
-  Independent Researcher \\
-  \texttt{swetankkumar391@gmail.com}
+  Department of Computer Science \\
+  SRM Institute of Science and Technology (SRMIST) \\
+  Chennai, Tamil Nadu, India \\
+  \texttt{swetankkumar391@gmail.com} \\
+  \url{https://github.com/swetank18}
 }
 
 \begin{document}
@@ -45,7 +50,7 @@
 % ABSTRACT
 % ═══════════════════════════════════════════════════════════════════
 \begin{abstract}
-Large language models (LLMs) have achieved remarkable performance on mathematical reasoning benchmarks such as GSM8K, MATH, and MMLU. However, these benchmarks exclusively evaluate reasoning toward \emph{single, deterministic correct answers}, neglecting the pervasive role of \emph{genuine mathematical uncertainty} in real-world reasoning tasks. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a rigorously constructed dataset of 3{,}000 problems spanning five categories: Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity. Each problem requires a model to (i)~identify the correct probabilistic reasoning framework, (ii)~execute multi-step mathematical reasoning under parameter uncertainty, and (iii)~produce a calibrated answer with a justified confidence interval. Problems are stratified across five difficulty levels via 21 parametric generation templates, enabling fine-grained capability assessment. We evaluate five model capability tiers and find that: (1)~even expert-level systems achieve only 77.1\% accuracy overall and just 21\% on the hardest problems (Difficulty~5); (2)~adversarial ambiguity problems---designed to exploit overconfident reasoning---reduce accuracy by 15 percentage points across all tiers; and (3)~calibration remains poor universally, with Expected Calibration Error exceeding 0.17 even for the strongest models. \muru{} fills a critical gap in the evaluation landscape and provides a rigorous, reproducible measuring stick for progress in calibrated mathematical reasoning. Dataset, evaluation code, and baselines are available at \url{https://github.com/swetank18/MURU}.
+Large language models (LLMs) have achieved remarkable performance on mathematical reasoning benchmarks such as GSM8K, MATH, and MMLU. However, these benchmarks exclusively evaluate reasoning toward \emph{single, deterministic correct answers}, neglecting the pervasive role of \emph{genuine mathematical uncertainty} in real-world reasoning tasks. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a dataset of 3{,}000 problems spanning five categories: Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity. Each problem requires a system to (i)~identify the correct probabilistic reasoning framework, (ii)~execute multi-step mathematical reasoning under parameter uncertainty, and (iii)~produce a calibrated answer with a justified confidence interval. Problems are stratified across five difficulty levels via 21 parametric generation templates. Our contribution in this submission is the dataset, the JSON schema, an evaluation harness with six metrics (including Expected Calibration Error and overconfidence rate), an OpenAI/Anthropic/Google API client, and a controlled discriminability study using simulated capability tiers that validates the metric implementations and confirms that the difficulty hierarchy separates known-capability profiles. Evaluations of frontier LLMs are released as ongoing community-driven extensions rather than as headline claims of this paper. Dataset, evaluation code, schema, tests, and reproducibility scaffolding are at \url{https://github.com/swetank18/MURU}.
 \end{abstract}
 
 
@@ -65,14 +70,16 @@ We identify a critical gap in the LLM evaluation landscape: the absence of a mat
 This gap matters for AI safety and deployment. An LLM used as a medical reasoning assistant that gives a confident but poorly calibrated probability estimate could lead to harmful decisions. A financial model that ignores parameter uncertainty could understate risk. The current evaluation paradigm---which rewards only accuracy on deterministic problems---provides no signal about these failure modes.
 
 \paragraph{Our Contributions.}
-\muru{} fills this gap with four contributions:
+\muru{} addresses this gap with four contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=3pt]
-    \item \textbf{A curated dataset of 3{,}000 problems} across five categories of mathematical uncertainty, each with ground-truth point estimates, confidence intervals, solution steps, and annotated failure modes (Section~\ref{sec:dataset}).
-    \item \textbf{A principled evaluation framework with six metrics}, including Expected Calibration Error (ECE) and overconfidence rate, that measure not just accuracy but calibration quality and reasoning process (Section~\ref{sec:evaluation}).
-    \item \textbf{Baseline evaluations across five capability tiers}, revealing monotonic accuracy decay from 96\% (D1) to 21\% (D5) and systematic overconfidence in weaker models (Section~\ref{sec:results}).
-    \item \textbf{Analysis of where and why models fail}, showing that adversarial ambiguity and compound uncertainty are the primary discriminators, with implications for AI safety (Section~\ref{sec:analysis}).
+    \item \textbf{A dataset of 3{,}000 problems} across five categories of mathematical uncertainty, each with ground-truth point estimates, confidence intervals, step-by-step solutions, and annotated failure modes (Section~\ref{sec:dataset}).
+    \item \textbf{An evaluation framework with six metrics}, including Expected Calibration Error (ECE), overconfidence rate, and framework-match rate, that measure not just accuracy but calibration quality and reasoning process (Section~\ref{sec:evaluation}).
+    \item \textbf{A discriminability study using simulated capability tiers} (Section~\ref{sec:results}), demonstrating that the metric implementations and difficulty stratification correctly separate model profiles with known accuracy/calibration properties. We are explicit that these are simulator outputs, not measurements of any real model; they validate the harness rather than report capabilities.
+    \item \textbf{An open evaluation harness} for OpenAI, Anthropic, and Google APIs, plus a reproducibility scaffold (deterministic generation, stratified splits, tests, CI), so that frontier-model evaluations can be contributed by the community against a stable benchmark.
 \end{enumerate}
+
+We deliberately separate \emph{benchmark release} (the focus of this paper) from \emph{frontier-model evaluation} (in active development; preliminary numbers will be released to the project repository as they are produced). Section~\ref{sec:results} therefore reports on simulated tiers only; this lets us validate the harness without making claims about real LLM behavior that we have not yet measured.
 
 
 % ═══════════════════════════════════════════════════════════════════
@@ -197,8 +204,8 @@ Each problem is stored as a JSON document with the following fields:
     \item \texttt{category}: One of five categories
     \item \texttt{difficulty}: Integer 1--5
     \item \texttt{uncertainty\_type}: Type of uncertainty (e.g., \texttt{epistemic\_prior}, \texttt{parameter\_estimation})
-    \item \texttt{required\_framework}: The mathematically appropriate framework (\texttt{bayesian\_inference}, \texttt{frequentist\_inference}, \texttt{decision\_theory}, \texttt{information\_theory}, or \texttt{monte\_carlo})
-    \item \texttt{ground\_truth}: Object containing \texttt{answer} (text), \texttt{point\_estimate} (float), \texttt{confidence\_interval} ([lower, upper]), and \texttt{ci\_level} (typically 0.95)
+    \item \texttt{required\_framework}: The mathematically appropriate framework; one of five values listed in Section~\ref{sec:metrics}
+    \item \texttt{ground\_truth}: Object with fields \texttt{answer}, \texttt{point\_estimate}, \texttt{confidence\_interval}, and \texttt{ci\_level} (typically 0.95)
     \item \texttt{solution\_steps}: Ordered list of reasoning steps
     \item \texttt{common\_failure\_modes}: List of typical errors a model might make
     \item \texttt{metadata}: Author, review status, source template, and creation timestamp
@@ -244,6 +251,7 @@ Test & 301 & Baseline evaluation (reported results) \\
 \label{sec:evaluation}
 
 \subsection{Metrics}
+\label{sec:metrics}
 
 We evaluate models on six metrics designed to assess orthogonal dimensions of uncertainty reasoning capability.
 
@@ -290,7 +298,7 @@ All models receive a structured system prompt instructing them to:
     \item State a confidence probability between 0 and 1
 \end{enumerate}
 
-Responses are parsed using regular expressions to extract four structured fields: \texttt{FRAMEWORK}, \texttt{POINT\_ESTIMATE}, \texttt{CONFIDENCE\_INTERVAL}, and \texttt{CONFIDENCE}. Temperature is set to 0 for reproducibility. Full prompts are provided in Appendix~\ref{app:prompts}.
+Responses are parsed via regular expressions to extract four structured fields (\texttt{FRAMEWORK}, \texttt{POINT\_ESTIMATE}, \texttt{CONFIDENCE\_INTERVAL}, \texttt{CONFIDENCE}). Temperature is set to 0 for reproducibility; full prompts are in Appendix~\ref{app:prompts}.
 
 \subsection{Model-Agnostic Evaluation API}
 
@@ -298,20 +306,22 @@ The evaluation framework (\texttt{evaluation/run\_eval.py}) supports three API b
 
 
 % ═══════════════════════════════════════════════════════════════════
-% 5. RESULTS
+% 5. HARNESS VALIDATION VIA SIMULATED TIERS
 % ═══════════════════════════════════════════════════════════════════
-\section{Experimental Results}
+\section{Harness Validation via Simulated Capability Tiers}
 \label{sec:results}
 
-We evaluate five simulated model capability tiers on the \muru{} test set ($n = 301$), designed to span the range from random guessing to frontier-model performance. These tiers are \emph{simulated baselines}---each applies the ground-truth CI with a difficulty-dependent probability of producing a correct answer, reflecting empirically plausible accuracy profiles. The purpose is to validate \muru{}'s discriminability; future work will replace these with real model evaluations.
+\paragraph{What this section is, and is not.} This section does \emph{not} report measurements of any language model. We instead validate that the evaluation harness behaves correctly by feeding it five \emph{simulated} responder profiles whose accuracy and calibration properties are specified \emph{a priori}. The purpose is twofold: (1)~confirm that the metric implementations (Accuracy@CI, ECE, overconfidence, framework match) are sensitive to capability differences in the expected directions, and (2)~confirm that the difficulty stratification (D1--D5) and category structure separate responders along the dimensions they are designed to probe. Real-model evaluations are released to the project repository as they are completed; the present paper does not claim them as findings.
 
-\subsection{Main Results}
+\paragraph{Simulator construction.} Each tier is a \texttt{random.Random} instance parameterized by a per-difficulty success probability and a confidence-distribution shape. The tier names (Random, Heuristic, Competent, Strong, Expert) correspond to qualitative profiles loosely modelled on prior literature reports for non-MURU benchmarks; the specific numerical thresholds are configuration choices, not estimates of any specific model. Source: \texttt{evaluation/run\_baselines.py}, \texttt{MODEL\_PROFILES}.
 
-Table~\ref{tab:main_results} presents the overall results across all five tiers.
+\subsection{Discriminability of the Harness}
+
+Table~\ref{tab:main_results} reports harness output across all five simulated tiers. Because the simulator profiles were designed to be monotone in accuracy and calibration, \emph{the harness is functioning correctly if and only if it recovers that ordering on every metric}; deviations would indicate metric implementation bugs.
 
 \begin{table}[t]
 \centering
-\caption{MURU-BENCH baseline results across five model capability tiers (test set, $n=301$). The 70-point accuracy spread from Random to Expert confirms strong discriminability. Even the Expert tier leaves 23\% of problems unsolved.}
+\caption{Harness output across five \emph{simulated} responder tiers on the test set ($n=301$). Tier behavior is \emph{specified} by the simulator (accuracy targets per difficulty plus a confidence distribution), and the table verifies that all six metrics recover the intended ordering. These numbers reflect simulator configuration, not any LLM's performance.}
 \label{tab:main_results}
 \begin{tabular}{lccccc}
 \toprule
@@ -326,20 +336,20 @@ Expert Model (frontier tier) & 77.1\% & 0.183 & 9.6\% & 89.0\% & 301 \\
 \end{tabular}
 \end{table}
 
-\paragraph{Key observations.}
-\textbf{(1)}~Accuracy ranges from 7.3\% (random) to 77.1\% (expert)---a 70-point spread demonstrating strong discriminability.
-\textbf{(2)}~ECE improves with capability but plateaus at $\sim$0.18, suggesting calibration is harder than accuracy.
-\textbf{(3)}~The expert tier's overconfidence rate (9.6\%) is 4.7$\times$ lower than the heuristic tier's (44.5\%), indicating that stronger models not only answer more correctly but are also better at knowing when they might be wrong.
-\textbf{(4)}~Framework match rate increases monotonically from 33.9\% to 89.0\%, suggesting that stronger models are better at identifying the correct reasoning \emph{approach}, not just computing the answer.
+\paragraph{Harness-validation observations.} All four orderings recovered by the harness are consistent with the simulator's intended profile, indicating the metric implementations are wired correctly:
+\textbf{(1)}~Accuracy@CI is monotone in tier capability across the full simulator range.
+\textbf{(2)}~ECE decreases as the simulator's confidence distribution is tightened around its accuracy. The two highest tiers have similar ECE because their confidence distributions are similar by construction; this is an artefact of the simulator design, not a finding about real models.
+\textbf{(3)}~Overconfidence rate decreases monotonically as the simulator's confidence ceiling tracks accuracy.
+\textbf{(4)}~Framework-match rate is monotone in the per-tier framework-selection probability. None of these constitute claims about LLM behavior.
 
-\subsection{Difficulty Scaling}
+\subsection{Difficulty Stratification Recovers Configured Profiles}
 \label{sec:difficulty_results}
 
-Table~\ref{tab:difficulty_scaling} and Figure~\ref{fig:difficulty_curve} (Appendix~\ref{app:statistics}) show accuracy by difficulty level.
+Table~\ref{tab:difficulty_scaling} and Figure~\ref{fig:difficulty_curve} (Appendix~\ref{app:statistics}) show simulator output by difficulty level. Because each tier's per-difficulty accuracy is set as a hyperparameter, the table mainly verifies that the difficulty stratification is faithful: a real LLM's per-difficulty curve is an empirical question we leave to follow-on evaluations.
 
 \begin{table}[t]
 \centering
-\caption{Accuracy by difficulty level. All models exhibit monotonic accuracy decay from D1 to D5. The D3 inflection point separates heuristic approaches (which fail at 18\%) from reasoning-capable models (63--81\%).}
+\caption{Simulator output by difficulty level. Each per-tier curve reflects the difficulty-specific success probability set in the simulator profile, not measurements of any LLM.}
 \label{tab:difficulty_scaling}
 \begin{tabular}{lccccc|c}
 \toprule
@@ -354,21 +364,16 @@ Expert Model & 96\% & 91\% & 81\% & 64\% & 21\% & 75 pp \\
 \end{tabular}
 \end{table}
 
-\paragraph{Three regimes emerge:}
-\begin{itemize}[leftmargin=*,itemsep=2pt]
-    \item \textbf{D1--D2 (mastered)}: Expert models approach ceiling (96\%, 91\%). These problems are within reach of current systems and serve primarily as sanity checks.
-    \item \textbf{D3 (inflection)}: D3 marks the critical inflection where heuristic approaches collapse (18\%) while reasoning-capable models maintain moderate accuracy (63--81\%). This level separates ``can compute'' from ``can reason.''
-    \item \textbf{D4--D5 (frontier)}: No model tier exceeds 64\% on D4 or 21\% on D5, establishing a clear benchmark ceiling. D5 problems---requiring multi-step compound uncertainty with adversarial structure---represent the current frontier of mathematical uncertainty reasoning.
-\end{itemize}
+The intended interpretation of the difficulty levels is summarized in Table~\ref{tab:difficulty_spec}: D1--D2 problems are single-formula applications, D3 introduces multi-step reasoning with at least one uncertain parameter, D4 introduces compound uncertainty propagation, and D5 layers adversarial ambiguity onto the D4 conditions. Whether real LLMs exhibit a sharp transition at any specific difficulty level is an empirical question we cannot answer with simulated tiers alone.
 
-\subsection{Category Breakdown}
+\subsection{Category Decomposition}
 \label{sec:category_results}
 
-Table~\ref{tab:category_breakdown} decomposes accuracy by problem category.
+Table~\ref{tab:category_breakdown} decomposes simulator output by problem category. The simulator applies a small per-category modifier (largest negative on Adversarial Ambiguity), which the harness recovers as expected.
 
 \begin{table}[t]
 \centering
-\caption{Accuracy by problem category. Adversarial Ambiguity is consistently hardest ($-15$ pp vs.\ the next-hardest category for the Expert model), validating the benchmark's ability to test structural uncertainty reasoning.}
+\caption{Simulator output by problem category. Differences across categories reflect simulator per-category modifiers, not measured model behavior.}
 \label{tab:category_breakdown}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccc}
@@ -384,39 +389,39 @@ Expert Model & 49\% & 84\% & 77\% & 74\% & 91\% \\
 \end{tabular}}
 \end{table}
 
-\paragraph{Category difficulty ranking} (easiest to hardest for the expert tier): Distribution Estimation (91\%) $>$ Bayesian Updating (84\%) $>$ Conditional Chains (77\%) $>$ Decision Under Uncertainty (74\%) $>$ Adversarial Ambiguity (49\%). The 42-point gap between the easiest and hardest categories for the expert model confirms that \muru{}'s categories test genuinely different capabilities.
+The category ordering recovered by the harness matches the ordering specified in the simulator's category modifiers. We make no claim that real LLMs would rank categories in this order; that is what frontier-model evaluation will determine.
 
 
 % ═══════════════════════════════════════════════════════════════════
 % 6. ANALYSIS
 % ═══════════════════════════════════════════════════════════════════
-\section{Analysis}
+\section{Anticipated Failure Modes}
 \label{sec:analysis}
 
 \subsection{Failure Mode Taxonomy}
 \label{sec:failures}
 
-We identify four primary failure patterns, organized by frequency and severity:
+The benchmark is designed around four failure modes that uncertainty-reasoning research has documented in the broader literature. We catalog them here as the diagnostic targets the metrics are designed to detect; the per-category \texttt{common\_failure\_modes} field on every problem records which of these (and template-specific variants) the problem is constructed to elicit. Whether a given LLM exhibits these failures, and at what rates, is an empirical question for downstream evaluation.
 
-\paragraph{F1: Anchoring on surface statistics.} The most common failure mode for weaker models. The model fixates on the most salient number in the problem stem rather than performing proper probabilistic reasoning. In Bayesian Updating problems, this manifests as reporting the test sensitivity (e.g., 95\%) instead of the posterior probability (e.g., 8.7\%)---the classic base-rate neglect fallacy. This failure is largely resolved by D3 for strong models but persists on adversarial problems even at the expert level.
+\paragraph{F1: Anchoring on surface statistics.} The responder fixates on the most salient number in the problem stem rather than performing the appropriate probabilistic computation. In Bayesian Updating problems, the canonical instance is reporting the test sensitivity (e.g., 95\%) instead of the posterior probability---the well-known base-rate neglect fallacy.
 
-\paragraph{F2: Ignoring compound uncertainty.} D4--D5 problems require propagating uncertainty through multiple layers (e.g., uncertain prior \emph{and} uncertain likelihood \emph{and} uncertain sample size). Models that succeed on D1--D3 often collapse to single-point estimates when faced with compound uncertainty, producing overly narrow confidence intervals. The symptom is correct direction but catastrophically wrong interval width.
+\paragraph{F2: Ignoring compound uncertainty.} D4--D5 problems require propagating uncertainty through multiple layers (e.g., uncertain prior \emph{and} uncertain likelihood \emph{and} uncertain sample size). A responder that handles each step in isolation but collapses to a point estimate when uncertainties compound will produce a correct-direction answer with a catastrophically narrow confidence interval; the Accuracy@CI metric catches this when the point estimate falls outside the ground-truth interval.
 
-\paragraph{F3: Single-formalization commitment.} Adversarial Ambiguity problems are designed to have multiple defensible formalizations (e.g., Simpson's Paradox problems where the aggregate and subgroup analyses give opposite conclusions). Models overwhelmingly commit to a single formalization and report high confidence, rather than acknowledging the ambiguity. The 15-percentage-point accuracy penalty for this category reflects this systematic failure.
+\paragraph{F3: Single-formalization commitment.} Adversarial Ambiguity problems admit multiple defensible formalizations (e.g., Simpson's Paradox problems where aggregate and subgroup analyses point opposite directions). A responder that commits to a single formalization with high stated confidence will be penalized by both the Accuracy@CI metric (whose ground-truth interval spans the defensible range) and the overconfidence rate (which fires on high-confidence wrong answers).
 
-\paragraph{F4: Framework confusion.} Applying frequentist methods where Bayesian methods are appropriate (or vice versa). For example, using a $t$-test confidence interval for a problem that requires posterior inference with an informative prior. This failure correlates with lower difficulty levels and is largely resolved by strong models (framework match $>$ 83\%).
+\paragraph{F4: Framework confusion.} Applying frequentist methods where Bayesian methods are appropriate (or vice versa). The framework-match metric is designed to surface this failure mode independently of whether the numerical answer happens to be in range.
 
-\subsection{Calibration Analysis}
+\subsection{Calibration Metric Behavior on Simulated Inputs}
 \label{sec:calibration}
 
 \begin{wraptable}{r}{0.45\textwidth}
 \vspace{-12pt}
 \centering
-\caption{Calibration metrics.}
+\caption{Calibration metrics from the simulator (not real LLMs).}
 \label{tab:calibration}
 \begin{tabular}{lcc}
 \toprule
-\textbf{Tier} & \textbf{ECE}$\downarrow$ & \textbf{OvConf}$\downarrow$ \\
+\textbf{Tier (simulated)} & \textbf{ECE}$\downarrow$ & \textbf{OvConf}$\downarrow$ \\
 \midrule
 Random & 0.515 & 36.2\% \\
 Heuristic & 0.470 & 44.5\% \\
@@ -428,20 +433,12 @@ Expert & 0.183 & 9.6\% \\
 \vspace{-12pt}
 \end{wraptable}
 
-Table~\ref{tab:calibration} reveals a striking pattern: \textbf{calibration does not improve linearly with accuracy}. The strong and expert models achieve ECE values of 0.178 and 0.183, respectively---nearly identical despite a 16-point accuracy gap. This decoupling suggests that gaining the ability to \emph{solve} harder problems does not automatically confer the ability to \emph{assess one's confidence} on them.
+Table~\ref{tab:calibration} shows the harness's calibration metrics on simulator output. Two harness-level observations: (1)~ECE responds monotonically to the simulator's confidence-distribution width but saturates when two tiers share similar confidence shapes, which is the expected behavior of binned ECE under low bin populations; and (2)~the overconfidence-rate metric correctly flags the heuristic tier --- whose simulator profile applies high confidence to easy-pattern responses --- as having the highest rate, illustrating that the metric distinguishes calibration shape from accuracy magnitude. Figure~\ref{fig:calibration} in Appendix~\ref{app:statistics} visualizes these patterns. Whether real LLMs exhibit similar plateaus is an empirical question for follow-on work.
 
-The heuristic baseline exhibits the highest overconfidence rate (44.5\%), even worse than the random baseline (36.2\%). This is because heuristic models learn shallow patterns that happen to work on easy problems, leading to inflated confidence that transfers poorly to harder problems---a phenomenon we term \textbf{heuristic overconfidence}.
-
-The expert model's 9.6\% overconfidence rate, while the lowest, still means nearly 1 in 10 answers is confidently wrong---a concerning failure rate for safety-critical applications. Figure~\ref{fig:calibration} in Appendix~\ref{app:statistics} visualizes these patterns.
-
-\subsection{Discriminability Analysis}
+\subsection{Statistical Power of the Test Set}
 \label{sec:discriminability}
 
-A good benchmark must discriminate between meaningfully different capabilities. We quantify the discriminability of \muru{} in two ways:
-
-\paragraph{Inter-tier separation.} The accuracy gap between adjacent tiers ranges from 11.6~pp (Strong$\to$Expert, 60.8\%$\to$77.1\%) to 24.0~pp (Random$\to$Heuristic, 7.3\%$\to$31.2\%). All gaps exceed the standard error of the accuracy estimate ($\sim$2.5~pp for $n=301$), confirming that each tier is statistically distinguishable.
-
-\paragraph{D5 as a capability probe.} D5 accuracy provides the most fine-grained discrimination: Random (0\%), Heuristic (0\%), Competent (4\%), Strong (14\%), Expert (21\%). A model's D5 performance could serve as a single-number summary of its mathematical uncertainty reasoning capability, analogous to the HumanEval pass@1 for code generation.
+A good benchmark must be able to detect meaningfully different capability profiles. The standard error of an accuracy estimate at $n=301$ is approximately $\sqrt{p(1-p)/n} \approx 2.9$ percentage points at $p=0.5$, so the test set can statistically distinguish two responders whose true accuracies differ by $\geq 8$ percentage points (two-sided $\alpha = 0.05$). All five simulated-tier inter-tier gaps comfortably exceed this threshold, confirming that the test set is large enough to detect tier-scale capability differences. Tighter discrimination (e.g., between two frontier models within a few percentage points of each other) will require either the validation set, the train set, or paired comparisons via McNemar's test.
 
 
 % ═══════════════════════════════════════════════════════════════════
@@ -450,14 +447,14 @@ A good benchmark must discriminate between meaningfully different capabilities. 
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{Implications for AI safety.}
-Our finding that calibration plateaus despite accuracy improvements (Section~\ref{sec:calibration}) has direct implications for AI deployment. If a model is used for decision support in medical, financial, or legal contexts, overconfident wrong answers can cause more harm than admitting uncertainty. \muru{}'s overconfidence metric provides a direct measure of this risk. We argue that future model development should report overconfidence rates alongside accuracy.
+\paragraph{What this benchmark is for.}
+\muru{} is intended as a measuring stick for calibrated mathematical reasoning. The dataset and harness alone do not establish that any particular model is or is not well-calibrated; they make such claims \emph{measurable} once frontier-model evaluations are run. The deliberate choice in this paper to keep simulated-tier results separate from any real-model claim is intended to maintain that measurement integrity.
+
+\paragraph{Why the overconfidence metric matters.}
+The overconfidence rate is constructed to surface a specific safety-relevant failure: a responder that is high-confidence and wrong. In decision-support contexts (medical, financial, legal), this failure mode is more harmful than uncertainty acknowledged. We conjecture that current frontier LLMs exhibit non-trivial overconfidence rates on D4--D5 problems, but this conjecture requires real-model evaluation to test.
 
 \paragraph{Why adversarial ambiguity matters.}
-The 15-pp accuracy penalty for Adversarial Ambiguity problems reveals a systematic weakness: current models lack the \emph{meta-reasoning} capability to recognize when a problem is fundamentally ambiguous. This is precisely the case where a human expert would say ``it depends on your assumptions''---a response that is more useful than a single confident (and potentially misleading) answer. Training models to recognize and communicate structural ambiguity is an important direction for future work.
-
-\paragraph{Benchmark as a capability thermometer.}
-The monotonic difficulty scaling (D1$\to$D5) and consistent inter-tier separation make \muru{} a reliable ``capability thermometer'' for mathematical uncertainty reasoning. As models improve, we expect D5 accuracy to serve as a sensitive indicator of progress, much as MATH Level 5 problems track progress in deterministic mathematical reasoning.
+The Adversarial Ambiguity category targets meta-reasoning: the ability to recognize that a problem admits multiple defensible formalizations. A responder that commits to one formalization with high stated confidence will be penalized by both Accuracy@CI (whose ground truth is an interval over defensible answers) and overconfidence rate. Whether real LLMs systematically fail this category, and to what degree, is the empirical question we hope frontier-model evaluations will answer.
 
 
 % ═══════════════════════════════════════════════════════════════════
@@ -482,17 +479,16 @@ The monotonic difficulty scaling (D1$\to$D5) and consistent inter-tier separatio
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-We introduced \muru{}, a benchmark of 3{,}000 problems for mathematical reasoning under genuine uncertainty. Our evaluation across five capability tiers reveals three key findings:
+We introduced \muru{}, a dataset of 3{,}000 problems for mathematical reasoning under genuine uncertainty, together with a six-metric evaluation harness, an OpenAI/Anthropic/Google API client, deterministic generation scripts, stratified train/validation/test splits, and a test suite. The contribution of this paper is the benchmark infrastructure itself; we deliberately separate that contribution from frontier-model evaluation, which we treat as ongoing community-driven follow-on work and release to the project repository as it progresses.
 
-\begin{enumerate}[leftmargin=*,itemsep=2pt]
-    \item \textbf{Substantial headroom}: Even expert-level models achieve only 77.1\% accuracy overall and 21\% on D5, leaving significant room for improvement.
-    \item \textbf{Adversarial vulnerability}: Adversarial ambiguity problems reduce accuracy by 15 percentage points, exposing a systematic inability to recognize structural ambiguity.
-    \item \textbf{Calibration deficit}: ECE exceeds 0.17 for all tiers, indicating that models struggle to accurately assess their own confidence even when they can solve the underlying problems.
-\end{enumerate}
+The discriminability study in Section~\ref{sec:results} confirms that the harness recovers known capability orderings on all six metrics, that the test split has the statistical power to distinguish capability tiers separated by $\geq 8$~pp at $\alpha = 0.05$, and that the difficulty stratification and category structure separate responders along the dimensions they were designed to probe.
 
-\paragraph{Future work.} We plan to: (1)~evaluate frontier models (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro) and open-source models (Llama 3, Mistral, Qwen2-Math) using the released API framework; (2)~investigate whether chain-of-thought prompting or tool-augmented reasoning (e.g., access to a calculator or statistics library) improves D4--D5 performance; (3)~expand the benchmark with new categories (stochastic processes, information theory) and more D5 problems; (4)~develop a fine-tuning curriculum using the training split that specifically targets calibration improvement.
+\paragraph{Open questions for follow-on evaluation.}
+The simulated-tier study cannot answer empirical questions about real LLMs; we list the most important ones the benchmark is designed to address. (1)~Do frontier LLMs exhibit a steep accuracy decay between D3 and D5, and where is the inflection? (2)~Does ECE plateau as accuracy improves, or do calibration and accuracy improve together? (3)~How large is the Adversarial Ambiguity penalty, and does it shrink with chain-of-thought or tool-augmented prompting? (4)~Do open-source models trained on more mathematical data narrow the gap to closed-source frontier models on this benchmark? (5)~Does fine-tuning on the train split improve calibration without compromising accuracy?
 
-We release the full dataset, 21 generation templates, evaluation code, and baseline results at \url{https://github.com/swetank18/MURU} to facilitate future research on calibrated mathematical reasoning.
+\paragraph{Future work.} We plan to: (1)~run real-model evaluations across OpenAI, Anthropic, Google, and open-source providers and publish the results to the project repository as supplementary material; (2)~obtain a human baseline on a 100-problem stratified subsample with multiple expert annotators; (3)~expand the benchmark with new categories (stochastic processes, information theory) and additional D5 problems; (4)~explore whether chain-of-thought prompting or tool-augmented reasoning improves D4--D5 performance; and (5)~develop a fine-tuning curriculum on the train split targeting calibration improvement.
+
+We release the full dataset, 21 generation templates, evaluation code, tests, CI configuration, and harness-validation results at \url{https://github.com/swetank18/MURU} to facilitate future research on calibrated mathematical reasoning.
 
 
 % ═══════════════════════════════════════════════════════════════════
@@ -781,6 +777,11 @@ python evaluation/run_eval.py --model gpt-4o --save
 # Generate analysis and figures
 python evaluation/analyze_results.py
 python scripts/generate_figures.py
+
+# Run the test suite (metrics, parsing, dataset invariants)
+make test
 \end{verbatim}
+
+A continuous-integration workflow (\texttt{.github/workflows/ci.yml}) runs the test suite and dataset validation against Python 3.10, 3.11, and 3.12 on every push and pull request.
 
 \end{document}
