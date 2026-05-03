@@ -196,3 +196,18 @@ The generator is deterministic given the seed.
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+
+## 🏆 Leaderboard
+
+| Rank | Model | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |
+|------|-------|---------|-------|----------|-----------|--------|--------|
+| 🥇 | **Expert (sim.)** | 77.1% | 0.183 | 9.6% | 89.0% | 21% | 🔧 Sim. |
+| 🥈 | **Strong (sim.)** | 60.8% | 0.178 | 20.3% | 83.7% | 14% | 🔧 Sim. |
+| 🥉 | **Competent (sim.)** | 49.2% | 0.239 | 21.6% | 67.1% | 4% | 🔧 Sim. |
+| 4 | **Heuristic Baseline** | 31.2% | 0.470 | 44.5% | 47.2% | 0% | 🔧 Sim. |
+| 5 | **Random Baseline** | 7.3% | 0.515 | 36.2% | 33.9% | 0% | 🔧 Sim. |
+
+*Last updated: 2026-05-03*
+
+**Legend**: Acc@CI = Accuracy (point estimate within ground-truth CI), ECE = Expected Calibration Error, OvConf = Overconfidence Rate, FwMatch = Framework Match Rate, D5 = Difficulty 5 accuracy. 🤖 = real model via API, 🔧 = simulated baseline.

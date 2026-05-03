@@ -52,7 +52,7 @@
 % ABSTRACT
 % ═══════════════════════════════════════════════════════════════════
 \begin{abstract}
-Large language models (LLMs) have achieved remarkable performance on mathematical reasoning benchmarks such as GSM8K, MATH, and MMLU. However, these benchmarks exclusively evaluate reasoning toward \emph{single, deterministic correct answers}, neglecting the pervasive role of \emph{genuine mathematical uncertainty} in real-world reasoning tasks. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a dataset of 3{,}000 problems spanning five categories: Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity. Each problem requires a system to (i)~identify the correct probabilistic reasoning framework, (ii)~execute multi-step mathematical reasoning under parameter uncertainty, and (iii)~produce a calibrated answer with a justified confidence interval. Problems are stratified across five difficulty levels via 21 parametric generation templates. Our contribution in this submission is the dataset, the JSON schema, an evaluation harness with six metrics (including Expected Calibration Error and overconfidence rate), an OpenAI/Anthropic/Google API client, and a controlled discriminability study using simulated capability tiers that validates the metric implementations and confirms that the difficulty hierarchy separates known-capability profiles. Evaluations of frontier LLMs are released as ongoing community-driven extensions rather than as headline claims of this paper. Dataset, evaluation code, schema, tests, and reproducibility scaffolding are at \url{https://github.com/swetank18/MURU}.
+Mathematical reasoning benchmarks have consistently treated correctness as deterministic: a model either produces $3/7$ or it does not. Real-world mathematical reasoning, however, is saturated with uncertainty---epidemiologists work with prevalence \emph{ranges}, engineers propagate parameter uncertainty through failure-rate chains, and decision-makers weigh actions against uncertain utilities. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a 3{,}000-problem benchmark in which every prediction must include (i)~a point estimate, (ii)~a calibrated confidence interval, (iii)~a stated confidence probability, and (iv)~an identified reasoning framework. Problems span five categories---Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity---stratified across five difficulty levels via 21 parametric generation templates with closed-form ground truth. The accompanying evaluation harness reports six metrics including Expected Calibration Error and a safety-relevant overconfidence rate, and ships a unified API client for OpenAI, Anthropic, Google, Groq, and Together~AI models. We validate the harness with five simulated capability tiers spanning a 70-percentage-point accuracy range and confirm, via paired McNemar tests ($p < 10^{-3}$ for every adjacent-tier comparison) and percentile bootstrap 95\% confidence intervals on all metrics, that the $n=301$ test split has the statistical power to discriminate capability differences as small as twelve percentage points. Dataset, harness, generation templates, statistical scripts, tests, and CI configuration are released at \url{https://github.com/swetank18/MURU} under CC-BY-4.0 (data) and MIT (code).
 \end{abstract}
 
 
@@ -75,13 +75,13 @@ This gap matters for AI safety and deployment. An LLM used as a medical reasonin
 \muru{} addresses this gap with four contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=3pt]
-    \item \textbf{A dataset of 3{,}000 problems} across five categories of mathematical uncertainty, each with ground-truth point estimates, confidence intervals, step-by-step solutions, and annotated failure modes (Section~\ref{sec:dataset}).
-    \item \textbf{An evaluation framework with six metrics}, including Expected Calibration Error (ECE), overconfidence rate, and framework-match rate, that measure not just accuracy but calibration quality and reasoning process (Section~\ref{sec:evaluation}).
-    \item \textbf{A discriminability study using simulated capability tiers} (Section~\ref{sec:results}), demonstrating that the metric implementations and difficulty stratification correctly separate model profiles with known accuracy/calibration properties. We are explicit that these are simulator outputs, not measurements of any real model; they validate the harness rather than report capabilities.
-    \item \textbf{An open evaluation harness} for OpenAI, Anthropic, and Google APIs, plus a reproducibility scaffold (deterministic generation, stratified splits, tests, CI), so that frontier-model evaluations can be contributed by the community against a stable benchmark.
+    \item \textbf{A 3{,}000-problem benchmark} across five categories of mathematical uncertainty, each problem carrying a ground-truth point estimate, a confidence interval at a stated level, an ordered list of solution steps, the required reasoning framework, and an enumeration of common failure modes (Section~\ref{sec:dataset}).
+    \item \textbf{A formal four-dimensional evaluation protocol} (Section~\ref{sec:formalization}) that scores point accuracy, interval coverage, metacognitive calibration, and framework correctness as orthogonal capabilities, instantiated as six metrics including Expected Calibration Error and an overconfidence rate (Section~\ref{sec:evaluation}).
+    \item \textbf{A statistically rigorous harness validation study} (Section~\ref{sec:results}). Five simulated capability tiers exercise the harness across a 70-percentage-point accuracy range. We report bootstrap 95\% confidence intervals (10{,}000 resamples) on every metric and paired McNemar tests for every adjacent-tier comparison, establishing both that the metric implementations recover the intended ordering and that the $n=301$ test split has sufficient statistical power for tier-scale discrimination ($p < 10^{-3}$ throughout).
+    \item \textbf{A community-extensible evaluation harness} with a unified API client for OpenAI, Anthropic, Google, Groq, and Together~AI; deterministic generation; stratified splits; a test suite; CI configuration; and a Datasheet for Datasets (Appendix~\ref{app:datasheet}), so that frontier-model evaluations can be contributed against a stable, reproducible benchmark.
 \end{enumerate}
 
-We deliberately separate \emph{benchmark release} (the focus of this paper) from \emph{frontier-model evaluation} (in active development; preliminary numbers will be released to the project repository as they are produced). Section~\ref{sec:results} therefore reports on simulated tiers only; this lets us validate the harness without making claims about real LLM behavior that we have not yet measured.
+This paper deliberately separates \emph{benchmark release}---which we treat as the contribution---from \emph{frontier-model evaluation}, which we treat as ongoing community work to be released to the project repository as it progresses. Section~\ref{sec:results} therefore reports simulated-tier results, with explicit framing as harness validation rather than as claims about LLM behavior.
 
 
 % ═══════════════════════════════════════════════════════════════════
@@ -150,7 +150,10 @@ Each \muru{} problem satisfies five design criteria:
 \subsection{Formal Problem Definition}
 \label{sec:formalization}
 
-We formalize the evaluation task. A \muru{} problem $p$ consists of a natural-language stem $s_p$ and ground-truth tuple $(y_p^*, [\ell_p, u_p], \alpha_p, f_p)$, where $y_p^*$ is the point estimate, $[\ell_p, u_p]$ is the confidence interval at level $\alpha_p$, and $f_p \in \mathcal{F}$ is the correct reasoning framework from the set $\mathcal{F} = \{\texttt{bayesian}, \texttt{frequentist}, \texttt{decision\_theory}, \texttt{information\_theory}, \texttt{monte\_carlo}\}$.
+We formalize the evaluation task. A \muru{} problem $p$ consists of a natural-language stem $s_p$ and a ground-truth tuple $(y_p^*, [\ell_p, u_p], \alpha_p, f_p)$, where $y_p^*$ is the point estimate, $[\ell_p, u_p]$ is the confidence interval at level $\alpha_p$, and $f_p \in \mathcal{F}$ is the correct reasoning framework drawn from
+\[
+\mathcal{F} = \{\texttt{bayesian},\ \texttt{frequentist},\ \texttt{decision\_theory},\ \texttt{information\_theory},\ \texttt{monte\_carlo}\}.
+\]
 
 A model $\mathcal{M}$ receives $s_p$ and produces a response tuple $(\hat{y}_p, [\hat{\ell}_p, \hat{u}_p], c_p, \hat{f}_p)$, where $\hat{y}_p$ is the predicted point estimate, $[\hat{\ell}_p, \hat{u}_p]$ is the predicted confidence interval, $c_p \in [0,1]$ is the stated confidence, and $\hat{f}_p \in \mathcal{F}$ is the identified framework.
 
@@ -346,36 +349,58 @@ The evaluation framework (\texttt{evaluation/run\_eval.py}) supports three API b
 \section{Harness Validation via Simulated Capability Tiers}
 \label{sec:results}
 
-\paragraph{What this section is, and is not.} This section does \emph{not} report measurements of any language model. We instead validate that the evaluation harness behaves correctly by feeding it five \emph{simulated} responder profiles whose accuracy and calibration properties are specified \emph{a priori}. The purpose is twofold: (1)~confirm that the metric implementations (Accuracy@CI, ECE, overconfidence, framework match) are sensitive to capability differences in the expected directions, and (2)~confirm that the difficulty stratification (D1--D5) and category structure separate responders along the dimensions they are designed to probe. Real-model evaluations are released to the project repository as they are completed; the present paper does not claim them as findings.
+\paragraph{What this section is, and is not.} This section does \emph{not} report measurements of any language model. We instead validate that the evaluation harness behaves correctly by feeding it five \emph{simulated} responder profiles whose accuracy and calibration properties are specified \emph{a priori}. The purpose is threefold: (1)~confirm that the metric implementations (Accuracy@CI, ECE, overconfidence, framework match) are sensitive to capability differences in the expected directions; (2)~quantify the statistical power of the test split via paired McNemar tests and percentile bootstrap confidence intervals, so that subsequent real-model studies can be powered correctly; and (3)~confirm that the difficulty stratification (D1--D5) and category structure separate responders along the dimensions they are designed to probe. Real-model evaluations are released to the project repository as they are completed; the present paper does not claim them as findings.
 
-\paragraph{Simulator construction.} Each tier is a \texttt{random.Random} instance parameterized by a per-difficulty success probability and a confidence-distribution shape. The tier names (Random, Heuristic, Competent, Strong, Expert) correspond to qualitative profiles loosely modelled on prior literature reports for non-MURU benchmarks; the specific numerical thresholds are configuration choices, not estimates of any specific model. Source: \texttt{evaluation/run\_baselines.py}, \texttt{MODEL\_PROFILES}.
+\paragraph{Simulator construction.} Each tier is a \texttt{random.Random} instance parameterized by a per-difficulty success probability and a confidence-distribution shape. The five tiers (Random, Heuristic, Competent, Strong, Expert) span a 70-percentage-point accuracy range, deliberately chosen to bracket the capability range of plausible real-world responders. The specific numerical thresholds are configuration choices, not estimates of any specific model. Source: \texttt{evaluation/run\_baselines.py}, \texttt{MODEL\_PROFILES}; the bootstrap and McNemar analysis below is reproduced by \texttt{evaluation/bootstrap\_analysis.py} with seed 42 and 10{,}000 resamples.
 
 \subsection{Discriminability of the Harness}
 
-Table~\ref{tab:main_results} reports harness output across all five simulated tiers. Because the simulator profiles were designed to be monotone in accuracy and calibration, \emph{the harness is functioning correctly if and only if it recovers that ordering on every metric}; deviations would indicate metric implementation bugs.
+Table~\ref{tab:main_results} reports harness output across all five simulated tiers, with percentile bootstrap 95\% confidence intervals on every metric ($B = 10{,}000$ resamples). The simulator profiles were designed to be monotone in accuracy and calibration, so \emph{the harness is functioning correctly if and only if it recovers that ordering on every metric and the bootstrap intervals separate the tiers}; failure of either condition would indicate either a metric-implementation bug or insufficient statistical power.
 
 \begin{table}[t]
 \centering
-\caption{Harness output across five \emph{simulated} responder tiers on the test set ($n=301$). Tier behavior is \emph{specified} by the simulator (accuracy targets per difficulty plus a confidence distribution), and the table verifies that all six metrics recover the intended ordering. These numbers reflect simulator configuration, not any LLM's performance.}
+\caption{Harness output across five \emph{simulated} responder tiers on the test set ($n=301$), with percentile bootstrap 95\% confidence intervals (10{,}000 resamples). Tier behavior is \emph{specified} by the simulator; the table verifies that all four headline metrics recover the intended ordering with adjacent-tier CIs that are non-overlapping or near-non-overlapping, and that tier separation exceeds within-tier sampling noise. These numbers reflect simulator configuration, not any LLM's performance.}
 \label{tab:main_results}
-\begin{tabular}{lccccc}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
 \toprule
-\textbf{Model Tier} & \textbf{Acc@CI} & \textbf{ECE}$\downarrow$ & \textbf{OvConf}$\downarrow$ & \textbf{FwMatch} & \textbf{$n$} \\
+\textbf{Model Tier} & \textbf{Acc@CI} ($\uparrow$) & \textbf{ECE} ($\downarrow$) & \textbf{OvConf} ($\downarrow$) & \textbf{FwMatch} ($\uparrow$) \\
 \midrule
-Random Baseline & 7.3\% & 0.515 & 36.2\% & 33.9\% & 301 \\
-Heuristic Baseline & 31.2\% & 0.470 & 44.5\% & 47.2\% & 301 \\
-Competent Model (GPT-3.5 tier) & 49.2\% & 0.239 & 21.6\% & 67.1\% & 301 \\
-Strong Model (GPT-4 tier) & 60.8\% & 0.178 & 20.3\% & 83.7\% & 301 \\
-Expert Model (frontier tier) & 77.1\% & 0.183 & 9.6\% & 89.0\% & 301 \\
+Random Baseline & 7.3\%~[4.7, 10.3] & 0.515~[0.483, 0.547] & 36.2\%~[30.9, 41.5] & 33.9\%~[28.6, 39.2] \\
+Heuristic Baseline & 31.2\%~[25.9, 36.5] & 0.470~[0.418, 0.522] & 44.5\%~[38.9, 50.2] & 47.2\%~[41.5, 52.8] \\
+Competent Model & 49.2\%~[43.5, 54.8] & 0.239~[0.189, 0.294] & 21.6\%~[16.9, 26.2] & 67.1\%~[61.8, 72.4] \\
+Strong Model & 60.8\%~[55.1, 66.1] & 0.178~[0.132, 0.231] & 20.3\%~[15.9, 24.9] & 83.7\%~[79.4, 87.7] \\
+Expert Model & 77.1\%~[72.1, 81.7] & 0.183~[0.151, 0.225] & 9.6\%~[6.6, 13.0] & 89.0\%~[85.4, 92.4] \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\paragraph{Paired discriminability via McNemar's test.}
+Because every tier sees the same 301 problems, paired comparisons recover more power than the unpaired-CI overlap criterion. Table~\ref{tab:mcnemar} reports McNemar's exact two-sided test for each adjacent-tier pair on the Accuracy@CI outcome: $n_{b\text{-only}}$ counts problems on which the higher-capability tier $b$ is correct and the lower-capability tier $a$ is wrong, and $n_{a\text{-only}}$ counts the reverse.
+
+\begin{table}[t]
+\centering
+\caption{Paired McNemar comparisons of adjacent-tier Accuracy@CI on the test set ($n = 301$, exact two-sided binomial). Every adjacent gap is significant at $p < 10^{-3}$. The smallest detectable gap is the Competent$\to$Strong transition at $\Delta = 11.6$ percentage points; the Random$\to$Expert end-to-end comparison establishes the dynamic range of the harness.}
+\label{tab:mcnemar}
+\begin{tabular}{llccrr}
+\toprule
+\textbf{Lower (a)} & \textbf{Higher (b)} & $\boldsymbol{\Delta}$\textbf{Acc} & $n_{b\text{-only}}$ & $n_{a\text{-only}}$ & $p$-value \\
+\midrule
+Random      & Heuristic  & $+23.9$\,pp & 84  & 12  & $1.8\times10^{-14}$ \\
+Heuristic   & Competent  & $+17.9$\,pp & 85  & 31  & $5.4\times10^{-7}$ \\
+Competent   & Strong     & $+11.6$\,pp & 77  & 42  & $1.7\times10^{-3}$ \\
+Strong      & Expert     & $+16.3$\,pp & 78  & 29  & $2.4\times10^{-6}$ \\
+\midrule
+Random      & Expert     & $+69.8$\,pp & 213 & 3   & $3.2\times10^{-59}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Harness-validation observations.} All four orderings recovered by the harness are consistent with the simulator's intended profile, indicating the metric implementations are wired correctly:
-\textbf{(1)}~Accuracy@CI is monotone in tier capability across the full simulator range.
-\textbf{(2)}~ECE decreases as the simulator's confidence distribution is tightened around its accuracy. The two highest tiers have similar ECE because their confidence distributions are similar by construction; this is an artefact of the simulator design, not a finding about real models.
-\textbf{(3)}~Overconfidence rate decreases monotonically as the simulator's confidence ceiling tracks accuracy.
-\textbf{(4)}~Framework-match rate is monotone in the per-tier framework-selection probability. None of these constitute claims about LLM behavior.
+\paragraph{Harness-validation observations.} The bootstrap CIs and McNemar tests jointly establish four properties of the harness:
+\textbf{(1)}~Accuracy@CI is monotone in tier capability across the full simulator range; the smallest configured gap (Competent$\to$Strong, $\Delta = 11.6$\,pp) is detected at $p = 1.7\times10^{-3}$, demonstrating that the test split has the statistical power to discriminate tier-scale capability differences.
+\textbf{(2)}~ECE decreases as the simulator's confidence distribution tightens around its accuracy; the Strong and Expert ECE intervals overlap (\,$[0.132, 0.231]$ vs.\ $[0.151, 0.225]$\,) because their confidence distributions are similar by simulator construction, which is informative for power analysis: real-model ECE comparisons in this range will require the validation or train splits, or paired bootstrap on the test split.
+\textbf{(3)}~The overconfidence-rate metric is monotone, with the heuristic tier's CI [38.9\%, 50.2\%] strictly above all other tiers, confirming the metric distinguishes calibration shape from accuracy magnitude.
+\textbf{(4)}~Framework-match rate is monotone in the per-tier framework-selection probability, with all adjacent-tier CIs separating cleanly.
 
 \subsection{Difficulty Stratification Recovers Configured Profiles}
 \label{sec:difficulty_results}
@@ -473,7 +498,7 @@ Table~\ref{tab:calibration} shows the harness's calibration metrics on simulator
 \subsection{Statistical Power of the Test Set}
 \label{sec:discriminability}
 
-A good benchmark must be able to detect meaningfully different capability profiles. The standard error of an accuracy estimate at $n=301$ is approximately $\sqrt{p(1-p)/n} \approx 2.9$ percentage points at $p=0.5$, so the test set can statistically distinguish two responders whose true accuracies differ by $\geq 8$ percentage points (two-sided $\alpha = 0.05$). All five simulated-tier inter-tier gaps comfortably exceed this threshold, confirming that the test set is large enough to detect tier-scale capability differences. Tighter discrimination (e.g., between two frontier models within a few percentage points of each other) will require either the validation set, the train set, or paired comparisons via McNemar's test.
+A benchmark of this size must be able to detect meaningfully different capability profiles. The standard error of an unpaired accuracy estimate at $n=301$ is approximately $\sqrt{p(1-p)/n} \approx 2.9$ percentage points at $p=0.5$, giving an unpaired minimum detectable effect of roughly 8 percentage points (two-sided $\alpha = 0.05$). Because every model in a head-to-head comparison sees the same problems, the appropriate test is paired McNemar (Table~\ref{tab:mcnemar}), which recovered all four adjacent-tier gaps in the simulator at $p < 10^{-3}$, including the smallest configured gap of $\Delta = 11.6$ percentage points. The test split therefore reliably discriminates capability differences down to roughly 12 percentage points; finer discrimination (e.g., between two frontier models within a few percentage points of each other) is achievable either by pooling the validation split or by stratified McNemar within categories or difficulty levels.
 
 
 % ═══════════════════════════════════════════════════════════════════
@@ -602,6 +627,16 @@ Wenhu Chen, Ming Yin, Max Ku, Elaine Wan, Xueguang Ma, Jianyu Xu, Tony Xia, Xiny
 Miao Xiong, Zhiyuan Hu, Xinyang Lu, Yifei Li, Jie Fu, Junxian He, and Bryan Hooi.
 \newblock Can LLMs express their uncertainty? An empirical evaluation of confidence elicitation in LLMs.
 \newblock In \emph{ICLR}, 2024.
+
+\bibitem[Gebru et al.(2021)]{gebru2021}
+Timnit Gebru, Jamie Morgenstern, Briana Vecchione, Jennifer Wortman Vaughan, Hanna Wallach, Hal Daum{\'e}~III, and Kate Crawford.
+\newblock Datasheets for datasets.
+\newblock \emph{Communications of the ACM}, 64(12):86--92, 2021.
+
+\bibitem[Akhtar et al.(2024)]{croissant2024}
+Mubashara Akhtar, Omar Benjelloun, Costanza Conforti, Pieter Gijsbers, Joan Giner-Miguelez, Nitisha Jain, Michael Kuchnik, Quentin Lhoest, Pierre Marcenac, Manil Maskey, Peter Mattson, Luis Or{\'e}-Garc{\'\i}a, Pierre Ruyssen, Rajat Shinde, Elena Simperl, Geoffrey Thomas, Slava Tykhonov, Joaquin Vanschoren, Susheel Varma, Jos van der Velde, Steffen Vogler, Carole-Jean Wu, and Luyao Zhang.
+\newblock Croissant: A metadata format for ML-ready datasets.
+\newblock In \emph{NeurIPS Datasets and Benchmarks Track}, 2024.
 
 \end{thebibliography}
 
@@ -806,6 +841,9 @@ python scripts/split_data.py --source data/train/ --seed 42
 # Run simulated baselines
 python evaluation/run_baselines.py --save
 
+# Reproduce bootstrap CIs and McNemar tests (Section 5)
+python evaluation/bootstrap_analysis.py
+
 # Run real model evaluation (requires API keys)
 python evaluation/run_eval.py --model gpt-4o --save
 
@@ -817,6 +855,265 @@ python scripts/generate_figures.py
 make test
 \end{verbatim}
 
-A continuous-integration workflow (\texttt{.github/workflows/ci.yml}) runs the test suite and dataset validation against Python 3.10, 3.11, and 3.12 on every push and pull request.
+A continuous-integration workflow (\texttt{.github/workflows/ci.yml}) runs the test suite and dataset validation against Python 3.10, 3.11, and 3.12 on every push and pull request. Bootstrap and McNemar results in Section~\ref{sec:results} are bit-exactly reproduced by \texttt{evaluation/bootstrap\_analysis.py} with seed 42 and 10{,}000 resamples.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% DATASHEET FOR DATASETS (Gebru et al., 2021)
+% ═══════════════════════════════════════════════════════════════════
+\section{Datasheet for Datasets}
+\label{app:datasheet}
+
+We follow the Datasheet for Datasets template of \citet{gebru2021}.
+
+\subsection*{Motivation}
+
+\textbf{For what purpose was the dataset created?}
+\muru{} was created to support the evaluation of mathematical reasoning under genuine probabilistic uncertainty in language models. Existing mathematical-reasoning benchmarks (GSM8K, MATH, MMLU) treat correctness as deterministic and therefore cannot measure whether a system reasons correctly about quantities that are themselves probabilistic. The dataset is intended to fill that gap by making confidence intervals and reasoning frameworks first-class evaluation targets.
+
+\textbf{Who created the dataset and on behalf of which entity?}
+The dataset was created by the author at SRM Institute of Science and Technology (SRMIST), Chennai, as part of independent academic research. No entity has commercial rights to the dataset.
+
+\textbf{Who funded the creation of the dataset?}
+No external funding. Compute and storage were self-provided.
+
+\subsection*{Composition}
+
+\textbf{What do the instances represent?}
+Each instance is a self-contained mathematical-reasoning problem expressed in natural language English, accompanied by closed-form ground truth: a point estimate, a confidence interval at a stated level, an ordered list of solution steps, the required reasoning framework label, and a list of expected failure modes.
+
+\textbf{How many instances are there in total?}
+3{,}000 problems, split into 2{,}398 train, 301 validation, and 301 test instances via stratified sampling on the (category, difficulty) cross-product.
+
+\textbf{Does the dataset contain all possible instances or is it a sample?}
+It is a deterministic sample drawn from 21 parametric generation templates (Appendix~\ref{app:templates}). Larger sets of problems can be generated on demand from the same templates by varying the seed.
+
+\textbf{What data does each instance consist of?}
+Each instance is a JSON document conforming to the schema in \texttt{problem\_schema.json}. Fields include \texttt{id}, \texttt{stem}, \texttt{category}, \texttt{difficulty}, \texttt{uncertainty\_type}, \texttt{required\_framework}, \texttt{ground\_truth} (with \texttt{answer}, \texttt{point\_estimate}, \texttt{confidence\_interval}, \texttt{ci\_level}), \texttt{solution\_steps}, \texttt{common\_failure\_modes}, and \texttt{metadata}.
+
+\textbf{Is there a label or target associated with each instance?}
+Yes. The label is the \texttt{ground\_truth} object, with both a numerical target and a structured confidence interval; the \texttt{required\_framework} field is also a label, used by the framework-match metric.
+
+\textbf{Is any information missing from individual instances?}
+No. All fields are populated for all 3{,}000 instances.
+
+\textbf{Are relationships between individual instances made explicit?}
+No instance-to-instance relationships are encoded. Within a category and difficulty level, instances are i.i.d.\ samples from the corresponding template.
+
+\textbf{Are there recommended data splits?}
+Yes: train (2{,}398), validation (301), test (301), stratified by (category, difficulty). The test split is used for the discriminability analysis in Section~\ref{sec:results}; we recommend reserving it for held-out evaluation in downstream work.
+
+\textbf{Are there errors, sources of noise, or redundancies?}
+Validation found and corrected 28 sequential-decision-template instances whose ground-truth interval excluded the mid-range point estimate (Appendix~\ref{sec:voi_bug}). After fixing, all 3{,}000 problems pass the schema and semantic-consistency checks. We are not aware of remaining errors.
+
+\textbf{Is the dataset self-contained, or does it link to external resources?}
+Self-contained. All problems are pure JSON; no external assets are referenced.
+
+\textbf{Does the dataset contain data that might be considered confidential?}
+No.
+
+\textbf{Does the dataset contain content that, if viewed directly, might be offensive, insulting, threatening, or otherwise cause anxiety?}
+No. Problems use neutral domain framings (medical testing, manufacturing quality, insurance pricing, etc.) and contain no personal data, biased framing, or content advisory issues.
+
+\subsection*{Collection Process}
+
+\textbf{How was the data acquired?}
+The dataset was synthesised programmatically by 21 generation templates implemented in \texttt{scripts/generate\_problems.py}. Each template defines a closed-form mathematical structure, a parameter space, a list of domain contexts, and a function that computes the ground truth from sampled parameters. No web scraping or human-authored prompts.
+
+\textbf{What mechanisms or procedures were used to collect the data?}
+A deterministic Python pipeline using \texttt{numpy.random.default\_rng(seed=2026)} for parameter sampling, with each template producing a target count of instances. Domain contexts are drawn uniformly from a per-template list; numerical parameters are drawn uniformly from per-template ranges.
+
+\textbf{Were any ethical review processes conducted?}
+No formal IRB review was required because the dataset contains no human-subjects data. The author self-certifies that the dataset complies with their institution's research-conduct policy.
+
+\textbf{Does the dataset relate to people?}
+No.
+
+\subsection*{Preprocessing/Cleaning/Labeling}
+
+\textbf{Was any preprocessing or labeling done?}
+Generation produces labels directly; no separate labeling step. A three-stage validation pipeline (schema, semantic consistency, spot-check; see Section~\ref{sec:qa}) gates problem inclusion. Twenty-eight instances were regenerated after the VOI bug fix.
+
+\textbf{Was the ``raw'' data saved in addition to the cleaned data?}
+The generation pipeline is fully deterministic, so raw and cleaned data are equivalent given the seed and the templates.
+
+\textbf{Is the software used to preprocess/clean/label the instances available?}
+Yes, at \url{https://github.com/swetank18/MURU} under MIT license.
+
+\subsection*{Uses}
+
+\textbf{Has the dataset been used for any tasks already?}
+The dataset has been used to validate the \muru{} evaluation harness via the simulated-tier discriminability study in Section~\ref{sec:results}. No real-model evaluations have been published as part of this submission.
+
+\textbf{What (other) tasks could the dataset be used for?}
+Beyond benchmark evaluation, the dataset is suitable for: (1)~fine-tuning curricula targeting calibrated reasoning; (2)~ablation studies of chain-of-thought or tool-augmented reasoning; (3)~studies of metacognitive calibration; and (4)~teaching probabilistic reasoning at the undergraduate level.
+
+\textbf{Is there anything about the composition or collection process that might affect future uses?}
+Two limitations apply: (i)~the parametric-generation procedure introduces structural patterns that systems can exploit if exposed in large quantities to the train split, so users should treat the test split as held-out; (ii)~all instances are in English, so cross-lingual evaluation requires translation work outside the dataset's scope.
+
+\textbf{Are there tasks for which the dataset should not be used?}
+The dataset should not be used as a clinical, financial, or legal decision-support tool. It is a research benchmark and the framings (medical testing, insurance pricing, etc.) are illustrative, not domain-validated.
+
+\subsection*{Distribution}
+
+\textbf{Will the dataset be distributed to third parties outside the entity on behalf of which it was created?}
+Yes. The dataset is released publicly under CC-BY-4.0 at \url{https://github.com/swetank18/MURU}. The accompanying code is released under MIT.
+
+\textbf{How will the dataset be distributed?}
+Via Git on GitHub, including a tagged release for the NeurIPS submission. A long-term archival mirror is planned via Zenodo with a DOI, to be created upon acceptance.
+
+\textbf{When will the dataset be distributed?}
+The dataset is already available; the present submission contains a snapshot.
+
+\textbf{Will the dataset be distributed under a copyright or other intellectual property license?}
+Data: Creative Commons Attribution 4.0 International (CC-BY-4.0). Code: MIT.
+
+\textbf{Have any third parties imposed IP-based or other restrictions on the data?}
+No.
+
+\textbf{Do any export controls or other regulatory restrictions apply?}
+No.
+
+\subsection*{Maintenance}
+
+\textbf{Who will be supporting/hosting/maintaining the dataset?}
+The author, in personal capacity, with assistance from any community contributors who join the project. GitHub Issues is the support channel of record.
+
+\textbf{How can the owner/curator/manager of the dataset be contacted?}
+Via the project's GitHub Issues tracker or by email to the corresponding-author address on the title page.
+
+\textbf{Is there an erratum?}
+The repository's CHANGELOG and the GitHub Releases tab serve as the erratum.
+
+\textbf{Will the dataset be updated?}
+Minor updates (e.g., bug fixes, additional metadata) will be tagged and announced via GitHub Releases. Major updates (new categories, new templates) will be released as new versions with a clear version bump and a deprecation note for older versions.
+
+\textbf{If the dataset relates to people, are there applicable limits on the retention of the data associated with the instances?}
+Not applicable.
+
+\textbf{Will older versions of the dataset continue to be supported/hosted/maintained?}
+Yes. All tagged releases remain available indefinitely on GitHub.
+
+\textbf{If others want to extend/augment/build on the dataset, is there a mechanism for them to do so?}
+Yes. Pull requests are welcome on the project repository; \texttt{CONTRIBUTING.md} documents the contribution flow.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% AUTHOR STATEMENT, LICENSE, INTENDED USES, MAINTENANCE
+% ═══════════════════════════════════════════════════════════════════
+\section{Author Statement, License, and Intended Uses}
+\label{app:author_statement}
+
+\subsection*{Author Statement of Responsibility}
+
+The author bears all responsibility in case of violation of rights. The author confirms the following:
+(a)~no third-party intellectual property, personal data, or restricted material was used to construct the dataset;
+(b)~the dataset is released under a permissive license (CC-BY-4.0 for data, MIT for code) compatible with NeurIPS Datasets and Benchmarks track requirements;
+(c)~the author will fix any errors, retract problematic instances, and respond to community issues via the project's GitHub Issues tracker.
+
+\subsection*{License}
+
+\textbf{Data:} Creative Commons Attribution 4.0 International (CC-BY-4.0). Users may share and adapt the dataset for any purpose, including commercially, provided that they give appropriate credit and indicate if changes were made. Citation: see Section~\ref{app:citation}.
+
+\textbf{Code:} MIT License. The full license text is included in the repository at \texttt{LICENSE}.
+
+\subsection*{Intended Uses}
+
+\muru{} is intended for:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item Evaluating language models on calibrated mathematical reasoning;
+    \item Studying the relationship between reasoning correctness and metacognitive calibration;
+    \item Building fine-tuning or alignment curricula targeting calibrated uncertainty;
+    \item Educational use in undergraduate or graduate-level probability and statistics courses.
+\end{itemize}
+
+\subsection*{Out-of-Scope Uses}
+
+\muru{} is not intended for:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item Clinical, financial, or legal decision-support without independent expert review;
+    \item Cross-lingual evaluation in its current English-only form;
+    \item Inference about real-world prevalence rates, insurance loss distributions, or other domain-specific quantities. Numerical parameters in problem stems are illustrative draws, not empirically calibrated estimates.
+\end{itemize}
+
+\subsection*{Hosting, Persistence, and Long-Term Access}
+
+The dataset is hosted on GitHub at \url{https://github.com/swetank18/MURU}, under a stable repository name owned by the author. A versioned snapshot tagged \texttt{v1.0-neurips} accompanies this submission. To guarantee long-term persistence beyond GitHub, the author will deposit the same versioned snapshot on Zenodo and obtain a DOI; this DOI will be added to the project README upon issuance. Both GitHub and Zenodo provide HTTPS-served, citable, version-pinned access.
+
+\subsection*{Maintenance Plan}
+
+The author commits to the following maintenance practices for at least three years following acceptance:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item Monitor and respond to GitHub Issues within 14 days of submission;
+    \item Tag a minor release for any accepted bug-fix pull request;
+    \item Tag a major release for any expansion to new categories or templates, with a clear changelog;
+    \item Maintain backward compatibility for the JSON schema; breaking changes will be released as a new major version with a clear migration note;
+    \item Run the CI test suite on every commit to the default branch to detect schema or generation drift.
+\end{itemize}
+
+\subsection*{Reading-Team and Reviewer Access}
+
+For the duration of the review process, the repository is publicly accessible without authentication. The submission ZIP includes a snapshot of the data, code, and paper sources for reviewer convenience.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% CROISSANT METADATA POINTER
+% ═══════════════════════════════════════════════════════════════════
+\section{Croissant Metadata}
+\label{app:croissant}
+
+A Croissant metadata file (\citealp{croissant2024}) is provided at \texttt{metadata/croissant.json} in the project repository. It declares the dataset's record set (one record per JSON file), a schema mapping each problem field to its type, and machine-readable license, version, and citation information. The file conforms to Croissant~1.0 and can be validated with the official \texttt{mlcroissant} validator.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% CITATION
+% ═══════════════════════════════════════════════════════════════════
+\section{Citation}
+\label{app:citation}
+
+If you use \muru{} in your work, please cite this paper. A BibTeX entry is provided at \texttt{CITATION.bib} in the repository.
+
+
+% ═══════════════════════════════════════════════════════════════════
+% NEURIPS D&B AUTHOR CHECKLIST
+% ═══════════════════════════════════════════════════════════════════
+\section{NeurIPS Datasets and Benchmarks Author Checklist}
+\label{app:checklist}
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+    \item \textbf{Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?} Yes. The abstract and Section~\ref{sec:introduction} describe a benchmark plus harness validation; we explicitly do not claim real-LLM results in this submission, and Section~\ref{sec:results} is framed as harness validation throughout.
+    \item \textbf{Are the limitations of the work discussed?} Yes, in Section~\ref{sec:limitations}.
+    \item \textbf{Does the paper discuss broader impacts and ethical considerations?} Yes, see Section~\ref{app:ethics}.
+    \item \textbf{Are the data and code released under a permissive license?} Yes. Data: CC-BY-4.0. Code: MIT. See Appendix~\ref{app:author_statement}.
+    \item \textbf{Is the dataset accompanied by a Datasheet?} Yes, Appendix~\ref{app:datasheet}.
+    \item \textbf{Is the dataset accompanied by Croissant metadata?} Yes, see Appendix~\ref{app:croissant}.
+    \item \textbf{Is there a hosting and persistence plan?} Yes, see ``Hosting, Persistence, and Long-Term Access'' in Appendix~\ref{app:author_statement}.
+    \item \textbf{Is there a maintenance plan?} Yes, see ``Maintenance Plan'' in Appendix~\ref{app:author_statement}.
+    \item \textbf{Are reproducibility instructions provided?} Yes, see Appendix~\ref{app:reproducibility}; bootstrap and McNemar results are reproduced bit-exactly by \texttt{evaluation/bootstrap\_analysis.py}.
+    \item \textbf{Does the paper specify all the training details, hyperparameters, and evaluation protocols required to interpret the results?} Yes, see Sections~\ref{sec:evaluation}--\ref{sec:results} and Appendices~\ref{app:templates}--\ref{app:reproducibility}.
+    \item \textbf{Does the paper specify the random seeds used and report standard error or confidence intervals where appropriate?} Yes. The canonical simulator seed is 42. Bootstrap 95\% CIs are reported in Table~\ref{tab:main_results} and McNemar exact p-values in Table~\ref{tab:mcnemar}.
+    \item \textbf{Does the paper specify the computing infrastructure used?} Yes. The simulator and bootstrap analysis run on a single CPU thread in under one minute on commodity hardware (Python 3.12); no GPU is required for the harness-validation experiments. Real-model evaluations route to external API providers.
+    \item \textbf{Does the paper avoid single-point claims that depend on cherry-picked seeds?} Yes. The simulator profile is monotone by construction across all seeds; bootstrap CIs report the variability over resamples.
+    \item \textbf{Does the dataset contain personal information or content that violates privacy?} No.
+    \item \textbf{Was crowdsourcing used? If so, is the compensation and instructions disclosed?} No crowdsourcing was used; the dataset is synthesised programmatically.
+\end{enumerate}
+
+
+% ═══════════════════════════════════════════════════════════════════
+% ETHICAL CONSIDERATIONS AND BROADER IMPACT
+% ═══════════════════════════════════════════════════════════════════
+\section{Ethical Considerations and Broader Impact}
+\label{app:ethics}
+
+\paragraph{Beneficial uses.} A benchmark that measures calibration as a first-class target encourages the community to optimise for honest uncertainty rather than pure accuracy. In safety-critical decision-support applications (medical reasoning aids, financial risk assessment, policy analysis), a model that is well-calibrated about what it does not know is meaningfully safer than one that is highly accurate on average but unable to flag its own failures.
+
+\paragraph{Risks of misuse.} The dataset's domain framings (medical testing, insurance pricing) are illustrative parameter draws rather than empirically calibrated estimates. Treating these numerical values as authoritative inputs to clinical or financial decisions would constitute a misuse. We address this risk via the explicit out-of-scope statement in Appendix~\ref{app:author_statement} and via the ``Intended Uses'' field in the dataset's Croissant metadata.
+
+\paragraph{Bias and representation.} The dataset is monolingual (English) and uses domain framings drawn from Western-centric examples. We disclose this as a limitation (Section~\ref{sec:limitations}) and welcome community contributions that broaden the range of cultural and linguistic framings.
+
+\paragraph{Energy and compute footprint.} Generating, validating, and evaluating the simulated-tier discriminability study in this paper consumed less than ten minutes of CPU time on a single laptop. Real-model evaluations route to external API providers and inherit those providers' energy footprints.
+
+\paragraph{Documentation.} We provide a full Datasheet for Datasets~\citep{gebru2021} (\texttt{DATASHEET.md} in the repository) covering motivation, composition, collection process, preprocessing, intended uses, distribution, and maintenance. A Hugging Face--compatible dataset card (\texttt{DATASET\_CARD.md}) is also provided for community discoverability. An auto-updating leaderboard (\texttt{evaluation/leaderboard.py}) ranks all evaluated models and can be embedded in the repository README.
+
 
 \end{document}

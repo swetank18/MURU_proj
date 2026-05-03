@@ -142,14 +142,17 @@ class GroqClient(ModelClient):
     Supports: llama-3.1-70b-versatile, llama-3.1-8b-instant,
               mixtral-8x7b-32768, gemma2-9b-it
     """
-    # Map short names to Groq model IDs
+    # Map short names to current Groq model IDs (verified 2026-05).
     MODEL_MAP = {
-        "llama-3.1-70b": "llama-3.1-70b-versatile",
+        "llama-3.3-70b": "llama-3.3-70b-versatile",
+        "llama-3.1-70b": "llama-3.3-70b-versatile",   # alias to current 70B
         "llama-3.1-8b": "llama-3.1-8b-instant",
-        "llama-3-70b": "llama-3.1-70b-versatile",
+        "llama-3-70b": "llama-3.3-70b-versatile",
         "llama-3-8b": "llama-3.1-8b-instant",
-        "mixtral-8x7b": "mixtral-8x7b-32768",
-        "gemma2-9b": "gemma2-9b-it",
+        "llama-4-scout": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "gpt-oss-120b": "openai/gpt-oss-120b",
+        "gpt-oss-20b": "openai/gpt-oss-20b",
+        "qwen3-32b": "qwen/qwen3-32b",
     }
 
     def __init__(self, model: str):

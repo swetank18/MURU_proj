@@ -1,0 +1,184 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "MURU-BENCH",
+  "description": "MURU-BENCH (Mathematical Reasoning Under Uncertainty Benchmark) is a 3,000-problem benchmark for evaluating language models on calibrated mathematical reasoning. Every problem requires a point estimate, a confidence interval, a stated confidence probability, and an identified reasoning framework. Problems span five categories (Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, Adversarial Ambiguity) stratified across five difficulty levels.",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://github.com/swetank18/MURU",
+  "version": "1.0.0",
+  "datePublished": "2026-05-03",
+  "creator": {
+    "@type": "Person",
+    "name": "Swetank Kumar",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "SRM Institute of Science and Technology"
+    }
+  },
+  "citeAs": "@inproceedings{murubench2026, title={MURU-BENCH: A Benchmark for Mathematical Reasoning Under Uncertainty}, author={Kumar, Swetank}, year={2026}}",
+  "keywords": [
+    "mathematical reasoning",
+    "uncertainty quantification",
+    "calibration",
+    "language models",
+    "Bayesian inference",
+    "expected calibration error",
+    "benchmark"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "github-repo",
+      "name": "github-repo",
+      "description": "MURU-BENCH GitHub repository",
+      "contentUrl": "https://github.com/swetank18/MURU",
+      "encodingFormat": "git+https",
+      "sha256": "main"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "train-files",
+      "name": "train-files",
+      "description": "Training split: 2,398 problem JSON files.",
+      "containedIn": {"@id": "github-repo"},
+      "encodingFormat": "application/json",
+      "includes": "data/train/MURU-*.json"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "validation-files",
+      "name": "validation-files",
+      "description": "Validation split: 301 problem JSON files.",
+      "containedIn": {"@id": "github-repo"},
+      "encodingFormat": "application/json",
+      "includes": "data/validation/MURU-*.json"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "test-files",
+      "name": "test-files",
+      "description": "Test split: 301 problem JSON files.",
+      "containedIn": {"@id": "github-repo"},
+      "encodingFormat": "application/json",
+      "includes": "data/test/MURU-*.json"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "problems",
+      "name": "problems",
+      "description": "All MURU-BENCH problem records (one record per JSON file).",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "problems/id",
+          "name": "id",
+          "description": "Unique problem identifier (e.g., MURU-0001).",
+          "dataType": "sc:Text",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.id"}}
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "problems/stem",
+          "name": "stem",
+          "description": "Natural-language problem statement with embedded quantitative data.",
+          "dataType": "sc:Text",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.stem"}}
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "problems/category",
+          "name": "category",
+          "description": "One of five categories (bayesian_updating, conditional_probability_chains, distribution_estimation, decision_under_uncertainty, adversarial_ambiguity).",
+          "dataType": "sc:Text",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.category"}}
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "problems/difficulty",
+          "name": "difficulty",
+          "description": "Difficulty level, integer 1-5.",
+          "dataType": "sc:Integer",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.difficulty"}}
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "problems/required_framework",
+          "name": "required_framework",
+          "description": "The mathematically appropriate reasoning framework label.",
+          "dataType": "sc:Text",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.required_framework"}}
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "problems/ground_truth_point_estimate",
+          "name": "ground_truth_point_estimate",
+          "description": "Ground-truth point estimate.",
+          "dataType": "sc:Float",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.ground_truth.point_estimate"}}
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "problems/ground_truth_confidence_interval",
+          "name": "ground_truth_confidence_interval",
+          "description": "Ground-truth confidence interval [lower, upper].",
+          "dataType": "sc:Text",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.ground_truth.confidence_interval"}}
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "problems/ground_truth_ci_level",
+          "name": "ground_truth_ci_level",
+          "description": "The confidence level associated with the ground-truth interval (typically 0.95).",
+          "dataType": "sc:Float",
+          "source": {"fileSet": {"@id": "train-files"}, "extract": {"jsonPath": "$.ground_truth.ci_level"}}
+        }
+      ]
+    }
+  ]
+}
