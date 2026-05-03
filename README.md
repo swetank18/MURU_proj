@@ -1,158 +1,191 @@
-# MURU-BENCH: Mathematical Reasoning Under Uncertainty Benchmark
+# MURU-BENCH
 
-[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS-2026-blue.svg)](https://neurips.cc)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Problems](https://img.shields.io/badge/Problems-3%2C000-orange.svg)](data/)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
+**Mathematical Reasoning Under Uncertainty Benchmark** — a dataset of 3,000 problems for evaluating whether language models can reason correctly when the answer is genuinely uncertain.
 
-**MURU-BENCH** is a benchmark of **3,000 problems** for evaluating mathematical reasoning under genuine uncertainty. Unlike existing math benchmarks (GSM8K, MATH, MMLU) which test deterministic answers, MURU-BENCH requires models to produce **calibrated confidence intervals** and identify the correct **probabilistic reasoning framework**.
+Existing math benchmarks (GSM8K, MATH, MMLU) test deterministic answers: a single correct number. MURU-BENCH instead requires models to (1) identify the right probabilistic framework, (2) execute multi-step reasoning under parameter uncertainty, and (3) return a calibrated point estimate together with a justified confidence interval.
 
-## 🎯 Key Features
+---
 
-| Feature | Description |
-|---------|-------------|
-| **3,000 problems** | Spanning 5 categories and 5 difficulty levels |
-| **Calibrated ground truth** | Each problem has a point estimate + confidence interval |
-| **6 evaluation metrics** | Accuracy, ECE, overconfidence, framework match, and more |
-| **21 parametric templates** | Reproducible, numerically diverse problem generation |
-| **Multi-model support** | API clients for OpenAI, Anthropic, and Google models |
+## At a glance
 
-## 📊 Categories
+| | |
+|---|---|
+| Problems | 3,000 |
+| Categories | 5 (Bayesian Updating, Conditional Chains, Distribution Estimation, Decision Under Uncertainty, Adversarial Ambiguity) |
+| Difficulty levels | 5 (D1 easiest, D5 hardest) |
+| Generation templates | 21 parametric templates with seeded RNG |
+| Splits | 2,398 train / 301 validation / 301 test (stratified by category × difficulty) |
+| Evaluation metrics | Accuracy@CI, ECE, Overconfidence, Framework Match, plus per-category and per-difficulty breakdowns |
+| Model APIs supported | OpenAI, Anthropic, Google |
+| Tests | 26 pytest cases, run on Python 3.10 / 3.11 / 3.12 in CI |
 
-| Category | Count | Description |
-|----------|-------|-------------|
-| Bayesian Updating | 910 | Bayes' theorem with uncertain priors/likelihoods |
+---
+
+## Categories
+
+| Category | Count | What it tests |
+|---|---:|---|
+| Bayesian Updating | 910 | Bayes' theorem with uncertain priors or likelihoods |
 | Distribution Estimation | 660 | Population parameter inference from finite samples |
-| Decision Under Uncertainty | 525 | Expected utility with uncertain states |
+| Decision Under Uncertainty | 525 | Expected utility when the state is uncertain |
 | Adversarial Ambiguity | 474 | Problems with multiple valid formalizations |
-| Conditional Prob. Chains | 431 | Multi-step conditioning with uncertain intermediates |
+| Conditional Probability Chains | 431 | Multi-step conditioning with uncertain intermediates |
 
-## 🏗️ Project Structure
+---
+
+## Repository layout
 
 ```
 MURU/
-├── data/
-│   ├── train/          # 2,398 problems (80%)
-│   ├── validation/     # 301 problems (10%)
-│   ├── test/           # 301 problems (10%)
-│   ├── by_category/    # Symlinks organized by category
-│   └── by_difficulty/  # Symlinks organized by difficulty
-├── evaluation/
-│   ├── metrics.py      # 6 core evaluation metrics
-│   ├── run_eval.py     # API-based model evaluation
-│   ├── run_baselines.py # Simulated baseline generator
-│   ├── analyze_results.py # Analysis & LaTeX table generation
-│   └── baselines/      # Saved baseline results
-├── scripts/
-│   ├── generate_problems.py  # 21 parametric templates
-│   ├── validate.py           # Schema + semantic validation
-│   ├── split_data.py         # Stratified train/val/test split
-│   ├── generate_figures.py   # Publication-quality figures
-│   ├── stats.py              # Dataset statistics
-│   └── sample.py             # Problem inspector
-├── paper/
-│   ├── main.tex              # NeurIPS paper
-│   ├── neurips_2024.sty      # Style file
-│   └── figures/              # Generated figures
-└── problem_schema.json       # JSON schema for problems
+  data/
+    train/                # 2,398 problems
+    validation/           # 301 problems
+    test/                 # 301 problems
+    by_category/          # Symlinks organized by category
+    by_difficulty/        # Symlinks organized by difficulty
+  evaluation/
+    metrics.py            # Six evaluation metrics
+    run_eval.py           # API-driven model evaluation (OpenAI/Anthropic/Google)
+    run_baselines.py      # Simulated baseline tiers
+    analyze_results.py    # Generates LaTeX tables and analysis report
+    baselines/            # Saved baseline outputs (gitignored)
+  scripts/
+    generate_problems.py  # Parametric problem generator
+    validate.py           # Schema + semantic validation
+    split_data.py         # Stratified train/val/test split
+    generate_figures.py   # Paper figures
+    stats.py              # Dataset statistics
+    sample.py             # Problem inspector
+  tests/                  # pytest suite
+  paper/
+    main.tex              # NeurIPS 2026 paper source
+    main.pdf              # Compiled PDF
+    neurips_2024.sty      # Style file
+    figures/              # Generated figures
+  .github/workflows/      # CI configuration
+  problem_schema.json     # JSON Schema for problems
+  Makefile                # Convenience targets
+  pytest.ini              # pytest configuration
+  requirements.txt        # Python dependencies
 ```
 
-## 🚀 Quick Start
+---
 
-### Installation
+## Installation
 
 ```bash
 git clone https://github.com/swetank18/MURU.git
 cd MURU
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Inspect Problems
+---
+
+## Quick start
+
+### Inspect problems
 
 ```bash
-# Sample 3 random problems
-python scripts/sample.py
-
-# Sample D5 adversarial ambiguity problems
-python scripts/sample.py --category adversarial_ambiguity --difficulty 5
-
-# View a specific problem
-python scripts/sample.py --id MURU-0001
+python scripts/sample.py                                                  # 3 random
+python scripts/sample.py --category adversarial_ambiguity --difficulty 5  # filtered
+python scripts/sample.py --id MURU-0001                                   # specific
 ```
 
-### Evaluate a Model
+### Validate the dataset
 
 ```bash
-# Set your API key
-export OPENAI_API_KEY=your-key-here
-
-# Run evaluation
-python evaluation/run_eval.py --model gpt-4o --save
-
-# Analyze results
-python evaluation/analyze_results.py
+make validate
 ```
 
-### Run Simulated Baselines
+### Run simulated baselines (no API key needed)
 
 ```bash
 python evaluation/run_baselines.py --save
+python evaluation/analyze_results.py
 ```
 
-### Run Tests
+### Evaluate a real model
 
 ```bash
-make test         # 26 tests: metrics, parser, dataset invariants
-make validate     # Re-validate all 3,000 problem JSONs against the schema
+export OPENAI_API_KEY=...        # or ANTHROPIC_API_KEY / GOOGLE_API_KEY
+python evaluation/run_eval.py --model gpt-4o --save
+python evaluation/analyze_results.py
 ```
 
-A GitHub Actions workflow ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the same suite against Python 3.10/3.11/3.12 on every push.
+### Run the test suite
 
-## 📈 Baseline Results
+```bash
+make test
+```
 
-Results on the test set (n=301):
+A GitHub Actions workflow (`.github/workflows/ci.yml`) runs the same suite against Python 3.10, 3.11, and 3.12 on every push and pull request.
 
-| Model Tier | Accuracy | ECE ↓ | Overconfidence ↓ | Framework Match |
-|------------|----------|-------|-----------------|-----------------|
+---
+
+## Baseline results
+
+Results on the test split (n = 301), arrows indicate desired direction.
+
+| Model tier | Accuracy@CI | ECE (lower is better) | Overconfidence (lower) | Framework Match |
+|---|---:|---:|---:|---:|
 | Random | 7.3% | 0.515 | 36.2% | 33.9% |
 | Heuristic | 31.2% | 0.470 | 44.5% | 47.2% |
 | Competent (GPT-3.5 tier) | 49.2% | 0.239 | 21.6% | 67.1% |
 | Strong (GPT-4 tier) | 60.8% | 0.178 | 20.3% | 83.7% |
 | Expert (frontier tier) | 77.1% | 0.183 | 9.6% | 89.0% |
 
-**Difficulty scaling** — all models show monotonic accuracy decay:
+### Difficulty scaling
+
+All tiers show monotonic accuracy decay from D1 to D5; D5 separates capability levels most cleanly.
 
 | Model | D1 | D2 | D3 | D4 | D5 |
-|-------|----|----|----|----|----|
+|---|---:|---:|---:|---:|---:|
 | Expert | 96% | 91% | 81% | 64% | 21% |
 | Strong | 88% | 78% | 63% | 33% | 14% |
 | Competent | 81% | 72% | 44% | 22% | 4% |
 
-## 🔬 Regenerate the Dataset
+---
+
+## Regenerate the dataset
 
 ```bash
-# Generate 3,000 problems from all 21 templates
 python scripts/generate_problems.py --all --n 3000 --seed 2026 --validate
-
-# Split into train/val/test
 python scripts/split_data.py --source data/train/ --seed 42
-
-# Generate paper figures
 python scripts/generate_figures.py
 ```
 
-## 📄 Citation
+The generator is deterministic given the seed.
+
+---
+
+## Make targets
+
+| Target | Description |
+|---|---|
+| `make test` | Run the full pytest suite |
+| `make validate` | Schema-validate all 3,000 problem JSONs |
+| `make baselines` | Run all five simulated baselines and save outputs |
+| `make paper` | Compile the LaTeX paper with tectonic |
+| `make clean` | Remove build artifacts and pytest cache |
+
+---
+
+## Citation
 
 ```bibtex
 @inproceedings{kumar2026murubench,
-  title={MURU-BENCH: A Benchmark for Mathematical Reasoning Under Uncertainty},
-  author={Kumar, Swetank},
-  booktitle={NeurIPS Datasets and Benchmarks Track},
-  year={2026},
-  url={https://github.com/swetank18/MURU}
+  title     = {MURU-BENCH: A Benchmark for Mathematical Reasoning Under Uncertainty},
+  author    = {Kumar, Swetank},
+  booktitle = {NeurIPS Datasets and Benchmarks Track},
+  year      = {2026},
+  url       = {https://github.com/swetank18/MURU}
 }
 ```
 
-## 📜 License
+---
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+## License
+
+MIT. See [LICENSE](LICENSE).
