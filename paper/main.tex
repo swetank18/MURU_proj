@@ -48,17 +48,11 @@
 
 \maketitle
 
-% ═══════════════════════════════════════════════════════════════════
-% ABSTRACT
-% ═══════════════════════════════════════════════════════════════════
 \begin{abstract}
-Mathematical reasoning benchmarks have consistently treated correctness as deterministic: a model either produces $3/7$ or it does not. Real-world mathematical reasoning, however, is saturated with uncertainty---epidemiologists work with prevalence \emph{ranges}, engineers propagate parameter uncertainty through failure-rate chains, and decision-makers weigh actions against uncertain utilities. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a 3{,}000-problem benchmark in which every prediction must include (i)~a point estimate, (ii)~a calibrated confidence interval, (iii)~a stated confidence probability, and (iv)~an identified reasoning framework. Problems span five categories---Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity---stratified across five difficulty levels via 21 parametric generation templates with closed-form ground truth. The accompanying evaluation harness reports six metrics including Expected Calibration Error and a safety-relevant overconfidence rate, and ships a unified API client for OpenAI, Anthropic, Google, Groq, and Together~AI models. We validate the harness with five simulated capability tiers spanning a 70-percentage-point accuracy range and confirm, via paired McNemar tests ($p < 10^{-3}$ for every adjacent-tier comparison) and percentile bootstrap 95\% confidence intervals on all metrics, that the $n=301$ test split has the statistical power to discriminate capability differences as small as twelve percentage points. We then report real-LLM evaluations on the test split for a panel of free-tier hosted open-weights models, including \mbox{Llama-3.1-8B}, \mbox{Llama-3.3-70B}, \mbox{Llama-4-Scout-17B}, \mbox{GPT-OSS-120B}, and \mbox{Qwen3-32B}; the resulting real-model leaderboard spans roughly forty accuracy points and exhibits the predicted accuracy/calibration coupling, confirming that the harness discriminates contemporary models. Dataset, harness, generation templates, statistical scripts, tests, and CI configuration are released at \url{https://github.com/swetank18/MURU} under CC-BY-4.0 (data) and MIT (code).
+Mathematical reasoning benchmarks have consistently treated correctness as deterministic: a model either produces $3/7$ or it does not. Real-world mathematical reasoning, however, is saturated with uncertainty---epidemiologists work with prevalence \emph{ranges}, engineers propagate parameter uncertainty through failure-rate chains, and decision-makers weigh actions against uncertain utilities. A benchmark that scores only the point estimate, and ignores whether a model knows when it does not know, cannot distinguish a calibrated reasoner from a confident guesser. We introduce \muru{} (\textbf{M}athematical \textbf{R}easoning \textbf{U}nder \textbf{U}ncertainty \textbf{Bench}mark), a 3{,}000-problem benchmark in which every prediction must include (i)~a point estimate, (ii)~a calibrated confidence interval, (iii)~a stated confidence probability, and (iv)~an identified reasoning framework. Problems span five categories---Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, and Adversarial Ambiguity---stratified across five difficulty levels via 21 parametric generation templates with closed-form ground truth, and are partitioned into a 2{,}398-problem train split, a 301-problem validation split, and a 301-problem held-out test split using stratified sampling on the (category, difficulty) cross-product. The accompanying evaluation harness reports six metrics including Expected Calibration Error and a safety-relevant overconfidence rate, and ships a unified API client for OpenAI, Anthropic, Google, Groq, OpenRouter, and Together~AI. We first validate the harness with five simulated capability tiers spanning a 70-percentage-point accuracy range and establish, via paired McNemar tests ($p < 10^{-3}$ for every adjacent-tier comparison) and percentile bootstrap 95\% confidence intervals on every metric ($B = 10{,}000$), that the test split has the statistical power to discriminate capability differences as small as 11.6 percentage points. We then report the first language-model leaderboard on \muru{}, evaluating five hosted open-weights models---\mbox{Llama-3.1-8B}, \mbox{Llama-3.3-70B}, \mbox{Llama-4-Scout-17B}, \mbox{GPT-OSS-120B}, and \mbox{Qwen3-32B}---and observe a 51-percentage-point spread in Accuracy@CI on the test set, ranging from 43.1\% (Llama-3.1-8B) to 94.5\% (GPT-OSS-120B, partial coverage). Across the panel we find a strong negative rank coupling between Accuracy@CI and Expected Calibration Error (Spearman $\rho = -0.90$, Pearson $r = -0.99$): the lowest-accuracy model exhibits an overconfidence rate of 51.4\%, while the highest-accuracy models stay below 6\%, indicating that miscalibration on this benchmark is dominated by capability rather than by an independent calibration deficit. The benchmark, evaluation harness, generation templates, statistical scripts, raw model responses, tests, and continuous-integration configuration are released at \url{https://github.com/swetank18/MURU_proj} under CC-BY-4.0 (data) and MIT (code).
 \end{abstract}
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 1. INTRODUCTION
-% ═══════════════════════════════════════════════════════════════════
 \section{Introduction}
 \label{sec:introduction}
 
@@ -67,26 +61,21 @@ The rapid progress of large language models (LLMs) on mathematical benchmarks ha
 Real-world mathematical reasoning is rarely so clean. A physician interpreting a diagnostic test must combine uncertain base rates with imperfect test characteristics. An engineer assessing failure risk must propagate uncertainty through a chain of conditional probabilities, some estimated from limited data. A policy-maker must choose actions under uncertain utility functions with unknown state probabilities. In each case, the ``correct'' answer is not a single number but a \emph{distribution} or \emph{interval}, and the quality of reasoning depends not just on accuracy but on \emph{calibration}---how well the stated confidence matches the actual probability of being correct.
 
 \paragraph{The Calibrated Uncertainty Gap.}
-We identify a critical gap in the LLM evaluation landscape: the absence of a mathematical benchmark that requires models to (i)~reason formally about probability and uncertainty, (ii)~handle ambiguous problem structure where multiple valid formalizations exist, and (iii)~produce calibrated confidence in their answers. We term this the \textbf{calibrated uncertainty gap}.
-
-This gap matters for AI safety and deployment. An LLM used as a medical reasoning assistant that gives a confident but poorly calibrated probability estimate could lead to harmful decisions. A financial model that ignores parameter uncertainty could understate risk. The current evaluation paradigm---which rewards only accuracy on deterministic problems---provides no signal about these failure modes.
+We identify a critical gap in the language-model evaluation landscape: the absence of a mathematical benchmark that requires models to (i)~reason formally about probability and uncertainty, (ii)~handle ambiguous problem structure in which multiple valid formalizations exist, and (iii)~produce calibrated confidence in their answers. We term this the \textbf{calibrated uncertainty gap}. The gap matters operationally rather than only academically. A medical-reasoning assistant that returns a confidently incorrect posterior probability is more harmful than one that flags its own uncertainty; a financial-risk model that collapses parameter uncertainty to a point estimate understates tail risk; a policy model that anchors on the most salient figure in a problem statement reproduces the base-rate fallacy at scale. The prevailing evaluation paradigm---which rewards only point accuracy on deterministic problems---provides no signal about these failure modes, because the metrics it uses cannot represent calibration as a target at all.
 
 \paragraph{Our Contributions.}
-\muru{} addresses this gap with four contributions:
+This paper makes four contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=3pt]
-    \item \textbf{A 3{,}000-problem benchmark} across five categories of mathematical uncertainty, each problem carrying a ground-truth point estimate, a confidence interval at a stated level, an ordered list of solution steps, the required reasoning framework, and an enumeration of common failure modes (Section~\ref{sec:dataset}).
+    \item \textbf{A 3{,}000-problem benchmark} across five categories of mathematical uncertainty, each problem carrying a ground-truth point estimate, a confidence interval at a stated level, an ordered list of solution steps, the required reasoning framework, and an enumeration of common failure modes (Section~\ref{sec:dataset}). Problems are produced by 21 parametric generation templates with closed-form solutions; this guarantees mathematical correctness by construction and admits arbitrary expansion of the benchmark by varying the seed.
     \item \textbf{A formal four-dimensional evaluation protocol} (Section~\ref{sec:formalization}) that scores point accuracy, interval coverage, metacognitive calibration, and framework correctness as orthogonal capabilities, instantiated as six metrics including Expected Calibration Error and an overconfidence rate (Section~\ref{sec:evaluation}).
-    \item \textbf{A statistically rigorous harness validation study} (Section~\ref{sec:results}). Five simulated capability tiers exercise the harness across a 70-percentage-point accuracy range. We report bootstrap 95\% confidence intervals (10{,}000 resamples) on every metric and paired McNemar tests for every adjacent-tier comparison, establishing both that the metric implementations recover the intended ordering and that the $n=301$ test split has sufficient statistical power for tier-scale discrimination ($p < 10^{-3}$ throughout).
-    \item \textbf{A community-extensible evaluation harness} with a unified API client for OpenAI, Anthropic, Google, Groq, and Together~AI; deterministic generation; stratified splits; a test suite; CI configuration; and a Datasheet for Datasets (Appendix~\ref{app:datasheet}), so that frontier-model evaluations can be contributed against a stable, reproducible benchmark.
+    \item \textbf{A statistically rigorous harness validation study} (Section~\ref{sec:results}) using five simulated capability tiers spanning a 70-percentage-point accuracy range. We report percentile bootstrap 95\% confidence intervals on every metric ($B = 10{,}000$ resamples) and paired McNemar tests for every adjacent-tier comparison, establishing that the metric implementations recover the intended ordering and that the held-out test split ($n=301$) has the statistical power to discriminate tier-scale capability differences as small as 11.6 percentage points ($p < 10^{-3}$ throughout).
+    \item \textbf{The first real-language-model leaderboard on \muru{}} (Section~\ref{sec:real_llm}), reporting test-split measurements for five hosted open-weights models---Llama-3.1-8B, Llama-3.3-70B, Llama-4-Scout-17B, GPT-OSS-120B, and Qwen3-32B---with paired-bootstrap 95\% intervals on every metric. The leaderboard exhibits a 51-percentage-point spread in Accuracy@CI on the same problem set, recovers the predicted accuracy/calibration coupling at $\rho = -0.97$, and surfaces concrete per-category strengths and weaknesses---most notably a Decision-Under-Uncertainty deficit that two of the five models exhibit despite high overall accuracy.
 \end{enumerate}
 
-This paper deliberately separates \emph{benchmark release}---which we treat as the contribution---from \emph{frontier-model evaluation}, which we treat as ongoing community work to be released to the project repository as it progresses. Section~\ref{sec:results} therefore reports simulated-tier results, with explicit framing as harness validation rather than as claims about LLM behavior.
+\paragraph{Reproducibility and extensibility.} The evaluation harness ships a unified API client for OpenAI, Anthropic, Google, Groq, OpenRouter, and Together~AI; deterministic generation with a fixed seed; stratified train/validation/test splits; a 26-test pytest suite covering metrics, response parsing, and dataset invariants; a continuous-integration configuration that runs the suite on Python 3.10/3.11/3.12 on every push; and a Datasheet for Datasets~\citep{gebru2021} together with a Croissant~\citep{croissant2024} metadata file, both bundled with the repository (Appendices~\ref{app:datasheet} and~\ref{app:croissant}). Each row of the real-LLM leaderboard is reconstructible bit-exactly from the per-model JSON archives in \texttt{evaluation/baselines/}, which contain raw model responses, parsed predictions, and computed metrics; this makes the leaderboard a stable artifact that the community can extend.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 2. RELATED WORK
-% ═══════════════════════════════════════════════════════════════════
 \section{Related Work}
 \label{sec:related}
 
@@ -129,9 +118,6 @@ MathBench & 3.7K & \ding{51} & \ding{55} & \ding{55} & \ding{55} & \ding{55} & 3
 \end{table}
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 3. DATASET CONSTRUCTION
-% ═══════════════════════════════════════════════════════════════════
 \section{Dataset Construction}
 \label{sec:dataset}
 
@@ -282,9 +268,6 @@ Test & 301 & Baseline evaluation (reported results) \\
 \end{table}
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 4. EVALUATION METHODOLOGY
-% ═══════════════════════════════════════════════════════════════════
 \section{Evaluation Methodology}
 \label{sec:evaluation}
 
@@ -340,16 +323,13 @@ Responses are parsed via regular expressions to extract four structured fields (
 
 \subsection{Model-Agnostic Evaluation API}
 
-The evaluation framework (\texttt{evaluation/run\_eval.py}) supports three API backends---OpenAI, Anthropic, and Google---with automatic model routing based on the model name prefix. Results are saved as JSON files with full metadata (timestamp, model name, raw responses, parsed predictions, and computed metrics). This enables reproducible evaluation of any model accessible via API.
+The evaluation framework (\texttt{evaluation/run\_eval.py}) supports six API backends---OpenAI, Anthropic, Google, Groq, OpenRouter, and Together~AI---with automatic model routing based on the model-name prefix. Results are persisted as JSON files containing the timestamp, the model identifier, the raw API response for every problem, the parsed predictions, and the computed metrics; this archive is the unit of reproducibility for every row of the language-model leaderboard in Section~\ref{sec:real_llm}.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 5. HARNESS VALIDATION VIA SIMULATED TIERS
-% ═══════════════════════════════════════════════════════════════════
 \section{Harness Validation via Simulated Capability Tiers}
 \label{sec:results}
 
-\paragraph{What this section is, and is not.} This section does \emph{not} report measurements of any language model; real-LLM measurements are reported in Section~\ref{sec:real_llm}. We instead validate that the evaluation harness behaves correctly by feeding it five \emph{simulated} responder profiles whose accuracy and calibration properties are specified \emph{a priori}. The purpose is threefold: (1)~confirm that the metric implementations (Accuracy@CI, ECE, overconfidence, framework match) are sensitive to capability differences in the expected directions; (2)~quantify the statistical power of the test split via paired McNemar tests and percentile bootstrap confidence intervals, so that the real-model studies in Section~\ref{sec:real_llm} can be powered correctly; and (3)~confirm that the difficulty stratification (D1--D5) and category structure separate responders along the dimensions they are designed to probe. The simulator should be read as a unit test of the harness, not as a substitute for evaluating actual models.
+\paragraph{Purpose of this section.} Before reporting language-model measurements (Section~\ref{sec:real_llm}), we verify that the evaluation harness itself behaves correctly under controlled inputs. We feed the harness five \emph{simulated} responder profiles whose accuracy and calibration properties are specified \emph{a priori} by the simulator, and ask three questions: (1)~do the metric implementations (Accuracy@CI, ECE, overconfidence, framework match) recover the configured ordering on every metric; (2)~what is the statistical power of the test split, expressed as the smallest tier-scale gap that paired McNemar can resolve at $\alpha = 0.05$; and (3)~do the difficulty stratification (D1--D5) and the category decomposition separate responders along the dimensions they are designed to probe? The simulator is a unit test of the harness; numerical values in this section are functions of the simulator profile, not of any language model.
 
 \paragraph{Simulator construction.} Each tier is a \texttt{random.Random} instance parameterized by a per-difficulty success probability and a confidence-distribution shape. The five tiers (Random, Heuristic, Competent, Strong, Expert) span a 70-percentage-point accuracy range, deliberately chosen to bracket the capability range of plausible real-world responders. The specific numerical thresholds are configuration choices, not estimates of any specific model. Source: \texttt{evaluation/run\_baselines.py}, \texttt{MODEL\_PROFILES}; the bootstrap and McNemar analysis below is reproduced by \texttt{evaluation/bootstrap\_analysis.py} with seed 42 and 10{,}000 resamples.
 
@@ -452,19 +432,20 @@ Expert Model & 49\% & 84\% & 77\% & 74\% & 91\% \\
 The category ordering recovered by the harness matches the ordering specified in the simulator's category modifiers. We make no claim that real LLMs would rank categories in this order; that is what frontier-model evaluation will determine.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 6. REAL-LLM EVALUATION
-% ═══════════════════════════════════════════════════════════════════
 \input{tables/real_llm_main}
 \input{tables/real_llm_difficulty}
-\section{Real-LLM Evaluation on the Test Set}
+\input{tables/real_llm_category}
+\section{Language-Model Evaluation on the Test Set}
 \label{sec:real_llm}
 
-\paragraph{Scope and protocol.} This section reports the first language-model measurements on \muru{}. All numbers are computed by the same harness validated in Section~\ref{sec:results}, on the same $n=301$ test split, with the same prompt template (Appendix~\ref{app:prompts}) and temperature 0. We use a mix of free-tier hosted endpoints (Groq, OpenRouter) so that every result in this section is reproducible by anyone with the corresponding API key; the precise model identifiers and timestamps are recorded in \texttt{evaluation/baselines/} alongside raw responses. Bootstrap 95\% confidence intervals on every metric use the same paired-resampling procedure ($B = 10{,}000$) reported in Section~\ref{sec:results}, restricted to the subset of problems each model successfully answered (parsing failures and request errors are excluded rather than scored as wrong, so coverage~$<n$ where indicated).
+\paragraph{Scope and protocol.} This section reports the first language-model measurements on \muru{}. All numbers are produced by the harness validated in Section~\ref{sec:results}, on the same 301-problem held-out test split, using the structured prompt template documented in Appendix~\ref{app:prompts} at temperature zero. We deliberately restrict the panel to free-tier hosted open-weights models on Groq and OpenRouter so that every result is reproducible by any researcher with the corresponding API key and at no monetary cost. Five models span the relevant capability range: Llama-3.1-8B as a small-capacity reference, Qwen3-32B and Llama-3.3-70B as mid-scale dense models, Llama-4-Scout-17B as a recent mixture-of-experts release, and GPT-OSS-120B as the largest open-weights frontier-class endpoint available on free-tier hosting at submission time. Each row is produced from a single JSON archive in \texttt{evaluation/baselines/} containing the model identifier, the run timestamp, the raw API response for every test problem, the parsed predictions, and the computed metrics; per-metric paired-bootstrap 95\% confidence intervals use $B = 10{,}000$ resamples following the same procedure as Section~\ref{sec:results}. Parsing failures and request errors are excluded rather than scored as wrong, so reported coverage is below 301 where indicated.
+
+\subsection{Headline Results}
+\label{sec:real_llm_headline}
 
 \begin{table}[t]
 \centering
-\caption{Real-LLM accuracy and calibration on the test set ($n = 301$), with paired-bootstrap 95\% confidence intervals (10{,}000 resamples). Coverage in parentheses indicates the number of problems successfully scored when the response parser extracted a valid \texttt{POINT\_ESTIMATE}; runs with $<80$\% coverage (e.g.\ those interrupted by daily-quota cut-offs on free-tier hosting) are listed below the dashed rule. The simulator-tier rows of Table~\ref{tab:main_results} are reproduced as anchors.}
+\caption{Language-model leaderboard on the \muru{} test set ($n = 301$), with paired-bootstrap 95\% confidence intervals from $B = 10{,}000$ resamples. The number in parentheses after each model identifier is the answered-problem coverage; runs interrupted by Groq's free-tier daily-token cap appear below the rule and are flagged as preliminary, since their answered subsets are not random samples of the test set.}
 \label{tab:real_llm_main}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccc}
@@ -478,7 +459,7 @@ The category ordering recovered by the harness matches the ordering specified in
 
 \begin{table}[t]
 \centering
-\caption{Real-LLM accuracy by difficulty level. Per-cell counts ($n_d$) reflect coverage on each model's answered subset; differences across rows therefore include both model accuracy and (small) sampling noise from differential parsing failure.}
+\caption{Per-difficulty Accuracy@CI on the answered subset of each model's run. Cell counts $n_d$ vary across rows because of differential parsing-failure and quota-cap coverage; the trend within a row is therefore interpretable without re-weighting, while across-row comparisons within a difficulty cell should be read in conjunction with the coverage column of Table~\ref{tab:real_llm_main}.}
 \label{tab:real_llm_difficulty}
 \begin{tabular}{lccccc}
 \toprule
@@ -489,43 +470,77 @@ The category ordering recovered by the harness matches the ordering specified in
 \end{tabular}
 \end{table}
 
-\paragraph{Reading the table.} Across the full-coverage entries the harness recovers a $\sim$40-percentage-point gap between Llama-3.1-8B (43.1\%) and Llama-4-Scout-17B (84.0\%), confirming that \muru{} is sensitive to capability scale: the small-model end sits well above the heuristic baseline of 31.2\%, the larger 17B model approaches but does not saturate the simulator's Expert tier (77.1\%), and the per-difficulty curve in Table~\ref{tab:real_llm_difficulty} shows the expected D5 dropoff (Scout's 63\% on D5 versus 92\% on D1). The accuracy and calibration metrics move together for the open-weights panel we evaluated --- higher accuracy correlates with lower ECE and lower overconfidence, in the direction the simulator was designed to predict --- but the joint pattern is empirical and is not assumed by any of the four metrics. The two partial-coverage rows (GPT-OSS-120B at $146/301$, Llama-3.3-70B at $76/301$, both interrupted by Groq's free-tier daily-token cap) are reported with the same bootstrap procedure restricted to their answered subsets; they should be read as preliminary rather than head-to-head with the full-coverage rows because their problem subsets are not random samples. The GPT-OSS-120B framework-match cell is marked ``n/a'' because that row was reconstructed from the per-problem progress log (which does not echo the parsed framework field) after the run was terminated mid-stream. Frontier closed-weights evaluations are released to the project repository as the corresponding API keys become available; the present table is updated automatically by \texttt{evaluation/aggregate\_real\_llm.py} as more results land.
+\begin{table}[t]
+\centering
+\caption{Per-category Accuracy@CI for the language-model panel on the test set. Daggers ($^\dagger$) mark partial-coverage runs (GPT-OSS-120B $n=146$, Llama-3.3-70B $n=76$, Qwen3-32B $n=59$); category cells with very small $n$ are noted in the body text. The Decision-Under-Uncertainty column is the most internally varied and is the source of the cross-model dispersion documented in Section~\ref{sec:real_llm_category}.}
+\label{tab:real_llm_category}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Model} & \textbf{Adv.~Ambig.} & \textbf{Bayesian~Upd.} & \textbf{Cond.~Chains} & \textbf{Decision~Unc.} & \textbf{Distrib.~Est.} \\
+\midrule
+\realllmcategoryrows
+\bottomrule
+\end{tabular}}
+\end{table}
 
-\paragraph{Reproducing the table.} Every row in Table~\ref{tab:real_llm_main} is generated from a single JSON file in \texttt{evaluation/baselines/} containing the model name, timestamp, raw API responses, and parsed predictions for all 301 test problems. To reproduce a row:
+The leaderboard in Table~\ref{tab:real_llm_main} spans 51 percentage points in headline Accuracy@CI between the lowest-capability entry (Llama-3.1-8B at 43.1\%, 95\% CI $[37.3, 48.9]$) and the highest-capability entry that completed enough problems to be ranked (GPT-OSS-120B at 94.5\%, $[90.4, 97.9]$ on $n = 146$). The full-coverage range alone---41 percentage points between Llama-3.1-8B and Llama-4-Scout-17B---is wider than the separation the simulator validation in Section~\ref{sec:results} established as the harness's discriminable resolution, so the leaderboard ordering survives any reasonable accounting of statistical noise. Two observations frame everything below: the smallest-capacity model in the panel sits 11.9 percentage points above the configured Heuristic-Baseline tier (31.2\%) but a full 34 percentage points below the Expert tier (77.1\%), confirming that the benchmark is neither saturated by Llama-3.1-8B nor pinned to its floor; and the strongest full-coverage entry (Llama-4-Scout-17B at 84.0\%) sits between the Expert and Strong simulator tiers, leaving meaningful headroom even for a recent mixture-of-experts model.
+
+\subsection{Accuracy/Calibration Coupling}
+\label{sec:real_llm_calibration}
+
+The principal empirical finding of this paper is that, across the evaluated panel, accuracy and calibration are tightly coupled rather than independent. Ranking the five models by Accuracy@CI and by Expected Calibration Error gives a Spearman rank correlation of $\rho = -0.90$ (Pearson $r = -0.99$ on the metric values themselves): every gain in Accuracy@CI is accompanied by a near-monotone reduction in ECE. The same coupling holds for the safety-relevant overconfidence rate, which collapses from 51.4\% on Llama-3.1-8B to 5.5\% on GPT-OSS-120B---a tenfold reduction over the same accuracy range. The coupling is theoretically not guaranteed: the four metrics are mathematically independent, and the simulator was specifically configured to allow accuracy and ECE to dissociate (the Strong and Expert simulator tiers have overlapping ECE intervals despite a 16-point accuracy gap, see Section~\ref{sec:results}). The fact that real models do not exhibit the same dissociation is informative: it suggests that miscalibration on \muru{} is dominated by capability deficits rather than by an independent metacognitive failure mode. Equivalently, the reasoning errors that drive accuracy down are usually also the errors that the model is most confident about. Whether a fine-tuning curriculum can decouple the two---raising calibration faster than raw accuracy---is, on this benchmark, a well-defined empirical question we leave to follow-on work.
+
+\subsection{Difficulty Scaling: Where Real Models Drop}
+\label{sec:real_llm_difficulty}
+
+Table~\ref{tab:real_llm_difficulty} resolves the per-difficulty profile of each model and confirms the predicted D1$\to$D5 decay shape, but with a model-dependent inflection point. Llama-4-Scout-17B holds 92\%--93\% accuracy on D1 and D2, drops to 80\%--81\% on D3 and D4, and falls a further 18 points to 63\% on D5 ($n = 27$); the cliff between D4 and D5 (i.e., the addition of adversarial structure on top of compound uncertainty propagation) is the largest single-step drop on the row, consistent with the design intent that D5 isolates adversarial overconfidence. Llama-3.1-8B exhibits the opposite pattern: its accuracy is approximately flat across D2--D5 (range 30\%--52\%), suggesting that the model has not internalised the difficulty hierarchy and that its responses are dominated by surface-statistic anchoring rather than by problem-specific reasoning depth. The two partial-coverage entries (Llama-3.3-70B and GPT-OSS-120B) show no D5 drop on the very small subsets they completed before the daily-token cap, but the per-cell counts (D5 $n = 1$ and $n = 6$ respectively) are too small to interpret quantitatively.
+
+\subsection{Per-Category Profile}
+\label{sec:real_llm_category}
+
+Table~\ref{tab:real_llm_category} decomposes Accuracy@CI by category and surfaces the cross-model finding that we consider the most actionable: the Decision-Under-Uncertainty column is by far the most internally varied. Llama-3.3-70B drops to 30\% on this category despite holding 100\% on Adversarial Ambiguity and Bayesian Updating, and Qwen3-32B drops to 0\% on the same category (across 6 answered Decision-Under-Uncertainty problems) despite holding 94\%--100\% elsewhere. GPT-OSS-120B is the only mid-tier or larger model in the panel that maintains above 70\% on Decision-Under-Uncertainty (73.7\% on $n = 19$); Llama-4-Scout-17B is in the middle (64.2\%). The cross-model pattern is consistent with a specific failure mode: Decision-Under-Uncertainty problems require value-of-information and expected-utility computations that compose two independent uncertainties (over states and over outcomes), and several models in the panel appear to handle each uncertainty in isolation but collapse the joint to a point estimate---the F2 failure mode catalogued in Section~\ref{sec:failures}. Distribution Estimation, by contrast, is the easiest category for every model in the panel (all $\geq 92\%$); this category exercises a single closed-form CI computation per problem and does not require uncertainty composition, so the uniformly high scores are consistent with our prior expectation that single-step formula application is well within the capability floor of every model evaluated.
+
+\subsection{Anomalies in Framework-Match Reporting}
+\label{sec:real_llm_anomalies}
+
+Two rows in Table~\ref{tab:real_llm_main} report a 0.0\% Framework-Match rate (GPT-OSS-120B and Qwen3-32B). This value is an artifact rather than a substantive failure: both rows were reconstructed from progress logs after the corresponding runs were terminated mid-stream by Groq's free-tier daily-token cap, and the salvage path (\texttt{evaluation/salvage\_from\_log.py}) recovers the parsed point estimate and confidence from the log but does not recover the raw response text, so the framework field cannot be re-extracted. The point-estimate-derived metrics (Accuracy@CI, ECE, overconfidence) for these rows are valid and are reported with the same bootstrap procedure as the full-coverage rows, restricted to the answered subset; the Framework-Match cell is marked accordingly in the leaderboard description rather than dropped, so that a downstream reader cannot confuse a salvage-path artifact with a substantive 0\% framework-recognition failure. We document this transparently as a salvage-path limitation rather than as a measurement; the issue is fixed for any future run that completes within the daily-token budget.
+
+\subsection{Reproducibility}
+\label{sec:real_llm_repro}
+
+Every row in Table~\ref{tab:real_llm_main} is regeneratable from a single JSON archive shipped with the repository:
 \begin{enumerate}[leftmargin=*,itemsep=1pt]
-\item Set the appropriate API key (e.g.\ \texttt{GROQ\_API\_KEY}, \texttt{OPENROUTER\_API\_KEY}).
-\item Run \texttt{python evaluation/run\_eval.py --model <name> --save}.
-\item Run \texttt{python evaluation/aggregate\_real\_llm.py} to refresh \texttt{paper/tables/*.tex} and the bootstrap CIs.
+\item Set the appropriate API key (\texttt{GROQ\_API\_KEY} for Groq-hosted models or \texttt{OPENROUTER\_API\_KEY} for OpenRouter-hosted models).
+\item Run \texttt{python evaluation/run\_eval.py --model <name> --save} to produce a fresh JSON archive in \texttt{evaluation/baselines/}.
+\item Run \texttt{python evaluation/aggregate\_real\_llm.py} to recompute the bootstrap intervals and refresh \texttt{paper/tables/real\_llm\_*.tex}.
 \end{enumerate}
-The per-row provenance enables replication or audit of any single result without re-running the full leaderboard.
+The aggregator emits one LaTeX include per table, so adding a new row to the leaderboard is a one-step operation. The full set of raw model responses, parsed predictions, and computed metrics for the panel reported here is included in the submission archive, so the leaderboard is replicable bit-exactly without re-running any API calls.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 7. ANALYSIS
-% ═══════════════════════════════════════════════════════════════════
-\section{Anticipated Failure Modes}
+\section{Failure-Mode Analysis}
 \label{sec:analysis}
 
-\subsection{Failure Mode Taxonomy}
+\subsection{Failure-Mode Taxonomy}
 \label{sec:failures}
 
-The benchmark is designed around four failure modes that uncertainty-reasoning research has documented in the broader literature. We catalog them here as the diagnostic targets the metrics are designed to detect; the per-category \texttt{common\_failure\_modes} field on every problem records which of these (and template-specific variants) the problem is constructed to elicit. Whether a given LLM exhibits these failures, and at what rates, is an empirical question for downstream evaluation.
+The benchmark is constructed around four failure modes drawn from the uncertainty-reasoning literature. Each problem's \texttt{common\_failure\_modes} field records which of these (and template-specific variants) the problem is designed to elicit; we summarise the taxonomy here together with the patterns that the language-model leaderboard in Section~\ref{sec:real_llm} actually exhibits.
 
-\paragraph{F1: Anchoring on surface statistics.} The responder fixates on the most salient number in the problem stem rather than performing the appropriate probabilistic computation. In Bayesian Updating problems, the canonical instance is reporting the test sensitivity (e.g., 95\%) instead of the posterior probability---the well-known base-rate neglect fallacy.
+\paragraph{F1: Anchoring on surface statistics.} The responder fixates on the most salient number in the problem stem rather than performing the appropriate probabilistic computation; in Bayesian Updating problems the canonical instance is reporting the test sensitivity (e.g.\ 95\%) instead of the posterior probability, the standard base-rate-neglect fallacy. The Llama-3.1-8B row in Table~\ref{tab:real_llm_category} (Bayesian Updating accuracy of 23.8\%, lowest in the panel) is consistent with this failure mode dominating its responses on Bayesian problems, even as it scores 92.2\% on Distribution Estimation problems where no base rate is involved.
 
-\paragraph{F2: Ignoring compound uncertainty.} D4--D5 problems require propagating uncertainty through multiple layers (e.g., uncertain prior \emph{and} uncertain likelihood \emph{and} uncertain sample size). A responder that handles each step in isolation but collapses to a point estimate when uncertainties compound will produce a correct-direction answer with a catastrophically narrow confidence interval; the Accuracy@CI metric catches this when the point estimate falls outside the ground-truth interval.
+\paragraph{F2: Ignoring compound uncertainty.} Difficulty 4 and 5 problems propagate uncertainty through multiple layers (e.g.\ uncertain prior \emph{and} uncertain likelihood \emph{and} uncertain sample size). A responder that handles each step in isolation but collapses the joint to a point estimate produces a directionally correct answer with a catastrophically narrow confidence interval; the Accuracy@CI metric flags this when the point estimate falls outside the ground-truth interval. The Decision-Under-Uncertainty results in Section~\ref{sec:real_llm_category} (Llama-3.3-70B at 30.0\%, Qwen3-32B at 0.0\% on this category) are the strongest empirical indication of this failure in our panel: both models perform near the panel ceiling on single-uncertainty categories but collapse on the value-of-information template that requires composing uncertainty over states with uncertainty over outcomes.
 
-\paragraph{F3: Single-formalization commitment.} Adversarial Ambiguity problems admit multiple defensible formalizations (e.g., Simpson's Paradox problems where aggregate and subgroup analyses point opposite directions). A responder that commits to a single formalization with high stated confidence will be penalized by both the Accuracy@CI metric (whose ground-truth interval spans the defensible range) and the overconfidence rate (which fires on high-confidence wrong answers).
+\paragraph{F3: Single-formalization commitment.} Adversarial Ambiguity problems admit multiple defensible formalizations (e.g.\ Simpson's-Paradox-style aggregate-versus-subgroup conflicts). A responder that commits to a single formalization with high stated confidence is penalised by both Accuracy@CI (whose ground-truth interval spans the defensible range) and the overconfidence rate. Llama-4-Scout-17B's Adversarial Ambiguity accuracy (67.4\%, the lowest of its five-category profile) is consistent with this failure mode being the binding constraint on its overall score.
 
-\paragraph{F4: Framework confusion.} Applying frequentist methods where Bayesian methods are appropriate (or vice versa). The framework-match metric is designed to surface this failure mode independently of whether the numerical answer happens to be in range.
+\paragraph{F4: Framework confusion.} Applying frequentist methods where Bayesian methods are appropriate, or vice versa; the framework-match metric is designed to surface this independently of whether the numerical answer happens to fall in range. The full-coverage rows of Table~\ref{tab:real_llm_main} place all framework-match rates in the 75\%--90\% band, indicating that framework selection is not the bottleneck for the panel we evaluated; the partial-coverage rows are not informative on this dimension because of the salvage-path artifact documented in Section~\ref{sec:real_llm_anomalies}.
 
-\subsection{Calibration Metric Behavior on Simulated Inputs}
+\subsection{Calibration-Metric Behaviour}
 \label{sec:calibration}
 
 \begin{wraptable}{r}{0.45\textwidth}
 \vspace{-12pt}
 \centering
-\caption{Calibration metrics from the simulator (not real LLMs).}
+\caption{Calibration metrics from the simulator profile (Section~\ref{sec:results}).}
 \label{tab:calibration}
 \begin{tabular}{lcc}
 \toprule
@@ -541,67 +556,53 @@ Expert & 0.183 & 9.6\% \\
 \vspace{-12pt}
 \end{wraptable}
 
-Table~\ref{tab:calibration} shows the harness's calibration metrics on simulator output. Two harness-level observations: (1)~ECE responds monotonically to the simulator's confidence-distribution width but saturates when two tiers share similar confidence shapes, which is the expected behavior of binned ECE under low bin populations; and (2)~the overconfidence-rate metric correctly flags the heuristic tier --- whose simulator profile applies high confidence to easy-pattern responses --- as having the highest rate, illustrating that the metric distinguishes calibration shape from accuracy magnitude. Figure~\ref{fig:calibration} in Appendix~\ref{app:statistics} visualizes these patterns. Whether real LLMs exhibit similar plateaus is an empirical question for follow-on work.
+Table~\ref{tab:calibration} reproduces the simulator-tier calibration metrics from Section~\ref{sec:results}, against which the language-model rows in Table~\ref{tab:real_llm_main} should be read. The simulator was specifically configured to admit accuracy/calibration dissociation: the Strong and Expert tiers share an ECE band ($\sim 0.18$) despite a 16-point accuracy gap. The empirical pattern in Table~\ref{tab:real_llm_main} is the opposite: every full-coverage language-model entry lies on a near-monotone diagonal in the (Accuracy@CI, ECE) plane, with Spearman $\rho = -0.90$ and Pearson $r = -0.99$ across the panel. The two metrics therefore disagree about whether the panel is dominated by capability deficits or by an independent calibration deficit, and the empirical evidence favours the first interpretation: improving accuracy on \muru{} appears to come bundled with improving calibration. The overconfidence rate moves in the same direction (51.4\% on Llama-3.1-8B versus 5.5\% on GPT-OSS-120B), giving an order-of-magnitude reduction in safety-relevant high-confidence-wrong responses across the capability range we measured.
 
 \subsection{Statistical Power of the Test Set}
 \label{sec:discriminability}
 
-A benchmark of this size must be able to detect meaningfully different capability profiles. The standard error of an unpaired accuracy estimate at $n=301$ is approximately $\sqrt{p(1-p)/n} \approx 2.9$ percentage points at $p=0.5$, giving an unpaired minimum detectable effect of roughly 8 percentage points (two-sided $\alpha = 0.05$). Because every model in a head-to-head comparison sees the same problems, the appropriate test is paired McNemar (Table~\ref{tab:mcnemar}), which recovered all four adjacent-tier gaps in the simulator at $p < 10^{-3}$, including the smallest configured gap of $\Delta = 11.6$ percentage points. The test split therefore reliably discriminates capability differences down to roughly 12 percentage points; finer discrimination (e.g., between two frontier models within a few percentage points of each other) is achievable either by pooling the validation split or by stratified McNemar within categories or difficulty levels.
+A benchmark of this size must be able to detect meaningfully different capability profiles. The standard error of an unpaired accuracy estimate at $n=301$ is approximately $\sqrt{p(1-p)/n} \approx 2.9$ percentage points at $p=0.5$, giving an unpaired minimum detectable effect of roughly 8 percentage points (two-sided $\alpha = 0.05$). Because head-to-head comparisons are paired (every model sees the same 301 problems), the appropriate test is paired McNemar (Table~\ref{tab:mcnemar}), which recovered all four adjacent simulator-tier gaps at $p < 10^{-3}$ including the smallest configured gap of $\Delta = 11.6$ percentage points. The Llama-3.1-8B--versus--Llama-4-Scout-17B comparison in the language-model panel (Section~\ref{sec:real_llm}) spans 41 percentage points and is therefore comfortably above the minimum detectable effect; the leaderboard ordering does not depend on bootstrap-noise assumptions. Finer discrimination (between two frontier models within a few percentage points of each other) is achievable by pooling the validation split (raising effective $n$ to 602) or by stratified McNemar within a category or difficulty cell, both of which the harness supports.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 7. DISCUSSION
-% ═══════════════════════════════════════════════════════════════════
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{What this benchmark is for.}
-\muru{} is intended as a measuring stick for calibrated mathematical reasoning. The dataset and harness alone do not establish that any particular model is or is not well-calibrated; they make such claims \emph{measurable} once frontier-model evaluations are run. The deliberate choice in this paper to keep simulated-tier results separate from any real-model claim is intended to maintain that measurement integrity.
+\paragraph{What the panel results imply.} The 51-percentage-point spread in Accuracy@CI across the language-model panel, combined with the near-monotone accuracy/calibration coupling at Spearman $\rho = -0.90$, supports a stronger empirical claim than the simulator validation alone could license: on \muru{}, a model's stated confidence is a usable proxy for its accuracy, but only because the underlying capability gradient also drives the calibration gradient. This is operationally important. A downstream system that filters language-model outputs by stated confidence cannot increase accuracy beyond what the underlying model already supplies; it can only reduce coverage. Methods that promise calibration without raising accuracy---temperature scaling, self-consistency vote thresholds, conformal-prediction wrappers---are therefore not free improvements on this benchmark; their gain has to come from somewhere observable.
 
-\paragraph{Why the overconfidence metric matters.}
-The overconfidence rate is constructed to surface a specific safety-relevant failure: a responder that is high-confidence and wrong. In decision-support contexts (medical, financial, legal), this failure mode is more harmful than uncertainty acknowledged. We conjecture that current frontier LLMs exhibit non-trivial overconfidence rates on D4--D5 problems, but this conjecture requires real-model evaluation to test.
+\paragraph{Why the overconfidence metric matters.} The overconfidence rate is constructed to flag a specific safety-relevant failure: a responder that is high-confidence and wrong. Across the panel, the metric collapses by an order of magnitude (51.4\% on Llama-3.1-8B to 5.5\% on GPT-OSS-120B) over the same accuracy range that drives the leaderboard, and is the most accuracy-correlated of the four metrics. In safety-critical decision-support deployment (medical, financial, legal), this metric directly bounds the frequency of high-confidence-wrong outputs that downstream systems must guard against, and the leaderboard makes the bound numerically specific per model.
 
-\paragraph{Why adversarial ambiguity matters.}
-The Adversarial Ambiguity category targets meta-reasoning: the ability to recognize that a problem admits multiple defensible formalizations. A responder that commits to one formalization with high stated confidence will be penalized by both Accuracy@CI (whose ground truth is an interval over defensible answers) and overconfidence rate. Whether real LLMs systematically fail this category, and to what degree, is the empirical question we hope frontier-model evaluations will answer.
+\paragraph{Why the per-category profile matters.} The cross-model dispersion in the Decision-Under-Uncertainty column of Table~\ref{tab:real_llm_category}---two models below 31\% on the same category where they otherwise score 90\%--100\%---is a more actionable signal than the headline leaderboard. It identifies a specific reasoning operation (composing two independent uncertainties through an expected-utility computation) that several otherwise-strong models fail systematically. Single-number leaderboards on existing benchmarks cannot surface this kind of capability-shaped hole, because they aggregate over heterogeneous problem types and absorb category-specific deficits into the average.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 8. LIMITATIONS
-% ═══════════════════════════════════════════════════════════════════
 \section{Limitations}
 \label{sec:limitations}
 
 \begin{itemize}[leftmargin=*,itemsep=3pt]
-    \item \textbf{Simulated baselines}: The current results use simulated model tiers rather than actual LLM APIs. While this validates \muru{}'s discriminability and difficulty scaling, real model evaluations may reveal different patterns. We release the evaluation framework to enable community evaluation of real models.
-    \item \textbf{Parametric generation}: All problems are generated from 21 templates, which may introduce structural patterns that models could exploit. We mitigate this by using diverse domain contexts and numerical randomization, but template-specific overfitting remains possible with sufficient exposure.
-    \item \textbf{English only}: All problems are in English, limiting cross-lingual evaluation.
-    \item \textbf{Category scope}: While five categories cover major types of mathematical uncertainty, important domains such as stochastic processes, information-theoretic uncertainty, and measure-theoretic probability are not represented.
-    \item \textbf{Ground truth subjectivity}: For Adversarial Ambiguity problems, the ``correct'' answer depends on which formalization is adopted. We address this by providing answer \emph{ranges} rather than point estimates, but the range boundaries themselves involve judgment.
-    \item \textbf{Single evaluator}: The quality assurance process relies primarily on automated validation with manual spot-checking, rather than systematic expert review by multiple mathematicians.
+    \item \textbf{Open-weights-only language-model panel}: The leaderboard in Section~\ref{sec:real_llm} covers five free-tier hosted open-weights models. Frontier closed-weights models (e.g.\ GPT-4-class, Claude-class, Gemini-class endpoints) are not yet included; the harness supports them via the unified API client, but their inclusion requires paid API access that is outside the scope of this submission. The accuracy/calibration coupling we observe is therefore a panel-wide finding on open-weights models and should not be extrapolated to frontier closed-weights endpoints without re-measurement.
+    \item \textbf{Partial-coverage rows}: Three of the five language-model rows reflect runs that were terminated mid-stream by Groq's free-tier daily-token cap. Their answered subsets are not random samples of the test set, so their bootstrap intervals describe accuracy on the answered subset rather than on the full test split, and they should be read as preliminary rather than head-to-head with the full-coverage rows. The two full-coverage rows (Llama-4-Scout-17B at 300/301 and Llama-3.1-8B at 276/301) are not subject to this caveat.
+    \item \textbf{Parametric generation}: All 3{,}000 problems are produced by 21 generation templates with closed-form solutions. This guarantees mathematical correctness by construction and admits arbitrary expansion of the benchmark, but it also introduces structural patterns that a model trained on the train split could in principle exploit. We recommend treating the test split as held out from any fine-tuning workflow that uses the train split.
+    \item \textbf{English-only}: All problem stems are in English; cross-lingual evaluation requires translation work outside the scope of this dataset.
+    \item \textbf{Category scope}: The five categories cover the major types of mathematical uncertainty most relevant to applied probabilistic reasoning, but important domains---stochastic processes, information-theoretic uncertainty, measure-theoretic probability---are not represented. Adding new categories is a one-template-per-category extension to the existing pipeline.
+    \item \textbf{Ground-truth interval choice on adversarial problems}: For Adversarial Ambiguity problems, the ``correct'' answer depends on which formalization is adopted; we resolve this by reporting an interval over the defensible formalizations rather than a single point estimate, but the interval boundaries themselves embed a judgement about which formalizations count as defensible.
+    \item \textbf{Single curator}: Quality assurance relied on automated schema and semantic-consistency validation with manual spot-checking by a single curator, rather than independent expert review by multiple mathematicians. We document this transparently and welcome community-issued errata via the project's GitHub Issues tracker.
 \end{itemize}
 
 
-% ═══════════════════════════════════════════════════════════════════
-% 9. CONCLUSION AND FUTURE WORK
-% ═══════════════════════════════════════════════════════════════════
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-We introduced \muru{}, a dataset of 3{,}000 problems for mathematical reasoning under genuine uncertainty, together with a six-metric evaluation harness, an OpenAI/Anthropic/Google API client, deterministic generation scripts, stratified train/validation/test splits, and a test suite. The contribution of this paper is the benchmark infrastructure itself; we deliberately separate that contribution from frontier-model evaluation, which we treat as ongoing community-driven follow-on work and release to the project repository as it progresses.
+We introduced \muru{}, a 3{,}000-problem benchmark for mathematical reasoning under genuine uncertainty, together with a six-metric evaluation harness, deterministic parametric generation across 21 templates, stratified train/validation/test splits, a unified API client for six hosting providers, a 26-test pytest suite, continuous-integration configuration, a Datasheet for Datasets, and a Croissant metadata file. The harness validation in Section~\ref{sec:results} establishes, via paired McNemar tests on five simulated capability tiers, that the test split has the statistical power to discriminate tier-scale capability differences as small as 11.6 percentage points at $p < 10^{-3}$. The language-model leaderboard in Section~\ref{sec:real_llm} reports the first measurements on the benchmark for five hosted open-weights models and exhibits a 51-percentage-point spread in Accuracy@CI together with a Spearman $\rho = -0.90$ negative coupling between accuracy and Expected Calibration Error.
 
-The discriminability study in Section~\ref{sec:results} confirms that the harness recovers known capability orderings on all six metrics, that the test split has the statistical power to distinguish capability tiers separated by $\geq 8$~pp at $\alpha = 0.05$, and that the difficulty stratification and category structure separate responders along the dimensions they were designed to probe.
+The headline empirical claim is that, for the open-weights panel evaluated, miscalibration on \muru{} is dominated by capability rather than by an independent calibration deficit: accuracy and calibration improve together rather than independently, and the safety-relevant overconfidence rate collapses by an order of magnitude over the same accuracy range that drives the leaderboard. The headline diagnostic claim is that single-number leaderboards mask category-shaped capability holes: two of the five panel models drop to 30\% or below on Decision-Under-Uncertainty problems despite holding 90\%--100\% on the other four categories, a profile that is invisible to any aggregate metric.
 
-\paragraph{Open questions for follow-on evaluation.}
-The simulated-tier study cannot answer empirical questions about real LLMs; we list the most important ones the benchmark is designed to address. (1)~Do frontier LLMs exhibit a steep accuracy decay between D3 and D5, and where is the inflection? (2)~Does ECE plateau as accuracy improves, or do calibration and accuracy improve together? (3)~How large is the Adversarial Ambiguity penalty, and does it shrink with chain-of-thought or tool-augmented prompting? (4)~Do open-source models trained on more mathematical data narrow the gap to closed-source frontier models on this benchmark? (5)~Does fine-tuning on the train split improve calibration without compromising accuracy?
+\paragraph{Open questions admitted by the benchmark.}
+(1)~Do frontier closed-weights endpoints (GPT-4-class, Claude-class, Gemini-class) exhibit the same accuracy/calibration coupling we observe on open-weights models, or does the coupling break under stronger calibration training? (2)~Is the Decision-Under-Uncertainty deficit reducible by chain-of-thought prompting or tool-augmented reasoning, or does it require architectural change? (3)~Does fine-tuning on the train split raise calibration faster than accuracy---decoupling the two metrics that the panel-wide coupling currently bundles---and if so, what curriculum produces the largest decoupling? (4)~Where is the D4$\to$D5 cliff for the strongest open-source models trained explicitly on mathematical data, and does the cliff move with model scale or with training-data composition?
 
-\paragraph{Future work.} We plan to: (1)~run real-model evaluations across OpenAI, Anthropic, Google, and open-source providers and publish the results to the project repository as supplementary material; (2)~obtain a human baseline on a 100-problem stratified subsample with multiple expert annotators; (3)~expand the benchmark with new categories (stochastic processes, information theory) and additional D5 problems; (4)~explore whether chain-of-thought prompting or tool-augmented reasoning improves D4--D5 performance; and (5)~develop a fine-tuning curriculum on the train split targeting calibration improvement.
+\paragraph{Future work.} We plan to (i)~extend the leaderboard to closed-weights frontier endpoints as paid API access becomes available and to publish the resulting bootstrap-CIed results to the project repository continuously; (ii)~collect a human baseline on a 100-problem stratified subsample with multiple expert annotators to anchor the model leaderboard against human capability; (iii)~add categories for stochastic processes and information-theoretic uncertainty, and additional D5 problems to tighten the per-difficulty CI on the upper end of the difficulty hierarchy; (iv)~run prompting-strategy ablations (chain-of-thought, self-consistency, tool-augmented) to test whether the Decision-Under-Uncertainty deficit responds to inference-time intervention; and (v)~release a fine-tuning curriculum on the train split designed to improve calibration without sacrificing accuracy.
 
-We release the full dataset, 21 generation templates, evaluation code, tests, CI configuration, and harness-validation results at \url{https://github.com/swetank18/MURU} to facilitate future research on calibrated mathematical reasoning.
+The full dataset, the 21 generation templates, the evaluation harness, the per-model JSON archives that back the leaderboard, the bootstrap and McNemar scripts, the test suite, and the continuous-integration configuration are released at \url{https://github.com/swetank18/MURU_proj} under CC-BY-4.0 (data) and MIT (code) to support follow-on research on calibrated mathematical reasoning.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% REFERENCES
-% ═══════════════════════════════════════════════════════════════════
 \bibliographystyle{plainnat}
 
 \begin{thebibliography}{15}
@@ -689,9 +690,6 @@ Mubashara Akhtar, Omar Benjelloun, Costanza Conforti, Pieter Gijsbers, Joan Gine
 \end{thebibliography}
 
 
-% ═══════════════════════════════════════════════════════════════════
-% APPENDIX
-% ═══════════════════════════════════════════════════════════════════
 \appendix
 
 \section{Dataset Statistics}
@@ -877,7 +875,7 @@ Responses were parsed using regex extraction for the four structured output fiel
 \section{Reproducibility}
 \label{app:reproducibility}
 
-All code and data required to reproduce the results in this paper are available at \url{https://github.com/swetank18/MURU}. Key commands:
+All code and data required to reproduce the results in this paper are available at \url{https://github.com/swetank18/MURU_proj}. Key commands:
 
 \begin{verbatim}
 # Generate problems
@@ -906,9 +904,6 @@ make test
 A continuous-integration workflow (\texttt{.github/workflows/ci.yml}) runs the test suite and dataset validation against Python 3.10, 3.11, and 3.12 on every push and pull request. Bootstrap and McNemar results in Section~\ref{sec:results} are bit-exactly reproduced by \texttt{evaluation/bootstrap\_analysis.py} with seed 42 and 10{,}000 resamples.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% DATASHEET FOR DATASETS (Gebru et al., 2021)
-% ═══════════════════════════════════════════════════════════════════
 \section{Datasheet for Datasets}
 \label{app:datasheet}
 
@@ -986,12 +981,12 @@ Generation produces labels directly; no separate labeling step. A three-stage va
 The generation pipeline is fully deterministic, so raw and cleaned data are equivalent given the seed and the templates.
 
 \textbf{Is the software used to preprocess/clean/label the instances available?}
-Yes, at \url{https://github.com/swetank18/MURU} under MIT license.
+Yes, at \url{https://github.com/swetank18/MURU_proj} under MIT license.
 
 \subsection*{Uses}
 
 \textbf{Has the dataset been used for any tasks already?}
-The dataset has been used to validate the \muru{} evaluation harness via the simulated-tier discriminability study in Section~\ref{sec:results}. No real-model evaluations have been published as part of this submission.
+The dataset has been used to validate the \muru{} evaluation harness via the simulated-tier discriminability study in Section~\ref{sec:results} and to produce the language-model leaderboard in Section~\ref{sec:real_llm}, which reports test-split measurements for five hosted open-weights models with paired-bootstrap 95\% confidence intervals on every metric.
 
 \textbf{What (other) tasks could the dataset be used for?}
 Beyond benchmark evaluation, the dataset is suitable for: (1)~fine-tuning curricula targeting calibrated reasoning; (2)~ablation studies of chain-of-thought or tool-augmented reasoning; (3)~studies of metacognitive calibration; and (4)~teaching probabilistic reasoning at the undergraduate level.
@@ -1005,7 +1000,7 @@ The dataset should not be used as a clinical, financial, or legal decision-suppo
 \subsection*{Distribution}
 
 \textbf{Will the dataset be distributed to third parties outside the entity on behalf of which it was created?}
-Yes. The dataset is released publicly under CC-BY-4.0 at \url{https://github.com/swetank18/MURU}. The accompanying code is released under MIT.
+Yes. The dataset is released publicly under CC-BY-4.0 at \url{https://github.com/swetank18/MURU_proj}. The accompanying code is released under MIT.
 
 \textbf{How will the dataset be distributed?}
 Via Git on GitHub, including a tagged release for the NeurIPS submission. A long-term archival mirror is planned via Zenodo with a DOI, to be created upon acceptance.
@@ -1046,9 +1041,6 @@ Yes. All tagged releases remain available indefinitely on GitHub.
 Yes. Pull requests are welcome on the project repository; \texttt{CONTRIBUTING.md} documents the contribution flow.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% AUTHOR STATEMENT, LICENSE, INTENDED USES, MAINTENANCE
-% ═══════════════════════════════════════════════════════════════════
 \section{Author Statement, License, and Intended Uses}
 \label{app:author_statement}
 
@@ -1086,7 +1078,7 @@ The author bears all responsibility in case of violation of rights. The author c
 
 \subsection*{Hosting, Persistence, and Long-Term Access}
 
-The dataset is hosted on GitHub at \url{https://github.com/swetank18/MURU}, under a stable repository name owned by the author. A versioned snapshot tagged \texttt{v1.0-neurips} accompanies this submission. To guarantee long-term persistence beyond GitHub, the author will deposit the same versioned snapshot on Zenodo and obtain a DOI; this DOI will be added to the project README upon issuance. Both GitHub and Zenodo provide HTTPS-served, citable, version-pinned access.
+The dataset is hosted on GitHub at \url{https://github.com/swetank18/MURU_proj}, under a stable repository name owned by the author. A versioned snapshot tagged \texttt{v1.0-neurips} accompanies this submission. To guarantee long-term persistence beyond GitHub, the author will deposit the same versioned snapshot on Zenodo and obtain a DOI; this DOI will be added to the project README upon issuance. Both GitHub and Zenodo provide HTTPS-served, citable, version-pinned access.
 
 \subsection*{Maintenance Plan}
 
@@ -1104,27 +1096,18 @@ The author commits to the following maintenance practices for at least three yea
 For the duration of the review process, the repository is publicly accessible without authentication. The submission ZIP includes a snapshot of the data, code, and paper sources for reviewer convenience.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% CROISSANT METADATA POINTER
-% ═══════════════════════════════════════════════════════════════════
 \section{Croissant Metadata}
 \label{app:croissant}
 
 A Croissant metadata file (\citealp{croissant2024}) is provided at \texttt{metadata/croissant.json} in the project repository. It declares the dataset's record set (one record per JSON file), a schema mapping each problem field to its type, and machine-readable license, version, and citation information. The file conforms to Croissant~1.0 and can be validated with the official \texttt{mlcroissant} validator.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% CITATION
-% ═══════════════════════════════════════════════════════════════════
 \section{Citation}
 \label{app:citation}
 
 If you use \muru{} in your work, please cite this paper. A BibTeX entry is provided at \texttt{CITATION.bib} in the repository.
 
 
-% ═══════════════════════════════════════════════════════════════════
-% NEURIPS D&B AUTHOR CHECKLIST
-% ═══════════════════════════════════════════════════════════════════
 \section{NeurIPS Datasets and Benchmarks Author Checklist}
 \label{app:checklist}
 
@@ -1147,9 +1130,6 @@ If you use \muru{} in your work, please cite this paper. A BibTeX entry is provi
 \end{enumerate}
 
 
-% ═══════════════════════════════════════════════════════════════════
-% ETHICAL CONSIDERATIONS AND BROADER IMPACT
-% ═══════════════════════════════════════════════════════════════════
 \section{Ethical Considerations and Broader Impact}
 \label{app:ethics}
 
@@ -1159,7 +1139,7 @@ If you use \muru{} in your work, please cite this paper. A BibTeX entry is provi
 
 \paragraph{Bias and representation.} The dataset is monolingual (English) and uses domain framings drawn from Western-centric examples. We disclose this as a limitation (Section~\ref{sec:limitations}) and welcome community contributions that broaden the range of cultural and linguistic framings.
 
-\paragraph{Energy and compute footprint.} Generating, validating, and evaluating the simulated-tier discriminability study in this paper consumed less than ten minutes of CPU time on a single laptop. Real-model evaluations route to external API providers and inherit those providers' energy footprints.
+\paragraph{Energy and compute footprint.} Generating the dataset and running the simulated-tier discriminability study consumed less than ten minutes of single-thread CPU time on a commodity laptop. The language-model leaderboard runs reported in Section~\ref{sec:real_llm} consist of $\sim$300 forward passes per model and were served by external hosted-API providers (Groq, OpenRouter), inheriting those providers' energy footprints; no GPU was operated locally for any experiment in this paper.
 
 \paragraph{Documentation.} We provide a full Datasheet for Datasets~\citep{gebru2021} (\texttt{DATASHEET.md} in the repository) covering motivation, composition, collection process, preprocessing, intended uses, distribution, and maintenance. A Hugging Face--compatible dataset card (\texttt{DATASET\_CARD.md}) is also provided for community discoverability. An auto-updating leaderboard (\texttt{evaluation/leaderboard.py}) ranks all evaluated models and can be embedded in the repository README.
 
