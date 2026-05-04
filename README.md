@@ -74,8 +74,8 @@ MURU/
 ## Installation
 
 ```bash
-git clone https://github.com/swetank18/MURU.git
-cd MURU
+git clone https://github.com/swetank18/MURU_benchmark.git
+cd MURU_benchmark
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -200,7 +200,7 @@ The generator is deterministic given the seed.
   author    = {Kumar, Swetank},
   booktitle = {NeurIPS Datasets and Benchmarks Track},
   year      = {2026},
-  url       = {https://github.com/swetank18/MURU}
+  url       = {https://github.com/swetank18/MURU_benchmark}
 }
 ```
 
@@ -211,22 +211,23 @@ The generator is deterministic given the seed.
 MIT. See [LICENSE](LICENSE).
 
 
-## 🏆 Leaderboard
+
+## Leaderboard
 
 | Rank | Model | n | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |
 |------|-------|--:|---------|-------|----------|-----------|--------|--------|
-| 🥇 | **Llama-4-Scout-17B** | 300 | 84.0% | 0.092 | 14.0% | 82.3% | 63% | 🤖 API |
-| 🥈 | **Expert (sim.)** | 301 | 77.1% | 0.183 | 9.6% | 89.0% | 21% | 🔧 Sim. |
-| 🥉 | **Strong (sim.)** | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | 🔧 Sim. |
-| 4 | **Competent (sim.)** | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | 🔧 Sim. |
-| 5 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.4% | 30% | 🤖 API |
-| 6 | **Heuristic Baseline** | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | 🔧 Sim. |
-| 7 | **Random Baseline** | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | 🔧 Sim. |
-| — | **GPT-OSS-120B\*** | 146 | 94.5% | 0.038 | 5.5% | 0.0% | 100% | 🤖 API |
-| — | **Llama-3.3-70B\*** | 76 | 89.5% | 0.035 | 9.2% | 90.8% | 100% | 🤖 API |
-| — | **Qwen3-32B\*** | 59 | 71.2% | 0.217 | 25.4% | 0.0% | 100% | 🤖 API |
+| 1 | **Llama-4-Scout-17B** | 300 | 84.0% | 0.092 | 14.0% | 82.3% | 63% | API |
+| 2 | **Expert (sim.)** | 301 | 77.1% | 0.183 | 9.6% | 89.0% | 21% | Sim. |
+| 3 | **Strong (sim.)** | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | Sim. |
+| 4 | **Competent (sim.)** | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | Sim. |
+| 5 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.4% | 30% | API |
+| 6 | **Heuristic Baseline** | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | Sim. |
+| 7 | **Random Baseline** | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | Sim. |
+| — | **GPT-OSS-120B\*** | 146 | 94.5% | 0.038 | 5.5% | 0.0% | 100% | API |
+| — | **Llama-3.3-70B\*** | 76 | 89.5% | 0.035 | 9.2% | 90.8% | 100% | API |
+| — | **Qwen3-32B\*** | 59 | 71.2% | 0.217 | 25.4% | 0.0% | 100% | API |
 
 *Last updated: 2026-05-04*
 
-**Legend**: n = problems answered (test set has 301). Acc@CI = Accuracy (point estimate within ground-truth CI), ECE = Expected Calibration Error, OvConf = Overconfidence Rate, FwMatch = Framework Match Rate, D5 = Difficulty 5 accuracy. 🤖 = real model via API, 🔧 = simulated baseline. \* = partial coverage (rate-limited mid-run); not ranked.
+**Legend**: n = problems answered (test set has 301). Acc@CI = Accuracy (point estimate within ground-truth CI), ECE = Expected Calibration Error, OvConf = Overconfidence Rate, FwMatch = Framework Match Rate, D5 = Difficulty 5 accuracy. API = real model via API, Sim. = simulated baseline. \* = partial coverage (rate-limited mid-run); not ranked.
 

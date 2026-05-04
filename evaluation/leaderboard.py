@@ -136,7 +136,7 @@ def format_model_name(name: str) -> str:
 def generate_markdown_table(results: list[dict]) -> str:
     """Generate markdown leaderboard table."""
     lines = [
-        "## 🏆 Leaderboard",
+        "## Leaderboard",
         "",
         "| Rank | Model | n | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |",
         "|------|-------|--:|---------|-------|----------|-----------|--------|--------|",
@@ -146,14 +146,14 @@ def generate_markdown_table(results: list[dict]) -> str:
     for r in results:
         name = format_model_name(r["model"])
         d5 = f"{r['d5_accuracy']:.0%}" if r["d5_accuracy"] is not None else "—"
-        source = "🤖 API" if r["source"] == "api" else "🔧 Sim."
+        source = "API" if r["source"] == "api" else "Sim."
         n = r.get("coverage", r.get("n_problems", 0))
         if r.get("partial"):
             label = "—"  # partial runs are unranked
             name = name + "\\*"  # asterisk for "partial coverage"
         else:
             full_rank += 1
-            label = "🥇" if full_rank == 1 else "🥈" if full_rank == 2 else "🥉" if full_rank == 3 else f"{full_rank}"
+            label = str(full_rank)
 
         lines.append(
             f"| {label} | **{name}** | {n} | {r['accuracy']:.1%} | "
@@ -168,8 +168,9 @@ def generate_markdown_table(results: list[dict]) -> str:
         "**Legend**: n = problems answered (test set has 301). Acc@CI = Accuracy "
         "(point estimate within ground-truth CI), ECE = Expected Calibration "
         "Error, OvConf = Overconfidence Rate, FwMatch = Framework Match Rate, "
-        "D5 = Difficulty 5 accuracy. 🤖 = real model via API, 🔧 = simulated "
-        "baseline. \\* = partial coverage (rate-limited mid-run); not ranked.",
+        "D5 = Difficulty 5 accuracy. API = real model via API, Sim. = "
+        "simulated baseline. \\* = partial coverage (rate-limited mid-run); "
+        "not ranked.",
     ])
 
     return "\n".join(lines)
@@ -212,7 +213,7 @@ def update_readme(table: str):
     content = readme_path.read_text()
 
     # Find and replace leaderboard section
-    start_marker = "## 🏆 Leaderboard"
+    start_marker = "## Leaderboard"
     end_markers = ["## ", "---"]
 
     if start_marker in content:
@@ -236,7 +237,7 @@ def update_readme(table: str):
             content += "\n\n" + table
 
     readme_path.write_text(content)
-    print(f"  ✓ Updated {readme_path.relative_to(PROJECT_ROOT)}")
+    print(f"  Updated {readme_path.relative_to(PROJECT_ROOT)}")
 
 
 def main():
@@ -252,9 +253,9 @@ def main():
         print("Run 'python evaluation/run_baselines.py --save' first.")
         sys.exit(1)
 
-    print(f"\n{'═' * 60}")
+    print(f"\n{'=' * 60}")
     print(f"  MURU-BENCH Leaderboard ({len(results)} entries)")
-    print(f"{'═' * 60}\n")
+    print(f"{'=' * 60}\n")
 
     table = generate_markdown_table(results)
     print(table)
