@@ -358,12 +358,62 @@ def load_problems(subset_dir: str) -> list[dict]:
     return problems
 
 
+def prediction_from_raw(entry: dict) -> Prediction | None:
+    """Rebuild a Prediction from a saved raw_results archive entry.
+
+    Returns None for entries that did not parse into a point estimate, so
+    a merged/accumulated archive can be turned back into the prediction set
+    the metrics need without re-querying the API.
+    """
+    parsed = entry.get("parsed") or {}
+    if parsed.get("point_estimate") is None:
+        return None
+    ci = parsed.get("confidence_interval")
+    return Prediction(
+        problem_id=entry["problem_id"],
+        predicted_answer=parsed["point_estimate"],
+        predicted_confidence=parsed.get("confidence"),
+        predicted_interval=tuple(ci) if ci else None,
+        predicted_framework=parsed.get("framework"),
+        raw_response=entry.get("response", ""),
+    )
+
+
+def load_prior_success(model_name: str) -> dict[str, dict]:
+    """Collect already-answered problems for a model from prior archives.
+
+    Scans ``evaluation/baselines/`` for archives whose ``model`` field
+    matches ``model_name`` and returns a ``{problem_id: raw_entry}`` map of
+    the successfully-parsed responses. Used by ``--resume`` so a run split
+    across several daily-token-budget windows accumulates coverage instead
+    of re-querying (and re-paying for) problems already answered.
+    """
+    baselines = PROJECT_ROOT / "evaluation" / "baselines"
+    prior: dict[str, dict] = {}
+    if not baselines.exists():
+        return prior
+    archives = sorted(baselines.glob("*.json"), key=lambda p: p.stat().st_mtime)
+    for path in archives:
+        try:
+            with open(path) as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            continue
+        if data.get("model") != model_name:
+            continue
+        for entry in data.get("raw_results", []):
+            if entry.get("success") and (entry.get("parsed") or {}).get("point_estimate") is not None:
+                prior[entry["problem_id"]] = entry  # later archives override earlier
+    return prior
+
+
 def run_evaluation(
     model_name: str,
     problems: list[dict],
     max_n: int | None = None,
     delay: float = 0.5,
     seed: int = 42,
+    skip_ids: set[str] | None = None,
 ) -> tuple[list[Prediction], list[dict]]:
     """Run model on all problems and collect predictions.
 
@@ -379,6 +429,8 @@ def run_evaluation(
     import random
     problems = list(problems)
     random.Random(seed).shuffle(problems)
+    if skip_ids:
+        problems = [p for p in problems if p["id"] not in skip_ids]
     if max_n and max_n < len(problems):
         problems = problems[:max_n]
 
@@ -474,6 +526,7 @@ def main():
     parser.add_argument("--n", type=int, help="Max number of problems to evaluate.")
     parser.add_argument("--delay", type=float, default=0.5, help="Delay between API calls (seconds).")
     parser.add_argument("--seed", type=int, default=42, help="Seed for the deterministic evaluation-order shuffle (keeps quota-truncated runs difficulty-representative).")
+    parser.add_argument("--resume", action="store_true", help="Skip problems already answered in prior archives for this model and merge the new answers in — lets a run split across daily-token-budget windows accumulate to full coverage.")
     parser.add_argument("--save", action="store_true", help="Save results to evaluation/baselines/.")
     args = parser.parse_args()
 
@@ -490,9 +543,28 @@ def main():
 
     print(f"  Loaded {len(problems)} problems\n")
 
+    prior_success: dict[str, dict] = {}
+    if args.resume:
+        prior_success = load_prior_success(args.model)
+        remaining = len(problems) - len(prior_success)
+        print(f"  Resume: {len(prior_success)} already answered in prior archives; "
+              f"{remaining} remaining to attempt this run\n")
+        if remaining <= 0:
+            print("  Full coverage already accumulated; nothing to do.")
+
     predictions, raw_results = run_evaluation(
-        args.model, problems, max_n=args.n, delay=args.delay, seed=args.seed
+        args.model, problems, max_n=args.n, delay=args.delay, seed=args.seed,
+        skip_ids=set(prior_success),
     )
+
+    # Merge prior successful answers with this run's results so the archive
+    # (and its metrics) reflect cumulative coverage. New answers win on the
+    # rare id collision; failures for not-yet-answered problems are retained
+    # so a downstream run can retry them.
+    if prior_success:
+        answered_now = {r["problem_id"] for r in raw_results}
+        raw_results = [r for r in prior_success.values() if r["problem_id"] not in answered_now] + raw_results
+        predictions = [p for e in raw_results if (p := prediction_from_raw(e)) is not None]
 
     if not predictions:
         print("\n  No valid predictions obtained. Cannot compute metrics.")
@@ -514,13 +586,16 @@ def main():
             "model": args.model,
             "timestamp": timestamp,
             "seed": args.seed,
+            "resumed": bool(prior_success),
+            "n_prior_answered": len(prior_success),
             "n_problems": len(problems),
             "n_predictions": len(predictions),
             "metrics": metrics.compute_all(),
             "raw_results": raw_results,
         }
 
-        outpath = baselines_dir / f"{model_slug}_{timestamp}.json"
+        suffix = "_resumed" if prior_success else ""
+        outpath = baselines_dir / f"{model_slug}_{timestamp}{suffix}.json"
         with open(outpath, "w") as f:
             json.dump(results_data, f, indent=2, default=str)
 

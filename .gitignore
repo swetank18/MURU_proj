@@ -26,6 +26,7 @@ Thumbs.db
 # API keys — NEVER commit these
 .env
 *.key
+evaluation/.groq_key
 
 # Evaluation outputs.
 # Simulator-tier baselines are deterministically regenerable
