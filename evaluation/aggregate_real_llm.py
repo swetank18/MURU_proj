@@ -163,6 +163,30 @@ def main():
         c, f, o, conf = per_problem_outcomes(sub_problems, preds)
         boot = bootstrap_metrics(c, f, o, conf)
 
+        # Framework-match: compute only over predictions that actually carry a
+        # framework. Entries recovered from progress logs (salvage path) lost
+        # the raw response, so their framework is missing data, not a wrong
+        # answer — scoring them as 0 would understate a model whose archive
+        # mixes fresh and salvaged rows (e.g. an accumulated union). Models
+        # with full framework coverage are unchanged (subset == full set).
+        fw_hits, fw_seen = [], 0
+        for p in preds:
+            if p.predicted_framework:
+                fw_seen += 1
+                fw_hits.append(int(p.predicted_framework == problems_by_id[p.problem_id]["required_framework"]))
+        if fw_seen:
+            rng = random.Random(0xF00D)
+            nfw = len(fw_hits)
+            boots = [sum(fw_hits[rng.randrange(nfw)] for _ in range(nfw)) / nfw for _ in range(N_BOOTSTRAP)]
+            boots.sort()
+            boot["framework_match"] = {
+                "point": sum(fw_hits) / nfw,
+                "ci95": [boots[int(0.025 * N_BOOTSTRAP)], boots[int(0.975 * N_BOOTSTRAP)]],
+                "n": nfw,
+            }
+        else:
+            boot["framework_match"] = {"point": None, "ci95": [None, None], "n": 0}
+
         # Difficulty / category breakdown via canonical metrics
         m = MURUMetrics(sub_problems, preds)
         breakdown = m.compute_all()
@@ -211,13 +235,16 @@ def main():
         n = s["n_evaluated"]
         n_total = s["n_test"]
         coverage = f"~({n}/{n_total})" if n < n_total else ""
-        # Salvaged rows have no framework data — display as "n/a" rather than
-        # let the table read 0%.
-        fwmatch_cell = (
-            "n/a"
-            if s.get("salvaged")
-            else fmt_pct(m['framework_match']['point'], m['framework_match']['ci95'])
-        )
+        # Rows with no recoverable framework data (fully salvaged) show "n/a"
+        # rather than a spurious 0%. Rows with partial framework coverage show
+        # the rate over the answered-with-framework subset (n annotated).
+        fw = m['framework_match']
+        if fw['point'] is None:
+            fwmatch_cell = "n/a"
+        elif fw.get("n", s["n_evaluated"]) < s["n_evaluated"]:
+            fwmatch_cell = fmt_pct(fw['point'], fw['ci95']) + f"$^{{(n={fw['n']})}}$"
+        else:
+            fwmatch_cell = fmt_pct(fw['point'], fw['ci95'])
         main_lines.append(
             f"{s['display']}{coverage} & "
             f"{fmt_pct(m['accuracy']['point'], m['accuracy']['ci95'])} & "
@@ -237,6 +264,27 @@ def main():
                 row.append("---")
         diff_lines.append(" & ".join(row) + " \\\\")
 
+    # ─── LaTeX: per-category table rows ──────────────────────────
+    # Columns follow the alphabetical category order used in the paper header:
+    # Adversarial Ambiguity, Bayesian Updating, Conditional Chains,
+    # Decision Under Uncertainty, Distribution Estimation. Partial-coverage
+    # rows are daggered (matching the table caption's footnote).
+    cat_order = [
+        "adversarial_ambiguity",
+        "bayesian_updating",
+        "conditional_probability_chains",
+        "decision_under_uncertainty",
+        "distribution_estimation",
+    ]
+    cat_lines = []
+    for s in ordered:
+        dagger = "$^\\dagger$" if s["n_evaluated"] < 0.8 * s["n_test"] else ""
+        row = [s["display"] + dagger]
+        for cat in cat_order:
+            acc = s["per_category_acc"].get(cat)
+            row.append(f"{100*acc:.1f}\\%" if acc is not None else "---")
+        cat_lines.append(" & ".join(row) + " \\\\")
+
     # Write to paper-includable .tex files.
     # Trailing %\endinput suppresses the newline LaTeX would otherwise inject
     # at the end of an \input'd file; without it, a stray newline inside the
@@ -252,8 +300,12 @@ def main():
     (paper_dir / "real_llm_difficulty.tex").write_text(
         "\\newcommand{\\realllmdifficultyrows}{%\n" + "\n".join(diff_lines) + "}\n"
     )
+    (paper_dir / "real_llm_category.tex").write_text(
+        "\\newcommand{\\realllmcategoryrows}{%\n" + "\n".join(cat_lines) + "}\n"
+    )
     print(f"Saved: paper/tables/real_llm_main.tex", file=sys.stderr)
     print(f"Saved: paper/tables/real_llm_difficulty.tex", file=sys.stderr)
+    print(f"Saved: paper/tables/real_llm_category.tex", file=sys.stderr)
 
     # Echo to stdout for convenience.
     print()
