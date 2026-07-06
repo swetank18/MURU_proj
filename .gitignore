@@ -27,9 +27,22 @@ Thumbs.db
 .env
 *.key
 
-# Evaluation outputs (large files — regenerated)
-evaluation/baselines/*.json
+# Evaluation outputs.
+# Simulator-tier baselines are deterministically regenerable
+# (`python evaluation/run_baselines.py --save`), so they are not tracked.
+evaluation/baselines/random_baseline_*.json
+evaluation/baselines/heuristic_baseline_*.json
+evaluation/baselines/competent_model_*.json
+evaluation/baselines/strong_model_*.json
+evaluation/baselines/expert_model_*.json
+evaluation/baselines/summary.json
+# Verbose per-run progress logs (salvage sources; recovered data lives
+# in the corresponding *_salvaged.json archives).
 evaluation/baselines/logs/
+# NOTE: real-LLM archives (llama-*, gpt-oss-*, qwen*-*, *_salvaged.json)
+# and the aggregate summaries are intentionally tracked — they contain
+# raw API responses that cannot be regenerated without paid/keyed access
+# and are the evidentiary basis for the leaderboard in the paper.
 
 # Claude Code session artifacts
 .claude/scheduled_tasks.lock
@@ -47,3 +60,7 @@ paper/*.synctex.gz
 
 # Matplotlib cache
 .matplotlib/
+
+# Unpacked Overleaf working copy (the synced MURU-BENCH-Overleaf.zip is tracked;
+# the extracted directory is a local mirror of paper/ and should not be)
+MURU-BENCH-Overleaf/

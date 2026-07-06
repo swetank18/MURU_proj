@@ -363,14 +363,24 @@ def run_evaluation(
     problems: list[dict],
     max_n: int | None = None,
     delay: float = 0.5,
+    seed: int = 42,
 ) -> tuple[list[Prediction], list[dict]]:
-    """Run model on all problems and collect predictions."""
+    """Run model on all problems and collect predictions.
+
+    Problems are always evaluated in a deterministic, seed-shuffled order
+    rather than sorted-ID order. This matters when a run is truncated early
+    (e.g. a hosted-API daily-token cap): the completed prefix is then a
+    difficulty-representative random subset instead of the easy-skewed
+    front of the ID-sorted test set. The shuffle is seeded, so the order
+    is reproducible and ``--n`` yields the same subset across runs.
+    """
     client = get_client(model_name)
 
+    import random
+    problems = list(problems)
+    random.Random(seed).shuffle(problems)
     if max_n and max_n < len(problems):
-        import random
-        random.seed(42)
-        problems = random.sample(problems, max_n)
+        problems = problems[:max_n]
 
     predictions = []
     raw_results = []
@@ -463,6 +473,7 @@ def main():
     parser.add_argument("--subset", "-s", default=str(PROJECT_ROOT / "data" / "test"), help="Problem directory.")
     parser.add_argument("--n", type=int, help="Max number of problems to evaluate.")
     parser.add_argument("--delay", type=float, default=0.5, help="Delay between API calls (seconds).")
+    parser.add_argument("--seed", type=int, default=42, help="Seed for the deterministic evaluation-order shuffle (keeps quota-truncated runs difficulty-representative).")
     parser.add_argument("--save", action="store_true", help="Save results to evaluation/baselines/.")
     args = parser.parse_args()
 
@@ -480,7 +491,7 @@ def main():
     print(f"  Loaded {len(problems)} problems\n")
 
     predictions, raw_results = run_evaluation(
-        args.model, problems, max_n=args.n, delay=args.delay
+        args.model, problems, max_n=args.n, delay=args.delay, seed=args.seed
     )
 
     if not predictions:
@@ -502,6 +513,7 @@ def main():
         results_data = {
             "model": args.model,
             "timestamp": timestamp,
+            "seed": args.seed,
             "n_problems": len(problems),
             "n_predictions": len(predictions),
             "metrics": metrics.compute_all(),

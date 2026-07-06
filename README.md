@@ -47,7 +47,7 @@ Test split, n = 301. Acc@CI = point estimate within ground-truth CI. ECE = Expec
 | — | Llama-3.3-70B\* | 76 | 89.5% | 0.035 | 9.2% | 90.8% | 100% | API |
 | — | Qwen3-32B\* | 59 | 71.2% | 0.217 | 25.4% | n/a | 100% | API |
 
-\* Partial coverage (Groq free-tier daily-token cap). Reported on answered subset; not ranked. *Last updated: 2026-05-04.*
+\* Partial coverage (Groq free-tier daily-token cap). Reported on answered subset; not ranked. These runs predate the seeded-shuffle eval order, so their answered subset is a sorted-ID prefix skewed toward easy problems (12–22% D4+D5 vs. 29% in the full set) — their Acc@CI is upward-biased and should not be compared head-to-head with the full-coverage rows. Re-running with the current harness (`run_eval.py`, seeded shuffle) yields a difficulty-representative subset. *Last updated: 2026-05-04.*
 
 ---
 

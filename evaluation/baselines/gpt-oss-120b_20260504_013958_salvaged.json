@@ -1,0 +1,1846 @@
+{
+  "model": "gpt-oss-120b",
+  "timestamp": "20260504_013958",
+  "n_problems": 301,
+  "n_predictions": 146,
+  "salvaged": true,
+  "salvage_note": "Reconstructed from run_eval.py log lines. predicted_framework and predicted_interval are unavailable; framework-match metric should be treated as missing for this entry.",
+  "metrics": {
+    "accuracy": 0.9452,
+    "ece": 0.0379,
+    "overconfidence_rate": 0.0548,
+    "framework_match_rate": 0.0,
+    "accuracy_by_category": {
+      "adversarial_ambiguity": {
+        "accuracy": 0.9230769230769231,
+        "count": 26,
+        "mean_error": 2.9082730769230762
+      },
+      "bayesian_updating": {
+        "accuracy": 0.9795918367346939,
+        "count": 49,
+        "mean_error": 0.008536734693877432
+      },
+      "conditional_probability_chains": {
+        "accuracy": 1.0,
+        "count": 20,
+        "mean_error": 0.002205000000000007
+      },
+      "decision_under_uncertainty": {
+        "accuracy": 0.7368421052631579,
+        "count": 19,
+        "mean_error": 26547.67947368421
+      },
+      "distribution_estimation": {
+        "accuracy": 1.0,
+        "count": 32,
+        "mean_error": 0.1731718749999988
+      }
+    },
+    "accuracy_by_difficulty": {
+      "1": {
+        "accuracy": 0.9459459459459459,
+        "count": 37,
+        "mean_error": 5533.255205405406
+      },
+      "2": {
+        "accuracy": 0.9428571428571428,
+        "count": 35,
+        "mean_error": 7049.698062857143
+      },
+      "3": {
+        "accuracy": 0.9285714285714286,
+        "count": 42,
+        "mean_error": 1261.7674547619047
+      },
+      "4": {
+        "accuracy": 0.9615384615384616,
+        "count": 26,
+        "mean_error": 0.8906961538461553
+      },
+      "5": {
+        "accuracy": 1.0,
+        "count": 6,
+        "mean_error": 0.0438333333333324
+      }
+    },
+    "calibration_curve": [
+      {
+        "bin_lower": 0.7,
+        "bin_upper": 0.8,
+        "mean_confidence": 0.7228571428571428,
+        "accuracy": 1.0,
+        "count": 7
+      },
+      {
+        "bin_lower": 0.8,
+        "bin_upper": 0.9,
+        "mean_confidence": 0.8464516129032258,
+        "accuracy": 0.9032258064516129,
+        "count": 31
+      },
+      {
+        "bin_lower": 0.9,
+        "bin_upper": 1.0,
+        "mean_confidence": 0.9366666666666666,
+        "accuracy": 0.9537037037037037,
+        "count": 108
+      }
+    ],
+    "total_evaluated": 146
+  },
+  "raw_results": [
+    {
+      "problem_id": "MURU-0001",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.088,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0007",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.96,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0029",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.4,
+        "confidence_interval": null,
+        "confidence": 0.7
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0033",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.512,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0047",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.739,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0058",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.494,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0068",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.514,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0079",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.75,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0092",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.475,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0093",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.444,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0099",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.763,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0114",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.523,
+        "confidence_interval": null,
+        "confidence": 0.86
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0132",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.572,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0152",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.804,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0191",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.167,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0208",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.548,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0221",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.34,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0238",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.488,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0239",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.9,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0252",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.439,
+        "confidence_interval": null,
+        "confidence": 0.78
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0255",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 53000.0,
+        "confidence_interval": null,
+        "confidence": 0.99
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0265",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 190.75,
+        "confidence_interval": null,
+        "confidence": 0.98
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0279",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.81,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0307",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.573,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0324",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.52,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0327",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 110.9,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0333",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 86000.0,
+        "confidence_interval": null,
+        "confidence": 0.82
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0365",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 163.3,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0392",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.43,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0420",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.86,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0421",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 243.48,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0422",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 209.8,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0442",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.65,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0445",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 204895.0,
+        "confidence_interval": null,
+        "confidence": 0.99
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0457",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.23,
+        "confidence_interval": null,
+        "confidence": 0.94
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0468",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.78,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0485",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 184.7,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0494",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 92.45,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0513",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.053,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0528",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.57,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0533",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 198.0,
+        "confidence_interval": null,
+        "confidence": 1.0
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0545",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.418,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0575",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 69.9,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0600",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.37,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0615",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 92.8,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0635",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.374,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0636",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.784,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0640",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.4,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0644",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.75,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0646",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 369.15,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0650",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.709,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0671",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 190.0,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0680",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.25,
+        "confidence_interval": null,
+        "confidence": 0.96
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0687",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 123.0,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0696",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.4,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0704",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.08,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0705",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.6,
+        "confidence_interval": null,
+        "confidence": 0.94
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0724",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.85,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0725",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 152.76,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0739",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.303,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0760",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.265,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0767",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 158.55,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0771",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.414,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0791",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 115.8,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0806",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 480.3,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0830",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 301.3,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0848",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.1,
+        "confidence_interval": null,
+        "confidence": 0.98
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0850",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.655,
+        "confidence_interval": null,
+        "confidence": 0.78
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0852",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.915,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0853",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 112.8,
+        "confidence_interval": null,
+        "confidence": 0.7
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0858",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.558,
+        "confidence_interval": null,
+        "confidence": 0.8
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0862",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 377.7,
+        "confidence_interval": null,
+        "confidence": 0.96
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0915",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.462,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0916",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.814,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0927",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 163.2,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0938",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.316,
+        "confidence_interval": null,
+        "confidence": 0.86
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0943",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 141.5,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0960",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.019,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0962",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.278,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0963",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.522,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0964",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.584,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0975",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 41.22,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0983",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 83.4,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-0988",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.741,
+        "confidence_interval": null,
+        "confidence": 0.86
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1009",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.996,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1032",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.936,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1036",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 5.56,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1087",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.675,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1099",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 3.69,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1108",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.391,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1126",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 156.0,
+        "confidence_interval": null,
+        "confidence": 0.8
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1127",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.284,
+        "confidence_interval": null,
+        "confidence": 0.94
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1138",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.498,
+        "confidence_interval": null,
+        "confidence": 0.7
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1140",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 112.5,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1142",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 181.76,
+        "confidence_interval": null,
+        "confidence": 0.98
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1145",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": -0.075,
+        "confidence_interval": null,
+        "confidence": 1.0
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1148",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.165,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1152",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 249.13,
+        "confidence_interval": null,
+        "confidence": 1.0
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1167",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.236,
+        "confidence_interval": null,
+        "confidence": 0.7
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1168",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 407.5,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1170",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.655,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1177",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.982,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1184",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 208.48,
+        "confidence_interval": null,
+        "confidence": 0.98
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1190",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.138,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1195",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 158.8,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1240",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.908,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1246",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 2.96,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1252",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 423.27,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1258",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 482.3,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1267",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 5.23,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1278",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 160950.0,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1297",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.595,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1310",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 124.4,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1313",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.056,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1314",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.56,
+        "confidence_interval": null,
+        "confidence": 0.7
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1323",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.07,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1324",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.28,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1327",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.581,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1340",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.78,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1344",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.28,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1356",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.21,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1361",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.69,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1366",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.77,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1386",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.18,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1412",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.4,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1424",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.68,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1425",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 202.0,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1441",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 337.38,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1457",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 173.55,
+        "confidence_interval": null,
+        "confidence": 0.99
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1468",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 240.0,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1470",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.039,
+        "confidence_interval": null,
+        "confidence": 0.97
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1475",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.158,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1496",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.586,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1509",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 146.22,
+        "confidence_interval": null,
+        "confidence": 0.8
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1518",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 118.0,
+        "confidence_interval": null,
+        "confidence": 0.85
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1526",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.107,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1528",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.369,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1529",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.857,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1541",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 190.2,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1552",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 218.5,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1553",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 201.3,
+        "confidence_interval": null,
+        "confidence": 0.95
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1556",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 81.0,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1561",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 4.08,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1565",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.08,
+        "confidence_interval": null,
+        "confidence": 0.89
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1567",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 63.36,
+        "confidence_interval": null,
+        "confidence": 0.9
+      },
+      "success": true,
+      "salvaged": true
+    },
+    {
+      "problem_id": "MURU-1579",
+      "response": "[salvaged from log; full response not available]",
+      "parsed": {
+        "framework": null,
+        "point_estimate": 0.538,
+        "confidence_interval": null,
+        "confidence": 0.93
+      },
+      "success": true,
+      "salvaged": true
+    }
+  ]
+}

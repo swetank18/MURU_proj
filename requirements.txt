@@ -5,12 +5,13 @@ matplotlib>=3.8.0
 numpy>=1.26.0
 tabulate>=0.9.0
 
-# Evaluation dependencies (Phase 2)
+# Real-model evaluation (optional — only the SDK for the provider you use
+# is imported, lazily, inside evaluation/run_eval.py). Groq and OpenRouter
+# are served through the OpenAI-compatible client, so `openai` covers the
+# free-tier panel reported in the paper.
 openai>=1.12.0
-anthropic>=0.18.0
-google-generativeai>=0.4.0
-transformers>=4.38.0
-torch>=2.2.0
+anthropic>=0.18.0            # only needed for --model claude-*
+google-generativeai>=0.4.0   # only needed for --model gemini-*
 
 # Development
 pytest>=8.0.0

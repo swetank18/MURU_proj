@@ -1,0 +1,292 @@
+{
+  "llama-3_3-70b": {
+    "display": "Llama-3.3-70B",
+    "result_file": "evaluation/baselines/llama-3_3-70b_20260503_223341.json",
+    "n_evaluated": 76,
+    "n_test": 301,
+    "salvaged": false,
+    "subset_difficulty": {
+      "1": 28,
+      "2": 18,
+      "3": 21,
+      "4": 8,
+      "5": 1
+    },
+    "metrics": {
+      "accuracy": {
+        "point": 0.8947368421052632,
+        "ci95": [
+          0.8157894736842105,
+          0.9605263157894737
+        ]
+      },
+      "ece": {
+        "point": 0.0355263157894737,
+        "ci95": [
+          0.022368421052631596,
+          0.11447368421052623
+        ]
+      },
+      "overconfidence": {
+        "point": 0.09210526315789473,
+        "ci95": [
+          0.039473684210526314,
+          0.15789473684210525
+        ]
+      },
+      "framework_match": {
+        "point": 0.9078947368421053,
+        "ci95": [
+          0.8421052631578947,
+          0.9736842105263158
+        ]
+      }
+    },
+    "per_difficulty_acc": {
+      "1": 0.8571428571428571,
+      "2": 1.0,
+      "3": 0.8571428571428571,
+      "4": 0.875,
+      "5": 1.0
+    },
+    "per_category_acc": {
+      "adversarial_ambiguity": 1.0,
+      "bayesian_updating": 1.0,
+      "conditional_probability_chains": 1.0,
+      "decision_under_uncertainty": 0.3,
+      "distribution_estimation": 0.9285714285714286
+    }
+  },
+  "llama-3_1-8b": {
+    "display": "Llama-3.1-8B",
+    "result_file": "evaluation/baselines/llama-3_1-8b_20260503_233403.json",
+    "n_evaluated": 276,
+    "n_test": 301,
+    "salvaged": false,
+    "subset_difficulty": {
+      "1": 46,
+      "2": 67,
+      "3": 82,
+      "4": 54,
+      "5": 27
+    },
+    "metrics": {
+      "accuracy": {
+        "point": 0.4311594202898551,
+        "ci95": [
+          0.37318840579710144,
+          0.4891304347826087
+        ]
+      },
+      "ece": {
+        "point": 0.47689746376811587,
+        "ci95": [
+          0.4231282608695653,
+          0.5420460144927536
+        ]
+      },
+      "overconfidence": {
+        "point": 0.5144927536231884,
+        "ci95": [
+          0.4528985507246377,
+          0.572463768115942
+        ]
+      },
+      "framework_match": {
+        "point": 0.7536231884057971,
+        "ci95": [
+          0.7028985507246377,
+          0.8043478260869565
+        ]
+      }
+    },
+    "per_difficulty_acc": {
+      "1": 0.391304347826087,
+      "2": 0.5223880597014925,
+      "3": 0.43902439024390244,
+      "4": 0.4074074074074074,
+      "5": 0.2962962962962963
+    },
+    "per_category_acc": {
+      "adversarial_ambiguity": 0.36363636363636365,
+      "bayesian_updating": 0.2375,
+      "conditional_probability_chains": 0.2631578947368421,
+      "decision_under_uncertainty": 0.3,
+      "distribution_estimation": 0.921875
+    }
+  },
+  "gpt-oss-120b": {
+    "display": "GPT-OSS-120B",
+    "result_file": "evaluation/baselines/gpt-oss-120b_20260504_013958_salvaged.json",
+    "n_evaluated": 146,
+    "n_test": 301,
+    "salvaged": true,
+    "subset_difficulty": {
+      "1": 37,
+      "2": 35,
+      "3": 42,
+      "4": 26,
+      "5": 6
+    },
+    "metrics": {
+      "accuracy": {
+        "point": 0.9452054794520548,
+        "ci95": [
+          0.9041095890410958,
+          0.9794520547945206
+        ]
+      },
+      "ece": {
+        "point": 0.03794520547945208,
+        "ci95": [
+          0.01780821917808216,
+          0.07397260273972595
+        ]
+      },
+      "overconfidence": {
+        "point": 0.0547945205479452,
+        "ci95": [
+          0.02054794520547945,
+          0.0958904109589041
+        ]
+      },
+      "framework_match": {
+        "point": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "per_difficulty_acc": {
+      "1": 0.9459459459459459,
+      "2": 0.9428571428571428,
+      "3": 0.9285714285714286,
+      "4": 0.9615384615384616,
+      "5": 1.0
+    },
+    "per_category_acc": {
+      "adversarial_ambiguity": 0.9230769230769231,
+      "bayesian_updating": 0.9795918367346939,
+      "conditional_probability_chains": 1.0,
+      "decision_under_uncertainty": 0.7368421052631579,
+      "distribution_estimation": 1.0
+    }
+  },
+  "qwen3-32b": {
+    "display": "Qwen3-32B",
+    "result_file": "evaluation/baselines/qwen3-32b_20260504_024422_salvaged.json",
+    "n_evaluated": 59,
+    "n_test": 301,
+    "salvaged": true,
+    "subset_difficulty": {
+      "1": 13,
+      "2": 20,
+      "3": 16,
+      "4": 7,
+      "5": 3
+    },
+    "metrics": {
+      "accuracy": {
+        "point": 0.711864406779661,
+        "ci95": [
+          0.5932203389830508,
+          0.8305084745762712
+        ]
+      },
+      "ece": {
+        "point": 0.21677966101694912,
+        "ci95": [
+          0.1286440677966102,
+          0.3420338983050847
+        ]
+      },
+      "overconfidence": {
+        "point": 0.2542372881355932,
+        "ci95": [
+          0.15254237288135594,
+          0.3728813559322034
+        ]
+      },
+      "framework_match": {
+        "point": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "per_difficulty_acc": {
+      "1": 0.6923076923076923,
+      "2": 0.8,
+      "3": 0.625,
+      "4": 0.5714285714285714,
+      "5": 1.0
+    },
+    "per_category_acc": {
+      "adversarial_ambiguity": 0.6666666666666666,
+      "bayesian_updating": 0.9411764705882353,
+      "conditional_probability_chains": 1.0,
+      "decision_under_uncertainty": 0.0,
+      "distribution_estimation": 1.0
+    }
+  },
+  "llama-4-scout": {
+    "display": "Llama-4-Scout-17B",
+    "result_file": "evaluation/baselines/llama-4-scout_20260504_012550.json",
+    "n_evaluated": 300,
+    "n_test": 301,
+    "salvaged": false,
+    "subset_difficulty": {
+      "1": 52,
+      "2": 74,
+      "3": 89,
+      "4": 58,
+      "5": 27
+    },
+    "metrics": {
+      "accuracy": {
+        "point": 0.84,
+        "ci95": [
+          0.7966666666666666,
+          0.88
+        ]
+      },
+      "ece": {
+        "point": 0.09236999999999995,
+        "ci95": [
+          0.05799333333333333,
+          0.13563333333333327
+        ]
+      },
+      "overconfidence": {
+        "point": 0.14,
+        "ci95": [
+          0.10333333333333333,
+          0.18
+        ]
+      },
+      "framework_match": {
+        "point": 0.8233333333333334,
+        "ci95": [
+          0.78,
+          0.8666666666666667
+        ]
+      }
+    },
+    "per_difficulty_acc": {
+      "1": 0.9230769230769231,
+      "2": 0.9324324324324325,
+      "3": 0.797752808988764,
+      "4": 0.8103448275862069,
+      "5": 0.6296296296296297
+    },
+    "per_category_acc": {
+      "adversarial_ambiguity": 0.6739130434782609,
+      "bayesian_updating": 0.9021739130434783,
+      "conditional_probability_chains": 0.9302325581395349,
+      "decision_under_uncertainty": 0.6415094339622641,
+      "distribution_estimation": 0.9696969696969697
+    }
+  }
+}
