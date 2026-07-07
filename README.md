@@ -36,18 +36,18 @@ Test split, n = 301. Acc@CI = point estimate within ground-truth CI. ECE = Expec
 
 | Rank | Model | n | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |
 |-----:|-------|--:|---------:|------:|---------:|----------:|-------:|--------|
-| 1 | **Llama-4-Scout-17B** | 300 | **84.0%** | 0.092 | 14.0% | 82.3% | 63% | API |
-| 2 | Expert (sim.) | 301 | 77.1% | 0.183 | 9.6% | 89.0% | 21% | Sim. |
-| 3 | Strong (sim.) | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | Sim. |
-| 4 | Competent (sim.) | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | Sim. |
-| 5 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.9% | 30% | API |
-| 6 | Heuristic baseline | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | Sim. |
-| 7 | Random baseline | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | Sim. |
-| — | GPT-OSS-120B\* | 220 | 95.0% | 0.045 | 4.5% | 80.9% | 81% | API |
-| — | Llama-3.3-70B\* | 123 | 85.4% | 0.060 | 13.8% | 91.9% | 80% | API |
+| 1 | **GPT-OSS-120B** | 294 | **94.2%** | 0.037 | 5.1% | 82.3% | 81% | API |
+| 2 | **Llama-4-Scout-17B** | 300 | 84.0% | 0.092 | 14.0% | 82.3% | 63% | API |
+| 3 | Expert (sim.) | 301 | 77.1% | 0.183 | 9.6% | 89.0% | 21% | Sim. |
+| 4 | Strong (sim.) | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | Sim. |
+| 5 | Competent (sim.) | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | Sim. |
+| 6 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.9% | 30% | API |
+| 7 | Heuristic baseline | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | Sim. |
+| 8 | Random baseline | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | Sim. |
+| — | Llama-3.3-70B\* | 169 | 81.7% | 0.100 | 17.2% | 92.9% | 67% | API |
 | — | Qwen3-32B\* | 91 | 73.6% | 0.159 | 20.9% | 80.0% | 71% | API |
 
-\* Partial coverage (Groq free-tier daily-token cap). Reported on the answered subset; not ranked. Coverage is accumulated across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so each subset is difficulty-representative (19–26% D4+D5 vs. 29% in the full set) rather than easy-skewed — but the intervals are still on fewer than 301 problems, so treat these rows as preliminary. FwMatch is computed over each row's framework-carrying answers (GPT-OSS n=141, Qwen3 n=60). *Last updated: 2026-07-07.*
+\* Partial coverage (Groq free-tier daily-token cap not yet exhausted to completion). Reported on the answered subset; not ranked. Coverage is accumulated across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so each subset is difficulty-representative (19–26% D4+D5 vs. 29% in the full set) rather than easy-skewed — but the intervals are still on fewer than 301 problems, so treat these rows as preliminary. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=60). *Last updated: 2026-07-07.*
 
 ---
 
