@@ -36,18 +36,20 @@ Test split, n = 301. Acc@CI = point estimate within ground-truth CI. ECE = Expec
 
 | Rank | Model | n | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |
 |-----:|-------|--:|---------:|------:|---------:|----------:|-------:|--------|
-| 1 | **GPT-OSS-120B** | 296 | **94.3%** | 0.037 | 5.1% | 82.0% | 81% | API |
+| 1 | **GPT-OSS-120B** | 297 | **93.9%** | 0.034 | 5.4% | 82.1% | 78% | API |
 | 2 | **Llama-4-Scout-17B** | 300 | 84.0% | 0.092 | 14.0% | 82.3% | 63% | API |
 | 3 | Expert (sim.) | 301 | 77.1% | 0.183 | 9.6% | 89.0% | 21% | Sim. |
-| 4 | Strong (sim.) | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | Sim. |
-| 5 | Competent (sim.) | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | Sim. |
-| 6 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.9% | 30% | API |
-| 7 | Heuristic baseline | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | Sim. |
-| 8 | Random baseline | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | Sim. |
-| — | Llama-3.3-70B\* | 262 | 79.4% | 0.124 | 19.5% | 92.4% | 52% | API |
+| 4 | **Llama-3.3-70B** | 301 | 77.1% | 0.144 | 21.9% | 92.7% | 54% | API |
+| 5 | Strong (sim.) | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | Sim. |
+| 6 | Competent (sim.) | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | Sim. |
+| 7 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.9% | 30% | API |
+| 8 | Heuristic baseline | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | Sim. |
+| 9 | Random baseline | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | Sim. |
 | — | Qwen3-32B\* | 91 | 73.6% | 0.159 | 20.9% | 80.0% | 71% | API |
 
-\* Partial coverage (Groq free-tier daily-token cap not yet exhausted to completion). Reported on the answered subset; not ranked. Coverage is accumulated across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so each subset is difficulty-representative (19–29% D4+D5 vs. 29% in the full set) rather than easy-skewed — but the intervals are still on fewer than 301 problems, so treat these rows as preliminary. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=60). *Last updated: 2026-07-09.*
+Llama-3.3-70B now has **full 301/301 coverage** and is ranked; on the complete test split it ties the simulated Expert tier on point accuracy (77.1%) while carrying the strongest framework-match of any model (92.7%).
+
+\* Partial coverage (Groq free-tier daily-token cap not yet exhausted to completion): reported on the answered subset and not ranked. Coverage is accumulated across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so the subset is difficulty-representative rather than easy-skewed — but the intervals are still on fewer than 301 problems, so treat this row as preliminary. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=60). *Last updated: 2026-07-11.*
 
 ---
 
