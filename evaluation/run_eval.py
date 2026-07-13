@@ -170,6 +170,15 @@ class GroqClient(ModelClient):
             base_url="https://api.groq.com/openai/v1",
         )
         self.model = self.MODEL_MAP.get(model.lower(), model)
+        # Reasoning models (e.g. Qwen3) emit an explicit <think> trace before
+        # the structured answer. A 2048-token budget truncates that trace on
+        # harder problems, so no parseable answer is ever emitted and the
+        # problem is (wrongly) counted as unanswered. Give such models a
+        # larger completion budget, but stay under the free-tier per-minute
+        # token ceiling (~6000 TPM for Qwen3, i.e. prompt + max_tokens < 6000)
+        # so a single request is not rejected outright with a 413. Non-reasoning
+        # models finish well under 2048 and are unaffected by this value.
+        self.max_tokens = 5000 if "qwen" in self.model.lower() else 2048
 
     def query(self, prompt: str, system: str = "") -> str:
         messages = []
@@ -181,7 +190,7 @@ class GroqClient(ModelClient):
             model=self.model,
             messages=messages,
             temperature=0.0,
-            max_tokens=2048,
+            max_tokens=self.max_tokens,
         )
         return response.choices[0].message.content or ""
 
