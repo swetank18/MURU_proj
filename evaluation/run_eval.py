@@ -170,15 +170,27 @@ class GroqClient(ModelClient):
             base_url="https://api.groq.com/openai/v1",
         )
         self.model = self.MODEL_MAP.get(model.lower(), model)
-        # Reasoning models (e.g. Qwen3) emit an explicit <think> trace before
-        # the structured answer. A 2048-token budget truncates that trace on
-        # harder problems, so no parseable answer is ever emitted and the
-        # problem is (wrongly) counted as unanswered. Give such models a
-        # larger completion budget, but stay under the free-tier per-minute
-        # token ceiling (~6000 TPM for Qwen3, i.e. prompt + max_tokens < 6000)
-        # so a single request is not rejected outright with a 413. Non-reasoning
-        # models finish well under 2048 and are unaffected by this value.
-        self.max_tokens = 5000 if "qwen" in self.model.lower() else 2048
+        # Reasoning models (Qwen3, GPT-OSS) spend tokens on an internal trace
+        # before emitting the structured answer. A 2048-token budget truncates
+        # that trace on harder problems: the API returns finish_reason="length"
+        # with empty content, so no parseable answer is ever emitted and the
+        # problem is (wrongly) counted as a parse failure. Give such models a
+        # larger completion budget. The ceiling is per-family because it is
+        # bounded by the free-tier per-minute token limit, not by the model:
+        # Qwen3's ~6000 TPM requires prompt + max_tokens < 6000 and GPT-OSS's
+        # 8000 TPM requires prompt + max_tokens < 8000, or the request is
+        # rejected outright with a 413 regardless of how few tokens the model
+        # would actually have used. Both ceilings clear the longest traces we
+        # observed (~2.6k tokens on the hardest Decision-Under-Uncertainty
+        # problems). Non-reasoning models finish well under 2048 and are
+        # unaffected by this value.
+        model_lc = self.model.lower()
+        if "qwen" in model_lc:
+            self.max_tokens = 5000
+        elif "gpt-oss" in model_lc:
+            self.max_tokens = 7000
+        else:
+            self.max_tokens = 2048
 
     def query(self, prompt: str, system: str = "") -> str:
         messages = []

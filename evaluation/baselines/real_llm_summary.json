@@ -60,111 +60,111 @@
   },
   "llama-3_1-8b": {
     "display": "Llama-3.1-8B",
-    "result_file": "evaluation/baselines/llama-3_1-8b_20260503_233403.json",
-    "n_evaluated": 276,
+    "result_file": "evaluation/baselines/llama-3_1-8b_20260803_022626_resumed.json",
+    "n_evaluated": 289,
     "n_test": 301,
     "salvaged": false,
     "subset_difficulty": {
-      "1": 46,
-      "2": 67,
-      "3": 82,
-      "4": 54,
-      "5": 27
+      "1": 48,
+      "2": 72,
+      "3": 85,
+      "4": 56,
+      "5": 28
     },
     "metrics": {
       "accuracy": {
-        "point": 0.4311594202898551,
+        "point": 0.42560553633217996,
         "ci95": [
-          0.37318840579710144,
-          0.4891304347826087
+          0.370242214532872,
+          0.4844290657439446
         ]
       },
       "ece": {
-        "point": 0.47689746376811587,
+        "point": 0.481535294117647,
         "ci95": [
-          0.4231282608695653,
-          0.5420460144927536
+          0.42811038062283735,
+          0.5442134948096886
         ]
       },
       "overconfidence": {
-        "point": 0.5144927536231884,
+        "point": 0.5155709342560554,
         "ci95": [
-          0.4528985507246377,
-          0.572463768115942
+          0.45674740484429066,
+          0.5743944636678201
         ]
       },
       "framework_match": {
-        "point": 0.7591240875912408,
+        "point": 0.7700348432055749,
         "ci95": [
-          0.708029197080292,
-          0.8102189781021898
+          0.7212543554006968,
+          0.818815331010453
         ],
-        "n": 274
+        "n": 287
       }
     },
     "per_difficulty_acc": {
-      "1": 0.391304347826087,
-      "2": 0.5223880597014925,
-      "3": 0.43902439024390244,
-      "4": 0.4074074074074074,
-      "5": 0.2962962962962963
+      "1": 0.375,
+      "2": 0.5138888888888888,
+      "3": 0.43529411764705883,
+      "4": 0.4107142857142857,
+      "5": 0.2857142857142857
     },
     "per_category_acc": {
-      "adversarial_ambiguity": 0.36363636363636365,
-      "bayesian_updating": 0.2375,
-      "conditional_probability_chains": 0.2631578947368421,
-      "decision_under_uncertainty": 0.3,
+      "adversarial_ambiguity": 0.3695652173913043,
+      "bayesian_updating": 0.22988505747126436,
+      "conditional_probability_chains": 0.3,
+      "decision_under_uncertainty": 0.28846153846153844,
       "distribution_estimation": 0.921875
     }
   },
   "gpt-oss-120b": {
     "display": "GPT-OSS-120B",
-    "result_file": "evaluation/baselines/gpt-oss-120b_20260802_141431_resumed.json",
-    "n_evaluated": 299,
+    "result_file": "evaluation/baselines/gpt-oss-120b_20260803_024217_resumed.json",
+    "n_evaluated": 301,
     "n_test": 301,
     "salvaged": false,
     "subset_difficulty": {
       "1": 52,
       "2": 74,
-      "3": 87,
+      "3": 89,
       "4": 58,
       "5": 28
     },
     "metrics": {
       "accuracy": {
-        "point": 0.9331103678929766,
+        "point": 0.9269102990033222,
         "ci95": [
-          0.903010033444816,
-          0.959866220735786
+          0.8970099667774086,
+          0.9568106312292359
         ]
       },
       "ece": {
-        "point": 0.03204013377926422,
+        "point": 0.02857142857142852,
         "ci95": [
-          0.014381270903010071,
-          0.06020066889632108
+          0.012724252491694333,
+          0.05837209302325585
         ]
       },
       "overconfidence": {
-        "point": 0.056856187290969896,
+        "point": 0.06312292358803986,
         "ci95": [
-          0.033444816053511704,
-          0.08361204013377926
+          0.036544850498338874,
+          0.09302325581395349
         ]
       },
       "framework_match": {
-        "point": 0.8227272727272728,
+        "point": 0.8198198198198198,
         "ci95": [
-          0.7727272727272727,
-          0.8727272727272727
+          0.7702702702702703,
+          0.8693693693693694
         ],
-        "n": 220
+        "n": 222
       }
     },
     "per_difficulty_acc": {
       "1": 0.9615384615384616,
       "2": 0.9864864864864865,
-      "3": 0.9080459770114943,
+      "3": 0.8876404494382022,
       "4": 0.9655172413793104,
       "5": 0.75
     },
@@ -172,13 +172,13 @@
       "adversarial_ambiguity": 0.9574468085106383,
       "bayesian_updating": 0.9891304347826086,
       "conditional_probability_chains": 1.0,
-      "decision_under_uncertainty": 0.6666666666666666,
+      "decision_under_uncertainty": 0.6415094339622641,
       "distribution_estimation": 1.0
     }
   },
   "qwen3-32b": {
     "display": "Qwen3-32B",
-    "result_file": "evaluation/baselines/qwen3-32b_20260714_222830_resumed.json",
+    "result_file": "evaluation/baselines/qwen3-32b_20260803_021841_resumed.json",
     "n_evaluated": 245,
     "n_test": 301,
     "salvaged": false,

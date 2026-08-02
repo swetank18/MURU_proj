@@ -26,7 +26,7 @@
 
 On the open-weights panel we measured, **miscalibration on MURU-BENCH is dominated by capability, not by an independent metacognitive deficit**. Gains in Accuracy@CI come bundled with reductions in Expected Calibration Error (Spearman $\rho = -0.90$, Pearson $r = -0.99$). The one exception is a single adjacent swap — Qwen3-32B is 5.4 pp more accurate than Llama-3.3-70B but marginally worse calibrated (ECE 0.155 vs 0.144), on ECE intervals that overlap almost entirely, so it is not resolvable at these sample sizes. The simulator validation in §5 of the paper deliberately admits accuracy/calibration dissociation; real models on this panel essentially do not exhibit it.
 
-A second, more actionable finding: **single-number leaderboards mask category-shaped capability holes**. Two otherwise-strong models drop below 30% on Decision-Under-Uncertainty problems despite scoring 91–100% on the three computational categories — invisible to any aggregate metric.
+A second, more actionable finding: **single-number leaderboards mask category-shaped capability holes**. Two otherwise-strong models drop to 23–29% on Decision-Under-Uncertainty problems despite scoring 91–100% on the three computational categories — invisible to any aggregate metric. The hole survives all the way to the top of the panel: at 92.7% overall, GPT-OSS-120B's *entire* error budget sits in that one category.
 
 ---
 
@@ -36,20 +36,20 @@ Test split, n = 301. Acc@CI = point estimate within ground-truth CI. ECE = Expec
 
 | Rank | Model | n | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc | Source |
 |-----:|-------|--:|---------:|------:|---------:|----------:|-------:|--------|
-| 1 | **GPT-OSS-120B** | 299 | **93.3%** | 0.032 | 5.7% | 82.3% | 75% | API |
+| 1 | **GPT-OSS-120B** | 301 | **92.7%** | 0.029 | 6.3% | 82.0% | 75% | API |
 | 2 | **Llama-4-Scout-17B** | 300 | 84.0% | 0.092 | 14.0% | 82.3% | 63% | API |
 | 3 | **Qwen3-32B**\* | 245 | 82.4% | 0.155 | 13.9% | 80.2% | 67% | API |
 | 4 | Expert (sim.) | 301 | 77.1% | 0.183 | 9.6% | 89.0% | 21% | Sim. |
 | 5 | **Llama-3.3-70B** | 301 | 77.1% | 0.144 | 21.9% | 92.7% | 54% | API |
 | 6 | Strong (sim.) | 301 | 60.8% | 0.178 | 20.3% | 83.7% | 14% | Sim. |
 | 7 | Competent (sim.) | 301 | 49.2% | 0.239 | 21.6% | 67.1% | 4% | Sim. |
-| 8 | **Llama-3.1-8B** | 276 | 43.1% | 0.477 | 51.4% | 75.9% | 30% | API |
+| 8 | **Llama-3.1-8B** | 289 | 42.6% | 0.482 | 51.6% | 77.0% | 29% | API |
 | 9 | Heuristic baseline | 301 | 31.2% | 0.470 | 44.5% | 47.2% | 0% | Sim. |
 | 10 | Random baseline | 301 | 7.3% | 0.515 | 36.2% | 33.9% | 0% | Sim. |
 
-Qwen3-32B has accumulated to **245/301** (from 116) and is now ranked, entering the panel between Llama-4-Scout-17B and the simulated Expert tier. Llama-3.3-70B holds full 301/301 coverage; on the complete test split it ties the simulated Expert tier on point accuracy (77.1%) while carrying the strongest framework-match of any model (92.7%).
+**GPT-OSS-120B is now at complete 301/301 coverage.** Its last two "parse failures" were reasoning-trace truncation against a 2048-token completion budget, not malformed output — they answer cleanly in ~2.1–2.6k tokens. At full coverage, *every one of its 22 errors falls in Decision-Under-Uncertainty*; it is perfect or near-perfect on the other four categories, and scores 0/6 on the D5 problems of that category. Llama-3.3-70B also holds 301/301 and carries the strongest framework-match of any model (92.7%).
 
-\* Coverage still accumulating against the Groq free-tier daily-token cap, filled across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so the subset is difficulty-representative rather than easy-skewed (D4+D5 share 24.9% vs 28.6% in the full split) — but the intervals are on 245 rather than 301 problems, so treat the exact values as provisional. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=212, GPT-OSS n=220). *Last updated: 2026-08-03.*
+\* Qwen3-32B is frozen at 245/301: `qwen/qwen3-32b` was withdrawn from the Groq roster (as was `meta-llama/llama-4-scout-17b-16e-instruct`), so its remaining 56 problems can no longer be queried on that provider. Its coverage was filled across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so the subset is difficulty-representative rather than easy-skewed (D4+D5 share 24.9% vs 28.6% in the full split), but the intervals are on 245 rather than 301 problems and are the widest in the table. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=212, GPT-OSS n=222, Llama-3.1-8B n=287). Every raw API response is committed, so `aggregate_real_llm.py` alone rebuilds every number here without touching a live endpoint. *Last updated: 2026-08-03.*
 
 ---
 
