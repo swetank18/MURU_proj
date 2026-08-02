@@ -14,7 +14,7 @@ repository. Everything the document needs is here.
 | Path | Description |
 |------|-------------|
 | `main.tex` | Full paper source. Uses an inline `thebibliography` (no external `.bib`). |
-| `main.pdf` | Pre-built PDF (27 pages), for reference. |
+| `main.pdf` | Pre-built PDF (28 pages), for reference. |
 | `neurips_2024.sty` | NeurIPS style file. |
 | `tables/` | Auto-generated result tables, `\input{}` by `main.tex`. Regenerated bit-for-bit by `evaluation/aggregate_real_llm.py` in the main repo. |
 | `figures/` | All figures (PNG). |
@@ -34,7 +34,7 @@ pdflatex main.tex && pdflatex main.tex   # twice, to settle cross-references
 ```
 
 The build is expected to finish with **no undefined references** and produce a
-27-page PDF. (A handful of harmless `Overfull/Underfull \hbox` and
+28-page PDF. (A handful of harmless `Overfull/Underfull \hbox` and
 UTF-8-in-`.sty` warnings are emitted by the NeurIPS style file and can be
 ignored.)
 
