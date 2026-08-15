@@ -344,6 +344,88 @@ def fig_calibration(baselines: dict, output_dir: Path):
 
 
 # ──────────────────────────────────────────────────────────────────────
+# Figure 6: Coverage vs Sharpness (real-LLM panel)
+# ──────────────────────────────────────────────────────────────────────
+
+def load_real_llm_summary() -> dict | None:
+    path = PROJECT_ROOT / "evaluation" / "baselines" / "real_llm_summary.json"
+    if path.exists():
+        with open(path) as f:
+            return json.load(f)
+    return None
+
+
+def fig_coverage_sharpness(summary: dict, output_dir: Path):
+    """Coverage against interval width for the real-LLM panel.
+
+    Interval coverage alone cannot distinguish a model that knows the answer
+    from one that hedges: both land in the top band. Putting width on the
+    other axis separates them — the upper-left corner is genuine skill, the
+    upper-right is a model buying coverage with uninformative intervals.
+
+    The width axis is the 90th percentile, not the median, and it is
+    logarithmic. Median relative width is ~1.0 for every model in the panel
+    (they reproduce the defensible interval on typical problems), so a median
+    axis shows nothing; all of the between-model variation lives in the upper
+    tail, which spans two and a half orders of magnitude.
+    """
+    pts = []
+    for slug, s in summary.items():
+        sh = s.get("hardened", {}).get("sharpness")
+        if not sh or sh.get("pe_coverage") is None:
+            continue
+        pts.append((
+            s["display"],
+            100 * sh["pe_coverage"],
+            sh["p90_relative_width"],
+            100 * sh["hedge_rate"],
+            sh["median_relative_width"],
+        ))
+    if not pts:
+        return
+    pts.sort(key=lambda p: -p[1])
+
+    fig, ax = plt.subplots(figsize=(7.2, 4.8))
+    palette = ["#4C72B0", "#DD8452", "#55A868", "#C44E52", "#8172B3", "#937860"]
+    for i, (name, cov, p90, hedge, med) in enumerate(pts):
+        # Marker area encodes the hedging tail: how often this model emits an
+        # interval more than 10x wider than the defensible one.
+        ax.scatter(
+            p90, cov,
+            s=40 + 18 * hedge,
+            color=palette[i % len(palette)],
+            edgecolor="white", linewidth=1.2, zorder=3, alpha=0.9,
+        )
+        ax.annotate(
+            f"{name}\nhedge {hedge:.0f}%, med.\\,{med:.2f}$\\times$".replace("\\,", " "),
+            (p90, cov), textcoords="offset points", xytext=(0, 16),
+            ha="center", fontsize=8, color="#333333", linespacing=1.3,
+        )
+
+    ax.set_xscale("log")
+    ax.axvline(1.0, ls="--", lw=1, color="#999999", zorder=1)
+    ax.annotate(
+        "ground-truth width", (1.0, 0.02), xycoords=("data", "axes fraction"),
+        rotation=90, va="bottom", ha="right", fontsize=8, color="#777777",
+    )
+    ax.set_xlabel(
+        "90th-pct.\\ interval width ($\\times$ ground-truth)  $\\rightarrow$  hedging".replace(
+            "\\ ", " "
+        )
+    )
+    ax.set_ylabel("Interval coverage of\nground-truth estimate (%)")
+    ax.set_title("Coverage is bought with width: the hedging tail")
+    ax.grid(axis="both", alpha=0.25, zorder=0)
+    ax.set_xlim(0.7, 3000)
+    ax.set_ylim(40, 104)
+
+    outpath = output_dir / "coverage_sharpness.png"
+    fig.savefig(outpath)
+    plt.close(fig)
+    print(f"  ✓ {outpath.name}")
+
+
+# ──────────────────────────────────────────────────────────────────────
 # Main
 # ──────────────────────────────────────────────────────────────────────
 
@@ -362,6 +444,7 @@ def main():
 
     problems = load_all_problems()
     baselines = load_baselines()
+    real_llm = load_real_llm_summary()
 
     print(f"\n{'═' * 60}")
     print(f"  MURU-BENCH Figure Generator")
@@ -381,6 +464,13 @@ def main():
     else:
         print("  ⚠ No baselines found — skipping model figures")
         print("  Run 'python evaluation/run_baselines.py --save' first")
+
+    # Real-LLM panel figures
+    if real_llm:
+        fig_coverage_sharpness(real_llm, output_dir)
+    else:
+        print("  ⚠ No real-LLM summary — skipping coverage/sharpness figure")
+        print("  Run 'python evaluation/aggregate_real_llm.py' first")
 
     print(f"\n  ✓ All figures saved to {output_dir}/\n")
 

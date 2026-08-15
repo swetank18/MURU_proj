@@ -30,9 +30,25 @@ from evaluation.bootstrap_analysis import (
     mcnemar_test,
     per_problem_outcomes,
 )
+from evaluation import calibration_metrics as cm
+from evaluation.parse_status import (
+    MODEL_FAILURE_STATUSES,
+    classify_entry,
+    status_report,
+)
 
 
 N_BOOTSTRAP = 10_000
+
+# Confidence assigned to a response the parser could not read. The prompt asks
+# for an explicit CONFIDENCE field; where the model emitted one before the
+# response became unreadable we keep it, and otherwise fall back to the same
+# 0.5 default the parser uses. Only relevant to the strict accounting.
+UNPARSED_CONFIDENCE_DEFAULT = 0.5
+
+# A strict-vs-lenient gap above this is reported as a headline caveat: past it,
+# the leaderboard is partly measuring format compliance rather than reasoning.
+ACCOUNTING_GAP_THRESHOLD = 0.03
 
 # Map result filename pattern (model slug) to display name.
 DISPLAY_NAMES = {
@@ -82,6 +98,43 @@ def parse_predictions_from_raw(raw_results, problems_by_id):
             raw_response=r.get("response", ""),
         ))
     return predictions
+
+
+def unparsed_model_failures(raw_results, problems_by_id):
+    """Records the model answered but the harness could not read.
+
+    Returns ``(problem_id, stated_confidence)`` pairs for the statuses that are
+    the model's fault. Provider-side failures (endpoint 404s, rate limits,
+    timeouts) are deliberately not returned: they are missing data and say
+    nothing about the model, so they stay out of both accountings.
+    """
+    out = []
+    for r in raw_results:
+        pid = r.get("problem_id")
+        if pid not in problems_by_id:
+            continue
+        if classify_entry(r) not in MODEL_FAILURE_STATUSES:
+            continue
+        conf = (r.get("parsed") or {}).get("confidence")
+        out.append((pid, conf if conf is not None else UNPARSED_CONFIDENCE_DEFAULT))
+    return out
+
+
+def sharpness_records(preds, problems_by_id):
+    """Per-problem inputs for the interval-score / width statistics."""
+    records = []
+    for p in preds:
+        gt = problems_by_id[p.problem_id]["ground_truth"]
+        lo_hi = p.predicted_interval
+        ci = gt["confidence_interval"]
+        records.append({
+            "lower": lo_hi[0] if lo_hi else None,
+            "upper": lo_hi[1] if lo_hi else None,
+            "gt_point": gt["point_estimate"],
+            "gt_width": ci[1] - ci[0],
+            "alpha": 1.0 - gt.get("ci_level", 0.9),
+        })
+    return records
 
 
 def find_latest_result(model_slug: str):
@@ -191,6 +244,27 @@ def main():
         m = MURUMetrics(sub_problems, preds)
         breakdown = m.compute_all()
 
+        # ── Parse accounting (P0) ────────────────────────────────
+        # Two versions of every headline metric: "lenient" drops responses the
+        # harness could not read, "strict" scores them incorrect. The gap is
+        # the part of the leaderboard that is format compliance rather than
+        # reasoning, and it has to be visible rather than absorbed.
+        status = status_report(data, n_test=len(problems), test_ids=set(problems_by_id))
+        failures = unparsed_model_failures(raw, problems_by_id)
+        if failures:
+            c_strict = c + [0] * len(failures)
+            f_strict = f + [0] * len(failures)
+            o_strict = o + [1 if conf > 0.7 else 0 for _, conf in failures]
+            conf_strict = conf + [cf for _, cf in failures]
+            boot_strict = bootstrap_metrics(c_strict, f_strict, o_strict, conf_strict)
+        else:
+            boot_strict = boot
+        acc_gap = boot["accuracy"]["point"] - boot_strict["accuracy"]["point"]
+        ece_gap = boot_strict["ece"]["point"] - boot["ece"]["point"]
+
+        # ── Hardened calibration metrics (P4) ────────────────────
+        hardened = cm.full_summary(c, conf, records=sharpness_records(preds, problems_by_id))
+
         summary[slug] = {
             "display": display,
             "result_file": str(path.relative_to(PROJECT_ROOT)),
@@ -201,6 +275,22 @@ def main():
                 str(d): v["count"] for d, v in breakdown["accuracy_by_difficulty"].items()
             },
             "metrics": boot,
+            "metrics_strict": boot_strict,
+            "accounting_gap": {
+                "accuracy_pp": 100 * acc_gap,
+                "ece": ece_gap,
+                "material": abs(acc_gap) > ACCOUNTING_GAP_THRESHOLD,
+            },
+            "parse": {
+                "n_attempted": status["n_attempted"],
+                "n_parsed": status["n_parsed"],
+                "n_model_failure": status["n_model_failure"],
+                "n_provider_failure": status["n_provider_failure"],
+                "parse_rate": status["parse_rate"],
+                "coverage": status["coverage"],
+                "counts": status["counts"],
+            },
+            "hardened": hardened,
             "per_difficulty_acc": {
                 str(d): v["accuracy"] for d, v in breakdown["accuracy_by_difficulty"].items()
             },
@@ -232,9 +322,14 @@ def main():
     main_lines = []
     for s in ordered:
         m = s["metrics"]
-        n = s["n_evaluated"]
         n_total = s["n_test"]
+        # Coverage now annotates *attempted* problems, not parsed ones. A
+        # response the model returned but the parser could not read is a
+        # scored event with a status (Table: parse accounting), not missing
+        # coverage; only provider-side gaps reduce the denominator here.
+        n = s["parse"]["n_attempted"]
         coverage = f"~({n}/{n_total})" if n < n_total else ""
+        parse_cell = f"{100 * s['parse']['parse_rate']:.1f}\\%"
         # Rows with no recoverable framework data (fully salvaged) show "n/a"
         # rather than a spurious 0%. Rows with partial framework coverage show
         # the rate over the answered-with-framework subset (n annotated).
@@ -247,6 +342,7 @@ def main():
             fwmatch_cell = fmt_pct(fw['point'], fw['ci95'])
         main_lines.append(
             f"{s['display']}{coverage} & "
+            f"{parse_cell} & "
             f"{fmt_pct(m['accuracy']['point'], m['accuracy']['ci95'])} & "
             f"{fmt_dec(m['ece']['point'], m['ece']['ci95'])} & "
             f"{fmt_pct(m['overconfidence']['point'], m['overconfidence']['ci95'])} & "
@@ -285,6 +381,65 @@ def main():
             row.append(f"{100*acc:.1f}\\%" if acc is not None else "---")
         cat_lines.append(" & ".join(row) + " \\\\")
 
+    # ─── LaTeX: parse-accounting table (P0) ──────────────────────
+    # Every headline metric computed twice, so a reader can see exactly how
+    # much of each score depends on the choice to drop unreadable responses.
+    STATUS_LABEL = {
+        "truncated": "trunc.",
+        "missing_field": "empty field",
+        "format_variant": "off-schema",
+        "no_schema": "no schema",
+        "refused": "refused",
+        "endpoint_unavailable": "endpoint 404",
+        "rate_limited": "rate limit",
+        "timeout": "timeout",
+        "api_error": "API error",
+        "empty_response": "empty resp.",
+        "unattempted": "unattempted",
+    }
+    acct_lines = []
+    for s in ordered:
+        p = s["parse"]
+        lenient, strict = s["metrics"], s["metrics_strict"]
+        modes = ", ".join(
+            f"{n} {STATUS_LABEL.get(k, k)}" for k, n in p["counts"].items() if k != "ok"
+        ) or "---"
+        gap = s["accounting_gap"]["accuracy_pp"]
+        acct_lines.append(
+            f"{s['display']} & "
+            f"{100 * p['parse_rate']:.1f}\\% & "
+            f"{modes} & "
+            f"{100 * lenient['accuracy']['point']:.1f}\\% & "
+            f"{100 * strict['accuracy']['point']:.1f}\\% & "
+            f"{gap:+.1f} & "
+            f"{lenient['ece']['point']:.3f} & "
+            f"{strict['ece']['point']:.3f} \\\\"
+        )
+
+    # ─── LaTeX: sharpness / proper-scoring table (P4) ────────────
+    sharp_lines = []
+    for s in ordered:
+        h = s["hardened"]
+        sh = h["sharpness"]
+        br = h["brier"]
+
+        def _num(x, fmt="{:.3f}"):
+            return fmt.format(x) if x is not None else "---"
+
+        sharp_lines.append(
+            f"{s['display']} & "
+            f"{_num(sh['pe_coverage'] and 100 * sh['pe_coverage'], '{:.1f}')}\\% & "
+            f"{_num(sh['median_relative_width'], '{:.2f}')} & "
+            f"{_num(sh['p90_relative_width'], '{:.1f}')} & "
+            f"{_num(sh['hedge_rate'] and 100 * sh['hedge_rate'], '{:.1f}')}\\% & "
+            f"{_num(sh['median_normalized_interval_score'], '{:.2f}')} & "
+            f"{_num(br['brier'])} & "
+            f"{_num(br['reliability'])} & "
+            f"{_num(br['resolution'])} & "
+            f"{_num(h['auroc'])} & "
+            f"{_num(h['ece_debiased']['debiased'])} \\\\"
+        )
+
     # Write to paper-includable .tex files.
     # Trailing %\endinput suppresses the newline LaTeX would otherwise inject
     # at the end of an \input'd file; without it, a stray newline inside the
@@ -303,9 +458,40 @@ def main():
     (paper_dir / "real_llm_category.tex").write_text(
         "\\newcommand{\\realllmcategoryrows}{%\n" + "\n".join(cat_lines) + "}\n"
     )
-    print(f"Saved: paper/tables/real_llm_main.tex", file=sys.stderr)
-    print(f"Saved: paper/tables/real_llm_difficulty.tex", file=sys.stderr)
-    print(f"Saved: paper/tables/real_llm_category.tex", file=sys.stderr)
+    (paper_dir / "real_llm_accounting.tex").write_text(
+        "\\newcommand{\\realllmaccountingrows}{%\n" + "\n".join(acct_lines) + "}\n"
+    )
+    (paper_dir / "real_llm_sharpness.tex").write_text(
+        "\\newcommand{\\realllmsharpnessrows}{%\n" + "\n".join(sharp_lines) + "}\n"
+    )
+    for name in (
+        "real_llm_main",
+        "real_llm_difficulty",
+        "real_llm_category",
+        "real_llm_accounting",
+        "real_llm_sharpness",
+    ):
+        print(f"Saved: paper/tables/{name}.tex", file=sys.stderr)
+
+    # Loud console flag: if any model's two accountings diverge materially,
+    # the leaderboard is partly measuring format compliance and the paper has
+    # to say so rather than quietly reporting the friendlier number.
+    material = [s["display"] for s in ordered if s["accounting_gap"]["material"]]
+    if material:
+        print(
+            f"\n!! Strict/lenient accuracy gap exceeds "
+            f"{100 * ACCOUNTING_GAP_THRESHOLD:.0f} pp for: {', '.join(material)}",
+            file=sys.stderr,
+        )
+    else:
+        worst = max(ordered, key=lambda s: abs(s["accounting_gap"]["accuracy_pp"]))
+        print(
+            f"\nParse accounting: max strict/lenient gap "
+            f"{abs(worst['accounting_gap']['accuracy_pp']):.1f} pp "
+            f"({worst['display']}) — below the {100 * ACCOUNTING_GAP_THRESHOLD:.0f} pp "
+            f"threshold, so the leaderboard is not format-compliance-driven.",
+            file=sys.stderr,
+        )
 
     # Echo to stdout for convenience.
     print()

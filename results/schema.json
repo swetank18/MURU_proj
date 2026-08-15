@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/swetank18/MURU_proj/blob/main/results/schema.json",
+  "title": "MURU-BENCH result archive",
+  "description": "Format of a single model's evaluation archive. This is the interchange format for third-party leaderboard submissions: any file validating against this schema can be scored by `python evaluation/aggregate_real_llm.py` without modification. One archive holds one model's run over one split, including the raw response for every problem, so that every published number is recomputable from the archive alone with no API access.",
+  "type": "object",
+  "required": ["model", "timestamp", "n_problems", "raw_results"],
+  "properties": {
+    "model": {
+      "type": "string",
+      "description": "Provider-qualified model identifier as queried (e.g. 'llama-3.3-70b'). Must be stable across resumed runs of the same model, since --resume merges archives by this field."
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{8}_[0-9]{6}$",
+      "description": "Run start time, YYYYMMDD_HHMMSS."
+    },
+    "seed": {
+      "type": "integer",
+      "description": "Seed for the problem-shuffling order. The canonical value is 42; changing it changes which problems a partial run covers."
+    },
+    "resumed": {
+      "type": "boolean",
+      "description": "True if this archive merges answers from earlier archives for the same model (free-tier daily-budget accumulation)."
+    },
+    "n_prior_answered": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Answers carried in from earlier archives when resumed."
+    },
+    "n_problems": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Problems in the split this run targeted (301 for the MURU-BENCH test split)."
+    },
+    "n_predictions": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Records that parsed into a usable point estimate."
+    },
+    "salvaged": {
+      "type": "boolean",
+      "description": "True if any record was recovered from a progress log rather than a live API response. Salvaged records preserve the parsed fields but not the raw response text, so framework-match is missing data for them rather than a wrong answer."
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Optional convenience copy of the computed metrics. Never authoritative: the aggregator recomputes every metric from raw_results, so a stale or absent metrics block does not affect any published number."
+    },
+    "raw_results": {
+      "type": "array",
+      "description": "One record per problem attempted. Records that failed to parse MUST be retained, not dropped: the parse-status accounting distinguishes a response the model got wrong from one the harness could not read, and that distinction is unrecoverable if failures are omitted.",
+      "items": {
+        "type": "object",
+        "required": ["problem_id", "response", "parsed", "success"],
+        "properties": {
+          "problem_id": {
+            "type": "string",
+            "pattern": "^MURU-[0-9]{4}$",
+            "description": "Problem identifier from the split."
+          },
+          "response": {
+            "type": "string",
+            "description": "Complete model response text, unmodified. Empty only when the request itself failed (see 'error')."
+          },
+          "parsed": {
+            "type": "object",
+            "description": "Fields extracted from the response by evaluation/run_eval.py::parse_response.",
+            "properties": {
+              "framework": {
+                "type": ["string", "null"],
+                "enum": [
+                  "bayesian_inference",
+                  "frequentist_inference",
+                  "decision_theory",
+                  "information_theory",
+                  "monte_carlo",
+                  null
+                ],
+                "description": "Reasoning framework the model named, lowercased."
+              },
+              "point_estimate": {
+                "type": ["number", "null"],
+                "description": "The model's answer. Null means the response did not yield one; the record is then scored by its parse status rather than as a wrong answer."
+              },
+              "confidence_interval": {
+                "type": ["array", "null"],
+                "items": {"type": "number"},
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "[lower, upper] as stated by the model. Scored by the Winkler interval score against the ground-truth point estimate at the problem's ci_level, so both width and miss are penalised."
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Verbalized probability that the answer is correct. Defaults to 0.5 when the model stated none."
+              }
+            }
+          },
+          "success": {
+            "type": "boolean",
+            "description": "True iff parsed.point_estimate is non-null. Retained for backward compatibility; the finer-grained status is derived by evaluation/parse_status.py::classify_entry."
+          },
+          "error": {
+            "type": ["string", "null"],
+            "description": "Provider error string when the request never returned a response. Present here means the record is missing data (excluded from both accountings) rather than a model failure."
+          }
+        }
+      }
+    }
+  }
+}

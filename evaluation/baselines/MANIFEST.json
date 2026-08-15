@@ -1,0 +1,1266 @@
+{
+  "description": "Inventory of committed MURU-BENCH evaluation archives. Archives flagged cited_in_paper back a published leaderboard row; the rest are earlier accumulation checkpoints of the same runs, retained so the coverage history is auditable.",
+  "schema": "results/schema.json",
+  "n_archives": 70,
+  "n_cited": 5,
+  "archives": [
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260504_013958_salvaged.json",
+      "sha256": "ff5a0458ed3231044ead7535af6c205a3b79c15485fd6d9e993cb0cd86ccf60f",
+      "bytes": 48049,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260504_013958",
+      "seed": null,
+      "resumed": false,
+      "salvaged": true,
+      "n_records": 146,
+      "n_parsed": 146,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 146,
+        "unattempted": 155
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260706_195402.json",
+      "sha256": "ca3e1bdd3a721fd3443bc54bc052a00e6550fbe1175d9111a98547787a7be5ea",
+      "bytes": 69621,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260706_195402",
+      "seed": 42,
+      "resumed": false,
+      "salvaged": false,
+      "n_records": 150,
+      "n_parsed": 141,
+      "parse_rate": 0.9929577464788732,
+      "status_counts": {
+        "ok": 141,
+        "truncated": 1,
+        "rate_limited": 1,
+        "api_error": 1,
+        "empty_response": 6,
+        "unattempted": 151
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260706_212840_union.json",
+      "sha256": "f77c25a736a3cd5aec4fc713736cf12b4d527b3f769ea89644a9d57cf57452d4",
+      "bytes": 91952,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260706_212840",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 220,
+      "n_parsed": 220,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 220,
+        "unattempted": 81
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260707_120743_resumed.json",
+      "sha256": "681cced9a5903eed6a7bb14c335fa61564b2fec8bcc00289a50eca8b1e2a54f3",
+      "bytes": 131391,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260707_120743",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 294,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 294,
+        "api_error": 1,
+        "empty_response": 6
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260709_154046_resumed.json",
+      "sha256": "a3c3a79a10d742e51db81e2f2dca2684e0d440b0b26ba40e1a1bb4405d40c617",
+      "bytes": 131874,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260709_154046",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 295,
+      "parse_rate": 0.9966216216216216,
+      "status_counts": {
+        "ok": 295,
+        "truncated": 1,
+        "empty_response": 5
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260709_234515_resumed.json",
+      "sha256": "1c260d0bc670f828e43339330106228f433d0597ff30f3c2e7b9810de3e16288",
+      "bytes": 131808,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260709_234515",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 296,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 296,
+        "empty_response": 5
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260710_155742_resumed.json",
+      "sha256": "d7ee08fb64c9402f824ba4d66e073f7a0db27d950450909ff08bbb67e140f3e9",
+      "bytes": 131982,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260710_155742",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 297,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 297,
+        "empty_response": 4
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260711_110235_resumed.json",
+      "sha256": "7f6e7753529970437247106a71c6241a90def33a4403912b3a430476742cdbe3",
+      "bytes": 131982,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260711_110235",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 297,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 297,
+        "empty_response": 4
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260712_222156_resumed.json",
+      "sha256": "0ae925f4351b55502ba10609d1c64932ea2b000164ad2289eed0d11b70a18c9f",
+      "bytes": 132446,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260712_222156",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "empty_response": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260713_103455_resumed.json",
+      "sha256": "f5bc915692ad9e46a872c3acd5f8b5ac6dd53812b8023bfe7fac1214e2cca226",
+      "bytes": 132260,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260713_103455",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260714_194103_resumed.json",
+      "sha256": "d83663efb9144a54022813e9555263bd76884bb1d89491e07ece8e1f2537add0",
+      "bytes": 132353,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260714_194103",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 1,
+        "empty_response": 1
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260715_092656_resumed.json",
+      "sha256": "64568e99e303b5145cd711a1539ad0064e70ece7a2144309862a54e2ad3de25f",
+      "bytes": 132260,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260715_092656",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260725_184029_resumed.json",
+      "sha256": "2e4d884631b366b7ad0c136fa985fbeb191adf1d1ef3ba2bb82caf06ec887e3d",
+      "bytes": 132446,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260725_184029",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "empty_response": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260726_204232_resumed.json",
+      "sha256": "dcc5347a40ba0e468b4f54b5421c9fd478f915ee36e76750dd11a2bcb7d8895c",
+      "bytes": 132446,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260726_204232",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "empty_response": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260727_201105_resumed.json",
+      "sha256": "2e88adeb53d187d639ea6d2096068f834e64c20b8f94a0db16e895b9b8f13d38",
+      "bytes": 132260,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260727_201105",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260728_173806_resumed.json",
+      "sha256": "8b665347d5bcfff5fb50022dff7b878b8fdf479e6dbe3b9e496d35bede5074d2",
+      "bytes": 132260,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260728_173806",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260730_191644_resumed.json",
+      "sha256": "696d1019c9226730a3af8e707a218cc7e1359bcfb3a84a4801fe8daba2c2efb7",
+      "bytes": 132260,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260730_191644",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260731_110146_resumed.json",
+      "sha256": "7667b2a32ac7a466a6ea838acabe48815d2db1adcf0919eb7157f4c6d27824b8",
+      "bytes": 132260,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260731_110146",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260801_084835_resumed.json",
+      "sha256": "600be6ead8283db0ba39ae57d849565b6b8b23103b53dd5400f672e0a9d6fb6e",
+      "bytes": 132353,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260801_084835",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 1,
+        "empty_response": 1
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260802_141431_resumed.json",
+      "sha256": "13ca1b2d502929dec3456144fb2a6978af5c9dc6029e237d560d3d296f276480",
+      "bytes": 132353,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260802_141431",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "api_error": 1,
+        "empty_response": 1
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260803_021852_resumed.json",
+      "sha256": "746ecb94d2868ff735eeb3311683bddf5b399eef38e5dbb1f65294bb156484e2",
+      "bytes": 132446,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260803_021852",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "empty_response": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260803_024040_resumed.json",
+      "sha256": "0ad4595b7baa0dd671ca557b2d34f7b387ddd8bcda35ec48e08feef95f1946f8",
+      "bytes": 133044,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260803_024040",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 299,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 299,
+        "rate_limited": 2
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260803_024217_resumed.json",
+      "sha256": "243578339ee412b2150e570b717a70226bf09bbe3cf55d5595ffa3e74062841c",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260803_024217",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260805_070819_resumed.json",
+      "sha256": "8aa88cd2fc1e8a018a32c6be6fda2e503c1f8508f583e2497835df08514484be",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260805_070819",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260806_073344_resumed.json",
+      "sha256": "885af4696ec568fc8390f0d45ce62c92818aca6f1a5893311a75693962a1b611",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260806_073344",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260807_070634_resumed.json",
+      "sha256": "5495c047af207da8bab8c5f5a8d9cddde703be463c5c895153f6d25d90093e83",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260807_070634",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260808_164323_resumed.json",
+      "sha256": "54626b297b82a1a763a97cdd050f90678c8f5b210e61a03fd82996f88a0df98a",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260808_164323",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260809_135115_resumed.json",
+      "sha256": "11567ddc495973ec096d42d852c59a4e7b344574d2f46b243961984d4ca67bc6",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260809_135115",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260812_141329_resumed.json",
+      "sha256": "746d609ce3dce8745667f70f93d93538184569700de432d32a716c98adbe6fe6",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260812_141329",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260813_233622_resumed.json",
+      "sha256": "d54638f83956fc0cf0f8c163e3e78b34cba95507ae21484a1a7970cfd3a8f8cd",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260813_233622",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260814_073305_resumed.json",
+      "sha256": "7ad904795487d8001c28b952446128dc53fcfc8694d7836a689e948b06610a8c",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260814_073305",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/gpt-oss-120b_20260815_122420_resumed.json",
+      "sha256": "46f34d7a4b1015689cd2bfef52343f2ded0e607df5cfc943350b907336861aec",
+      "bytes": 132802,
+      "model": "gpt-oss-120b",
+      "timestamp": "20260815_122420",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": true
+    },
+    {
+      "file": "evaluation/baselines/llama-3_1-8b_20260503_233403.json",
+      "sha256": "3770f5ee65dd4e2927ad3149c1e75ef33fc4d7818f83590f09cca2018dc5baed",
+      "bytes": 1044912,
+      "model": "llama-3.1-8b",
+      "timestamp": "20260503_233403",
+      "seed": null,
+      "resumed": false,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 276,
+      "parse_rate": 0.9169435215946844,
+      "status_counts": {
+        "ok": 276,
+        "truncated": 21,
+        "missing_field": 3,
+        "no_schema": 1
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_1-8b_20260803_022626_resumed.json",
+      "sha256": "6b6194229fe465496a502eccb522158adce15ba114697d71d01aeb38a0b20f60",
+      "bytes": 1004251,
+      "model": "llama-3.1-8b",
+      "timestamp": "20260803_022626",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 289,
+      "parse_rate": 0.9601328903654485,
+      "status_counts": {
+        "ok": 289,
+        "truncated": 11,
+        "missing_field": 1
+      },
+      "cited_in_paper": true
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260503_223341.json",
+      "sha256": "434af31407db010f2d1f42a4185541bc5f456a366460ab6bd97be84da85a04d6",
+      "bytes": 375527,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260503_223341",
+      "seed": null,
+      "resumed": false,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 76,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 76,
+        "rate_limited": 225
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260706_200049.json",
+      "sha256": "1f2fc0dbd2a7aa8a04c1b76df82e3614a7cdeb68b27e23e1347967b6fafda22f",
+      "bytes": 241324,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260706_200049",
+      "seed": 42,
+      "resumed": false,
+      "salvaged": false,
+      "n_records": 65,
+      "n_parsed": 60,
+      "parse_rate": 0.9375,
+      "status_counts": {
+        "ok": 60,
+        "truncated": 3,
+        "missing_field": 1,
+        "rate_limited": 1,
+        "unattempted": 236
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260706_212840_union.json",
+      "sha256": "7b04af0bbe39ba7c54682a81e698b15745ebf90e7226dc4db1d32c3581a23f47",
+      "bytes": 423114,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260706_212840",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 123,
+      "n_parsed": 123,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 123,
+        "unattempted": 178
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260707_121236_resumed.json",
+      "sha256": "6fb1ec21d92a2cee465e61ec93748d1dc413d181b4623956ab3f683def60969e",
+      "bytes": 607030,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260707_121236",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 170,
+      "n_parsed": 169,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 169,
+        "rate_limited": 1,
+        "unattempted": 131
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260709_154809_resumed.json",
+      "sha256": "20743e5594d5ff2212f0e0ea32d8baa9594aa5d665a6182e3fb11c5f9668f301",
+      "bytes": 872397,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260709_154809",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 243,
+      "n_parsed": 241,
+      "parse_rate": 0.9958677685950413,
+      "status_counts": {
+        "ok": 241,
+        "truncated": 1,
+        "rate_limited": 1,
+        "unattempted": 58
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260709_234711_resumed.json",
+      "sha256": "9175de85d3a9fb6e68d81620abf8b872ecb570354d5f31bd6d5ad456647e1d49",
+      "bytes": 941662,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260709_234711",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 263,
+      "n_parsed": 262,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 262,
+        "rate_limited": 1,
+        "unattempted": 38
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260710_160130_resumed.json",
+      "sha256": "d718f6d1dba0cf102ca9b356788151ed7dae5e3dce48de2bd745335d9edbf287",
+      "bytes": 1083200,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260710_160130",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 300,
+      "parse_rate": 0.9966777408637874,
+      "status_counts": {
+        "ok": 300,
+        "format_variant": 1
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260711_110240_resumed.json",
+      "sha256": "6950aa3c15cf0c493644bbfefcd632e6beb27fe8946ed833e17ea1b8596cb055",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260711_110240",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260712_222157_resumed.json",
+      "sha256": "4b77a2aeafc934bd986f6cd0b864f2d142cb9d0b0409a9d3015c2101affbe4bb",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260712_222157",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260713_103456_resumed.json",
+      "sha256": "342e1cacd7babc8e2fdde32fca2a2f25ba72fae1d061a61c628f40ec7e6d7970",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260713_103456",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260714_194104_resumed.json",
+      "sha256": "365f12b9cdfa7415c3ee492484424ff1d49456020be5113a7054f30bd67bfe24",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260714_194104",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260715_092657_resumed.json",
+      "sha256": "4885d43531bbdc8f536d03b97d2b4f5e7ae49f05168659128b66a431bfe3de36",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260715_092657",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260725_184029_resumed.json",
+      "sha256": "7fe868ec0f1fc158036a80791f2a782014d54b16e10d33e64ad4806c8fd7493c",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260725_184029",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260726_204233_resumed.json",
+      "sha256": "5c57de0287b4f8b82f4195522da9a4ec1ab6e51e7bd8c2556797d6f601cff073",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260726_204233",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260727_201106_resumed.json",
+      "sha256": "d0ffce300d80e7bf6e5d8e2e1abd724b7b559c131cb144ef6505dd5c4364648f",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260727_201106",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260728_173806_resumed.json",
+      "sha256": "c843b09a79109cbc2f4bab317baa18a5a76337f472e79c74da55ddfaa0c67646",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260728_173806",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260730_191645_resumed.json",
+      "sha256": "565d0596d748e30ad011e0d6e48f2129af8b6cc056d6b5d2286e98206f2cb6e4",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260730_191645",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260731_110148_resumed.json",
+      "sha256": "255d3317e8654425f50198f1f9569d7ec5feb0ddd2973152519d5be038e7706e",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260731_110148",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260801_084836_resumed.json",
+      "sha256": "23383616b97961d3bd379f78cdfc53930c937815197158a36cf6b0a0dcc7b192",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260801_084836",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260802_141432_resumed.json",
+      "sha256": "7c67f03e6d8a25da95c6c1c1ec43f75c35fcdd6020599930f0d36ff15658169f",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260802_141432",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260805_070820_resumed.json",
+      "sha256": "5e39c7f9ff14a20b41dff47bbc1411056f70a1d24fc4e32e719cef9648acece5",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260805_070820",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260806_073345_resumed.json",
+      "sha256": "b1dea57fa84a1e3cc43641102d8266f912bba13bad98543a57be659665ebf0a6",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260806_073345",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260807_070636_resumed.json",
+      "sha256": "e69203628b6c682de8f11c5a9f12a649f6231eedc3468791ff4618e4a57c3d00",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260807_070636",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260808_164323_resumed.json",
+      "sha256": "8447aa9d1b4a5f25052eeadfecd785b1758db182d2209d5ece30c90df3c7893c",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260808_164323",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260809_135117_resumed.json",
+      "sha256": "b71424aff48dd4155f09f226c88eee732fb3b4df2e88ceb797915c1fed2132db",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260809_135117",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260812_141330_resumed.json",
+      "sha256": "8cb8c40bfb35a80c17a6c6d0c3d94d466cdf3b17e2b295e5415843db8a312805",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260812_141330",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260813_233622_resumed.json",
+      "sha256": "dfc453b7840b368ab1e9e8640328a66a83d920be73df41bdf291abdd753182c4",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260813_233622",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260814_073306_resumed.json",
+      "sha256": "05b39d8f39f9b33a1464965890b466d83a0df863c695fea22494af35ad5fb064",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260814_073306",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/llama-3_3-70b_20260815_122420_resumed.json",
+      "sha256": "dcb8b0b1cf6b3cdff28d712133b1234668326678c162544c99017208deddc66d",
+      "bytes": 1082375,
+      "model": "llama-3.3-70b",
+      "timestamp": "20260815_122420",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 301,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 301
+      },
+      "cited_in_paper": true
+    },
+    {
+      "file": "evaluation/baselines/llama-4-scout_20260504_012550.json",
+      "sha256": "e040d8a5e486da1a90134b017a8ecc6e587b244197f863428a424402c3425acd",
+      "bytes": 1125770,
+      "model": "llama-4-scout",
+      "timestamp": "20260504_012550",
+      "seed": null,
+      "resumed": false,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 300,
+      "parse_rate": 0.9966777408637874,
+      "status_counts": {
+        "ok": 300,
+        "format_variant": 1
+      },
+      "cited_in_paper": true
+    },
+    {
+      "file": "evaluation/baselines/qwen3-32b_20260504_024422_salvaged.json",
+      "sha256": "5917ca7950f6d9f7f078ccf9885a57443899f7ff0bd2909959bc485ef92211f2",
+      "bytes": 21106,
+      "model": "qwen3-32b",
+      "timestamp": "20260504_024422",
+      "seed": null,
+      "resumed": false,
+      "salvaged": true,
+      "n_records": 59,
+      "n_parsed": 59,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 59,
+        "unattempted": 242
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/qwen3-32b_20260706_212739.json",
+      "sha256": "1421dee3475b7237e019048b404ec32cdabfc1bc7207a6bfdfcdc8fcf6f3abfa",
+      "bytes": 1651304,
+      "model": "qwen3-32b",
+      "timestamp": "20260706_212739",
+      "seed": 42,
+      "resumed": false,
+      "salvaged": false,
+      "n_records": 238,
+      "n_parsed": 60,
+      "parse_rate": 0.25316455696202533,
+      "status_counts": {
+        "ok": 60,
+        "truncated": 158,
+        "format_variant": 5,
+        "no_schema": 10,
+        "refused": 4,
+        "rate_limited": 1,
+        "unattempted": 63
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/qwen3-32b_20260706_212840_union.json",
+      "sha256": "86a373e2845b09459700ef9ca572aa7b722b5fe4a027b3b50286ed0aed669a31",
+      "bytes": 327803,
+      "model": "qwen3-32b",
+      "timestamp": "20260706_212840",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 91,
+      "n_parsed": 91,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 91,
+        "unattempted": 210
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/qwen3-32b_20260712_061151_resumed.json",
+      "sha256": "4541831a0c2c611d790dde9a999f813c88c9f49bc3c912984cc907af1c37de1f",
+      "bytes": 1864492,
+      "model": "qwen3-32b",
+      "timestamp": "20260712_061151",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 116,
+      "parse_rate": 0.3853820598006645,
+      "status_counts": {
+        "ok": 116,
+        "truncated": 170,
+        "format_variant": 2,
+        "no_schema": 9,
+        "refused": 4
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/qwen3-32b_20260714_222830_resumed.json",
+      "sha256": "51768ae1dfc766f80389415bcfefdf3447ef382d0762663ed2ca9b94bf24c729",
+      "bytes": 2912217,
+      "model": "qwen3-32b",
+      "timestamp": "20260714_222830",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 245,
+      "parse_rate": 0.8166666666666667,
+      "status_counts": {
+        "ok": 245,
+        "truncated": 50,
+        "no_schema": 3,
+        "refused": 2,
+        "api_error": 1
+      },
+      "cited_in_paper": false
+    },
+    {
+      "file": "evaluation/baselines/qwen3-32b_20260803_021841_resumed.json",
+      "sha256": "4f2fa83b562f968724ceee3703d61393c328bd177e1fca78973c3648ce33216f",
+      "bytes": 1990884,
+      "model": "qwen3-32b",
+      "timestamp": "20260803_021841",
+      "seed": 42,
+      "resumed": true,
+      "salvaged": false,
+      "n_records": 301,
+      "n_parsed": 245,
+      "parse_rate": 1.0,
+      "status_counts": {
+        "ok": 245,
+        "endpoint_unavailable": 56
+      },
+      "cited_in_paper": true
+    }
+  ]
+}

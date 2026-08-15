@@ -1,4 +1,4 @@
-.PHONY: test validate baselines bootstrap eval-openai eval-anthropic eval-google eval-groq paper submission clean
+.PHONY: test validate baselines bootstrap reanalyze eval-openai eval-anthropic eval-google eval-groq paper submission clean
 
 PYTHON ?= .venv/bin/python
 
@@ -18,6 +18,16 @@ baselines:
 # Reproduce the bootstrap CIs and McNemar tests reported in Section 5.
 bootstrap:
 	$(PYTHON) evaluation/bootstrap_analysis.py
+
+# Rebuild every published leaderboard number from the committed archives:
+# parse-status accounting, bootstrap CIs, hardened calibration metrics, the
+# five LaTeX table includes, the figures, and the archive manifest. Requires
+# no API key and no network access.
+reanalyze:
+	$(PYTHON) evaluation/parse_status.py
+	$(PYTHON) evaluation/aggregate_real_llm.py
+	$(PYTHON) scripts/generate_figures.py
+	$(PYTHON) scripts/make_manifest.py
 
 # Real-LLM evaluations on the test split (n=301). Each target requires the
 # corresponding API key in the environment. Outputs land in evaluation/baselines/.

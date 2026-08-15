@@ -49,7 +49,33 @@ echo "  MURU-BENCH coverage accumulation — $STAMP"
 echo "  Models: ${MODELS[*]}"
 echo "════════════════════════════════════════════════════════════"
 
+# --- skip models that are already complete ------------------------------
+# `run_eval.py --save` writes a fresh union archive unconditionally, so a
+# model at 301/301 would otherwise produce an identical ~1.3 MB archive every
+# night forever. Check coverage first and only query models with problems
+# left, which is what "each run is a no-op" above was always meant to mean.
+PENDING=()
 for m in "${MODELS[@]}"; do
+    covered="$("$PYTHON" - "$m" <<'PY'
+import sys
+import evaluation.run_eval as r
+print(len(r.load_prior_success(sys.argv[1])))
+PY
+)"
+    if [ "${covered:-0}" -ge 301 ]; then
+        echo "  $m: already 301/301 — skipping (no new archive written)"
+    else
+        PENDING+=("$m")
+    fi
+done
+
+if [ ${#PENDING[@]} -eq 0 ]; then
+    echo
+    echo "All target models at full coverage. Nothing to do."
+    exit 0
+fi
+
+for m in "${PENDING[@]}"; do
     echo
     echo "----- $m -----"
     "$PYTHON" evaluation/run_eval.py --model "$m" --resume --save --delay 0.5
@@ -57,7 +83,9 @@ done
 
 echo
 echo "----- re-aggregating leaderboard -----"
+"$PYTHON" evaluation/parse_status.py --quiet
 "$PYTHON" evaluation/aggregate_real_llm.py
+"$PYTHON" scripts/make_manifest.py
 
 # --- report current union coverage so the log shows daily progress ------
 "$PYTHON" - "${MODELS[@]}" <<'PY'
