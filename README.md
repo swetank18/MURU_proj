@@ -19,18 +19,23 @@
 - **Proper scoring rules alongside the headline metrics** — Winkler interval score (penalises hedging, which Acc@CI does not), Brier + Murphy decomposition, AUROC, and a debiased ECE with reported binning sensitivity.
 - **Parse-status accounting** — wrong answers, unreadable answers, and absent answers are three different events, tracked separately and scored both ways.
 - **Validated test split** of 301 problems with statistical power to discriminate tier-scale capability gaps as small as **11.6 pp** ($p < 10^{-3}$).
-- **First leaderboard** on five hosted open-weights models — 50-pp spread in Accuracy@CI; Spearman $\rho = -0.90$ between accuracy and ECE; safety-relevant overconfidence rate collapses more than 8× across the panel (and by at least 7.5× at every confidence cut from 0.5 to 0.99, so the finding is not an artefact of the threshold).
+- **First leaderboard** on five hosted open-weights models — 53-pp spread in Accuracy@CI; accuracy and calibration-in-level turn out to be **separable** (Spearman $\rho = -0.10$ between accuracy and ECE); the safety-relevant overconfidence rate collapses 16.8× across the panel, but that metric is a function of the error rate rather than of calibration shape.
+- **Unit accounting** — the evaluation prompt asked for "a single number" on problems denominated in \$K or in percent, and **24.7% of the panel's recorded errors were correct answers in an admissible unit**. Correcting it reorders the leaderboard and kills three findings. Prompt fixed; archives now stamp a `PROMPT_VERSION`.
 - **One-line repro**: `python evaluation/run_eval.py --model <name> --save && python evaluation/aggregate_real_llm.py`.
 
 ---
 
 ## Headline finding
 
-On the open-weights panel we measured, **miscalibration on MURU-BENCH is dominated by capability, not by an independent metacognitive deficit**. Gains in Accuracy@CI come bundled with reductions in Expected Calibration Error (Spearman $\rho = -0.90$, Pearson $r = -0.99$). The one exception is a single adjacent swap — Qwen3-32B is 5.4 pp more accurate than Llama-3.3-70B but marginally worse calibrated (ECE 0.155 vs 0.144), on ECE intervals that overlap almost entirely, so it is not resolvable at these sample sizes. The simulator validation in §5 of the paper deliberately admits accuracy/calibration dissociation; real models on this panel essentially do not exhibit it.
+On the open-weights panel we measured, **accuracy and calibration-in-level are separable, not coupled**. The rank correlation between Accuracy@CI and ECE is ρ = −0.10 (exact permutation *p* = 0.95; same for debiased ECE): the second-most-accurate model is fourth-best calibrated, and the two best-calibrated rows are ranked third and fourth on accuracy. This is the case for the benchmark existing, arrived at backwards — if calibration were a corollary of accuracy, an accuracy benchmark would already cover it.
 
-A second, more actionable finding: **single-number leaderboards mask category-shaped capability holes**. Two otherwise-strong models drop to 23–29% on Decision-Under-Uncertainty problems despite scoring 91–100% on the three computational categories — invisible to any aggregate metric. The hole survives all the way to the top of the panel: at 92.7% overall, GPT-OSS-120B's *entire* error budget sits in that one category.
+The metrics that *do* track accuracy perfectly are the ones that are functions of the error rate. The overconfidence rate collapses 16.8× (50.2% → 3.0%) with ρ = −1.00, and the Brier score gives ρ = −1.00 as well. Neither is independent of accuracy: OvConf = P(wrong) × P(confident | wrong), and the second factor is 82–100% with no trend in capability, so the rate is the error rate times a near-constant. **A leaderboard that reports only accuracy-like calibration proxies will show a tight capability/calibration relationship whether or not one exists.**
 
-A third finding, from the proper scoring rules: **calibration in level is not metacognition.** Under a Murphy decomposition, every model in the panel has resolution ≤ 0.010 against an outcome uncertainty of 0.154, and AUROC of stated confidence over correctness spans 0.465–0.631 — from marginally *below* chance to weak. Even the panel leader barely ranks its own correct answers above its wrong ones. This is invisible to ECE, which conflates "confidence is systematically too high" with "confidence is uninformative"; the panel is both, and the second is the harder problem. The safety metric says the same thing under its own decomposition: OvConf = P(wrong) × P(confident | wrong), and only the first factor moves with capability — every model, leader included, states high confidence on 79–96% of its errors. Coverage is also partly purchased with width: every model states an interval more than 10× wider than the defensible one on 10–19% of problems, which Acc@CI does not penalise and the interval score does.
+A second finding, from the proper scoring rules: **calibration in level is not metacognition.** Under a Murphy decomposition every model has resolution ≤ 0.012 against outcome uncertainties up to 0.246, and AUROC of stated confidence over correctness spans 0.439–0.575 — two models *below* chance, including the panel leader, and no trend with capability (ρ = −0.30, *p* = 0.68). At 97.0% accuracy GPT-OSS-120B's confidence carries no usable signal about which of its 9 remaining errors are errors. Recalibration cannot fix this: temperature scaling, isotonic regression and conformal wrappers are monotone transforms, and a monotone transform cannot create discrimination that is not there.
+
+A third finding is about our own scoring, and it is the reason the first one reads the way it does. The evaluation prompt asked for "a single number" on problems denominated in \$K or in percent, so a model computing $163,195 against a ground truth of 164.7 ($K) was marked wrong. **24.7% of the panel's recorded errors are correct answers in an admissible unit.** Correcting it reorders the leaderboard, turns ρ = −0.90 into ρ = −0.10, shrinks an apparent Decision-Under-Uncertainty cliff (23–64% → 76–89%), and dissolves an apparent hedging result (p90 interval width 998× → 3.8×). Any benchmark grading a free-form numeric answer against a stored constant is exposed to this, and in aggregate it looks exactly like a capability gap in whichever category uses abbreviated units.
+
+Category-shaped weaknesses survive the correction in weaker form: Decision-Under-Uncertainty (76–89% for the four stronger models) and Adversarial Ambiguity (70–96%) carry nearly all remaining error against 90–100% on the three computational categories — a 30-point within-row spread that no aggregate metric shows.
 
 ---
 
@@ -40,43 +45,67 @@ Test split, n = 301. **Parse** = fraction of attempted problems whose response t
 
 | Rank | Model | Attempted | Parse ↑ | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc |
 |-----:|-------|----------:|--------:|---------:|------:|---------:|----------:|-------:|
-| 1 | **GPT-OSS-120B** | 301 | 100.0% | **92.7%** | 0.029 | 6.3% | 82.0% | 75% |
-| 2 | **Llama-4-Scout-17B** | 301 | 99.7% | 84.0% | 0.092 | 14.0% | 82.3% | 63% |
-| 3 | **Qwen3-32B**\* | 245 | 100.0% | 82.4% | 0.155 | 13.9% | 80.2% | 67% |
-| 4 | **Llama-3.3-70B** | 301 | 100.0% | 77.1% | 0.144 | 21.9% | 92.7% | 54% |
-| 5 | **Llama-3.1-8B** | 301 | 96.0% | 42.6% | 0.482 | 51.6% | 77.0% | 29% |
+| 1 | **GPT-OSS-120B** | 301 | 100.0% | **97.0%** | 0.067 | 3.0% | 82.0% | 93% |
+| 2 | **Qwen3-32B** | 245 | 100.0% | 93.1% | 0.117 | 5.7% | 80.2% | 100% |
+| 3 | **Llama-4-Scout-17B** | 301 | 99.7% | 88.3% | 0.052 | 10.0% | 82.3% | 78% |
+| 4 | **Llama-3.3-70B** | 301 | 100.0% | 87.0% | 0.051 | 12.0% | 92.7% | 64% |
+| 5 | **Llama-3.1-8B** | 301 | 96.0% | 43.9% | 0.468 | 50.2% | 77.0% | 36% |
 
-**GPT-OSS-120B and Llama-3.3-70B are at complete 301/301 coverage.** At full coverage, *every one of GPT-OSS-120B's 22 errors falls in Decision-Under-Uncertainty*; it is perfect or near-perfect on the other four categories, and scores 0/6 on the D5 problems of that category. Llama-3.3-70B carries the strongest framework-match of any model (92.7%).
+**GPT-OSS-120B, Llama-3.3-70B and Llama-4-Scout-17B are at complete 301/301 coverage.** All metric columns are unit-aware (see below); the same table under the original scoring is in the unit-accounting section. GPT-OSS-120B has 9 errors in total, 6 of them in Decision-Under-Uncertainty. Llama-3.3-70B carries the strongest framework-match of any model (92.7%). Qwen3-32B's 100% D5 cell is on n=18 and should not be read as evidence that adversarial structure is easy for it.
 
 \* Qwen3-32B is frozen at 245/301: `qwen/qwen3-32b` was withdrawn from the Groq roster (as was `meta-llama/llama-4-scout-17b-16e-instruct`), so its remaining 56 problems can no longer be queried on that provider. Its coverage was filled across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so the subset is difficulty-representative rather than easy-skewed (D4+D5 share 24.9% vs 28.6% in the full split), but the intervals are on 245 rather than 301 problems and are the widest in the table. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=212, GPT-OSS n=222, Llama-3.1-8B n=287). Every raw API response is committed, so `aggregate_real_llm.py` alone rebuilds every number here without touching a live endpoint. *Last updated: 2026-08-15.*
 
 ### Calibration hardening
 
-Cover = model's own interval contains the ground-truth estimate. Widths are multiples of the ground-truth interval width; hedge = share of intervals >10× that width. NIS = median normalised Winkler score (1.00 = as costly as stating the ground-truth interval and hitting it). RES = Murphy resolution (how much stated confidence separates right from wrong; outcome uncertainty is 0.154). dECE = ECE minus its finite-*n* null floor.
+Cover = model's own interval contains the ground-truth estimate. Widths are multiples of the ground-truth interval width; hedge = share of intervals >10× that width. NIS = median normalised Winkler score (1.00 = as costly as stating the ground-truth interval and hitting it). RES = Murphy resolution (how much stated confidence separates right from wrong; outcome uncertainty runs to 0.246). dECE = ECE minus its finite-*n* null floor.
 
 | Model | Cover | med. width | p90 width | hedge | NIS ↓ | Brier ↓ | RES ↑ | AUROC ↑ | dECE ↓ |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| GPT-OSS-120B | 91.0% | 1.00 | 16.8 | 10.4% | 1.00 | 0.065 | 0.005 | 0.631 | 0.004 |
-| Llama-4-Scout-17B | 86.6% | 1.00 | 6.0 | 10.0% | 1.00 | 0.137 | 0.002 | 0.591 | 0.071 |
-| Qwen3-32B | 85.8% | 1.00 | 125.0 | 12.8% | 1.00 | 0.174 | 0.002 | 0.465 | 0.119 |
-| Llama-3.3-70B | 78.9% | 1.00 | 998.3 | 19.1% | 1.01 | 0.195 | 0.006 | 0.550 | 0.121 |
-| Llama-3.1-8B | 48.0% | 0.93 | 20.0 | 13.4% | 8.91 | 0.490 | 0.010 | 0.469 | 0.452 |
+| GPT-OSS-120B | 95.5% | 1.00 | 1.1 | 4.5% | 1.00 | 0.039 | 0.003 | 0.439 | 0.042 |
+| Qwen3-32B | 98.1% | 1.00 | 1.0 | 0.5% | 1.00 | 0.101 | 0.000 | 0.494 | 0.081 |
+| Llama-4-Scout-17B | 91.0% | 1.00 | 1.6 | 5.7% | 1.00 | 0.104 | 0.001 | 0.575 | 0.031 |
+| Llama-3.3-70B | 88.9% | 1.00 | 3.8 | 9.1% | 1.00 | 0.115 | 0.002 | 0.564 | 0.028 |
+| Llama-3.1-8B | 49.5% | 0.90 | 14.7 | 11.9% | 7.69 | 0.477 | 0.012 | 0.470 | 0.438 |
 
-Llama-3.3-70B's 78.9% interval coverage is not comparable to Llama-4-Scout-17B's 86.6%: it is bought with a tail two orders of magnitude wider. Note also that debiased ECE and Brier — two estimators without raw ECE's model-dependent finite-*n* bias — are both monotone in accuracy across all five rows (ρ = −1.00), so the single rank inversion behind ρ = −0.90 is an estimator artifact rather than a dissociation. That is a metric correction on the same five runs, not new evidence; n = 5 remains the binding limit.
+Only Llama-3.1-8B hedges at a rate worth reporting (11.9% of its intervals >10× the defensible width), and its real problem is the opposite: median NIS 7.69 against a median width of 0.90 is the signature of intervals that are simultaneously narrow and wrong. Interval coverage separates the top of the panel more than Acc@CI does — Qwen3-32B covers on 98.1% vs GPT-OSS-120B's 95.5%. Note that debiased ECE ranks the panel the same way raw ECE does and gives the same near-zero correlation with accuracy (ρ = −0.10): both estimators agree the relationship is not there. Under the original scoring this section reported a p90 tail spanning 6×–998× and concluded that every model bought coverage with width; that tail was the unit factor.
 
 ### Overconfidence is not an artefact of the 0.7 cut
 
-OvConf is defined by a threshold, so the threshold is swept. Absolute levels move; the ordering does not. † marks a cut where >10% of that model's answers state *exactly* that confidence — verbalised confidence is a point mass on round values, and a cut on a spike measures the tie convention, not the model (which is why τ ≥ 0.9 is not read as informative here: at τ = 0.95, 22.9–70.0% of each model's answers sit exactly on the line).
+OvConf is defined by a threshold, so the threshold is swept. Absolute levels move; the ordering is identical to τ = 0.7 at every cut from 0.5 to 0.7 and differs by one adjacent swap at 0.8–0.9, with the weakest/strongest ratio at least 16.8× everywhere. † marks a cut where >10% of that model's answers state *exactly* that confidence — verbalised confidence is a point mass on round values, and a cut on a spike measures the tie convention, not the model (at τ = 0.95, 22.9–70.0% of each model's answers sit exactly on the line). A second caveat now binds harder than the first: GPT-OSS-120B has 9 errors in total, so no cut on this panel has enough events at the clean end to resolve a small ordering difference. An overconfidence rate is a tail statistic, and tail statistics stop being estimable exactly when the tail is the interesting part.
 
 | Model | τ=0.5 | τ=0.7 | τ=0.8 | τ=0.9 | τ=0.95 | E[OC] | P(err \| c>0.7) | P(c>0.7 \| err) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| GPT-OSS-120B | 7.0% | 6.3% | 5.0% | 2.3%† | 1.3%† | 0.062 | 6.5% | 86.4% |
-| Llama-4-Scout-17B | 14.7% | 14.0% | 12.0% | 11.3%† | 1.0%† | 0.141 | 14.5% | 87.5% |
-| Qwen3-32B | 15.5%† | 13.9% | 11.4% | 11.0% | 2.0%† | 0.148 | 18.1% | 79.1% |
-| Llama-3.3-70B | 22.6% | 21.9% | 14.6%† | 13.3% | 1.3%† | 0.201 | 23.0% | 95.7% |
-| Llama-3.1-8B | 53.3% | 51.6% | 49.1% | 46.7% | 12.1%† | 0.516 | 57.5% | 89.8% |
+| GPT-OSS-120B | 3.0% | 3.0% | 2.3% | 1.3%† | 1.3%† | 0.027 | 3.1% | 100.0% |
+| Qwen3-32B | 6.1%† | 5.7% | 4.5% | 4.1% | 0.4%† | 0.059 | 7.4% | 82.4% |
+| Llama-4-Scout-17B | 10.7% | 10.0% | 8.7% | 8.7%† | 0.7%† | 0.103 | 10.3% | 85.7% |
+| Llama-3.3-70B | 12.6% | 12.0% | 7.6%† | 7.6% | 0.3%† | 0.111 | 12.5% | 92.3% |
+| Llama-3.1-8B | 51.9% | 50.2% | 47.8% | 45.3% | 12.1%† | 0.503 | 56.0% | 89.5% |
 
-E[OC] = E[max(0, confidence − outcome)], the threshold-free version of the rate; it is *perfectly* monotone in accuracy (ρ = −1.00, exact p = 0.017) where the thresholded rate gives ρ = −0.90. P(c>0.7 | err) is the metacognitive factor of OvConf = P(wrong) × P(confident | wrong): it is flat in capability (ρ = −0.60, p = 0.35), so the eightfold collapse in the rate is the accuracy factor almost entirely. Strong models here are not better at knowing when they are wrong; they are wrong less often.
+E[OC] = E[max(0, confidence − outcome)], the threshold-free version of the rate; it is perfectly monotone in accuracy (ρ = −1.00, exact p = 0.017). P(c>0.7 | err) is the metacognitive factor of OvConf = P(wrong) × P(confident | wrong): it is flat in capability (82.4–100%, no trend), so the 16.8× collapse in the rate is the accuracy factor almost entirely. The leader states high confidence on all 9 of its errors; the weakest model on 145 of 162. Strong models here are not better at knowing when they are wrong; they are wrong less often.
+
+### Unit accounting
+
+The v1 prompt asked for "a single number" without stating a unit. A rescale is credited only when the model's *own* stated interval lands on the ground-truth interval under the same factor (IoU ≥ 0.5), so a point estimate that is genuinely 1000× too large and happens to fall in a wide interval is **not** credited — the corrected accuracies are lower bounds, with a further 30 errors (8.6%) rescaling into range uncorroborated.
+
+| Model | Err | Unit mismatches | % of err | Acc v1 | Acc unit-aware | Δ | ECE v1 | ECE unit-aware |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| GPT-OSS-120B | 22 | 13 | 59.1% | 92.7% | 97.0% | +4.3 | 0.029 | 0.067 |
+| Qwen3-32B | 43 | 26 | 60.5% | 82.4% | 93.1% | +10.6 | 0.155 | 0.117 |
+| Llama-4-Scout-17B | 48 | 13 | 27.1% | 84.0% | 88.3% | +4.3 | 0.092 | 0.052 |
+| Llama-3.3-70B | 69 | 30 | 43.5% | 77.1% | 87.0% | +10.0 | 0.144 | 0.051 |
+| Llama-3.1-8B | 166 | 4 | 2.4% | 42.6% | 43.9% | +1.4 | 0.482 | 0.468 |
+
+The correction is not a constant shift, which is why it reorders the leaderboard: +10.6 pp for Qwen3-32B against +1.4 pp for Llama-3.1-8B. Fixed at the root — `run_eval.py` now states the unit convention and stamps `PROMPT_VERSION` into every archive — but the panel cannot be re-collected under the corrected prompt, because two of its five endpoints have been withdrawn.
+
+### Per-category accuracy
+
+| Model | Adv. Ambig. | Bayesian | Cond. Chains | Decision Unc. | Distrib. Est. |
+|---|---:|---:|---:|---:|---:|
+| GPT-OSS-120B | 95.7% | 98.9% | 100.0% | 88.7% | 100.0% |
+| Qwen3-32B | 84.4% | 98.7% | 100.0% | 76.3% | 100.0% |
+| Llama-4-Scout-17B | 76.1% | 90.2% | 97.7% | 77.4% | 97.0% |
+| Llama-3.3-70B | 70.2% | 91.3% | 97.7% | 77.4% | 93.9% |
+| Llama-3.1-8B | 39.1% | 23.0% | 30.0% | 34.6% | 92.2% |
 
 ### Parse accounting
 
@@ -84,13 +113,13 @@ Lenient drops responses the harness could not read; strict scores them incorrect
 
 | Model | Parse | Unreadable responses | Acc lenient | Acc strict | Δ pp |
 |---|---:|---|---:|---:|---:|
-| GPT-OSS-120B | 100.0% | — | 92.7% | 92.7% | +0.0 |
-| Llama-4-Scout-17B | 99.7% | 1 off-schema | 84.0% | 83.7% | +0.3 |
-| Qwen3-32B | 100.0% | 56 endpoint 404 | 82.4% | 82.4% | +0.0 |
-| Llama-3.3-70B | 100.0% | — | 77.1% | 77.1% | +0.0 |
-| Llama-3.1-8B | 96.0% | 11 truncated, 1 empty field | 42.6% | 40.9% | +1.7 |
+| GPT-OSS-120B | 100.0% | — | 97.0% | 97.0% | +0.0 |
+| Qwen3-32B | 100.0% | 56 endpoint 404 | 93.1% | 93.1% | +0.0 |
+| Llama-4-Scout-17B | 99.7% | 1 off-schema | 88.3% | 88.0% | +0.3 |
+| Llama-3.3-70B | 100.0% | — | 87.0% | 87.0% | +0.0 |
+| Llama-3.1-8B | 96.0% | 11 truncated, 1 empty field | 43.9% | 42.2% | +1.8 |
 
-The largest gap anywhere is 1.7 pp, so the leaderboard is not covertly measuring format compliance — but that holds *because* four of five models parse above 99%, and must be rechecked as weaker instruction-followers are added. Llama-3.1-8B's failures are diagnostic rather than incidental: 11 of 12 are the model exhausting its token budget mid-derivation on repeated or circular algebra.
+The largest gap anywhere is 1.8 pp, so the leaderboard is not covertly measuring format compliance — but that holds *because* four of five models parse above 99%, and must be rechecked as weaker instruction-followers are added. Llama-3.1-8B's failures are diagnostic rather than incidental: 11 of 12 are the model exhausting its token budget mid-derivation on repeated or circular algebra.
 
 ### Harness validation baselines (simulated — not a ranking of models)
 
@@ -181,7 +210,7 @@ python evaluation/run_eval.py --model "or:nvidia/nemotron-3-super-120b-a12b:free
 export OPENAI_API_KEY=...        # or ANTHROPIC_API_KEY / GOOGLE_API_KEY
 python evaluation/run_eval.py --model gpt-4o --save
 
-# Aggregate to paper-ready bootstrap CIs and LaTeX (six tables, both accountings):
+# Aggregate to paper-ready bootstrap CIs and LaTeX (seven tables, all accountings):
 python evaluation/aggregate_real_llm.py
 python evaluation/leaderboard.py --update-readme
 
@@ -241,6 +270,8 @@ evaluation/
   calibration_metrics.py    # interval score, Brier/Murphy, AUROC, debiased ECE
   overconfidence.py         # the OvConf cut, swept; cut-free companions
   parse_status.py           # wrong vs unreadable vs absent — 10-status taxonomy
+  unit_accounting.py        # right answer in the wrong unit — corroborated rescales
+  error_extract.py          # every wrong answer + its problem, for failure coding
   run_eval.py               # unified API harness (6 providers)
   run_baselines.py          # simulated capability tiers
   bootstrap_analysis.py     # paired McNemar + bootstrap CIs (seed 42)

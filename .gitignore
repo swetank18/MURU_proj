@@ -65,3 +65,8 @@ paper/*.synctex.gz
 # Unpacked Overleaf working copy (the synced MURU-BENCH-Overleaf.zip is tracked;
 # the extracted directory is a local mirror of paper/ and should not be)
 MURU-BENCH-Overleaf/
+
+# Failure-coding corpus: derived from the committed archives by
+# `python evaluation/error_extract.py` (part of `make reanalyze`), so tracking
+# it would duplicate ~2 MB of response text already under version control.
+evaluation/errors/

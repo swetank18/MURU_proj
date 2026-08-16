@@ -310,14 +310,28 @@ def panel_cut_dependence(rates_by_model, grid=THRESHOLD_GRID):
             "min_events": min(
                 round(vals[l]["rate_strict"] * vals[l]["n"]) for l in labels
             ),
-            "degenerate": (
-                max(vals[l]["tie_mass"] for l in labels) >= TIE_DEGENERACY
-                or min(round(vals[l]["rate_strict"] * vals[l]["n"]) for l in labels)
-                < MIN_EVENTS
-            ),
         })
+        row = per_threshold[-1]
+        # The two causes are reported apart: a cut sitting on a confidence
+        # spike is decided by the tie convention, while a cut so high that the
+        # cleanest model has almost no confident errors left is thin rather
+        # than ambiguous. An accurate panel makes the second unavoidable --
+        # a model that is wrong 3% of the time cannot supply many confident
+        # errors at any cut -- and calling that a defect of the threshold
+        # would be reading a property of the models as a property of the grid.
+        row["tie_degenerate"] = row["max_tie_mass"] >= TIE_DEGENERACY
+        row["thin"] = row["min_events"] < MIN_EVENTS
+        row["degenerate"] = row["tie_degenerate"] or row["thin"]
 
     informative = [r for r in per_threshold if not r["degenerate"]]
+    if not informative:
+        # An accurate panel can leave every cut thin. Fall back to the cuts the
+        # tie convention does not decide and where at least one confident error
+        # survives, so the ordering check still reports something rather than
+        # nothing -- with the thin-cut list carrying the caveat.
+        informative = [
+            r for r in per_threshold if not r["tie_degenerate"] and r["min_events"] >= 1
+        ]
     corrs = [
         r["rank_corr_vs_canonical"]
         for r in informative
@@ -329,6 +343,8 @@ def panel_cut_dependence(rates_by_model, grid=THRESHOLD_GRID):
         "per_threshold": per_threshold,
         "informative_range": [r["tau"] for r in informative],
         "degenerate_cuts": [r["tau"] for r in per_threshold if r["degenerate"]],
+        "tie_degenerate_cuts": [r["tau"] for r in per_threshold if r["tie_degenerate"]],
+        "thin_cuts": [r["tau"] for r in per_threshold if r["thin"]],
         "min_rank_corr_informative": min(corrs) if corrs else None,
         "orderings_agree": all(c == 1.0 for c in corrs),
         "min_ratio_all_cuts": min(ratios) if ratios else None,

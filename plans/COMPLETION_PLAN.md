@@ -2,6 +2,47 @@
 
 ## Progress log
 
+**2026-08-16 (2) — P2 groundwork found a scoring artifact that invalidated the headline.**
+Step 6 of the old 72-hour list said to read the wrong answers instead of guessing at a
+codebook. The first thing they said is that a quarter of them are not wrong.
+
+The v1 prompt asked for "a single number". Many stems are denominated in $K or in percent
+and the ground truth is stored in that unit, so a model computing $163,195 against a
+ground truth of 164.7 was marked wrong. **86 of 348 recorded errors (24.7%) are correct
+answers in an admissible unit.** `evaluation/unit_accounting.py` credits a rescale only
+when the model's *own* interval lands on the ground-truth interval under the same factor,
+because a bare point estimate that rescales into a wide interval can be a genuine
+1000×-too-large answer (MURU-3022 is exactly that). Corrected accuracies are lower bounds:
+30 further errors rescale in without corroboration and are not credited.
+
+**Three of four empirical claims did not survive; the user chose to make unit-aware the
+primary accounting throughout.**
+
+| claim | before | after |
+|---|---|---|
+| accuracy ↔ ECE coupling | ρ = −0.90 | **ρ = −0.10** (p = 0.95) |
+| Decision-Under-Uncertainty hole | 22.6–64.2% | 76.3–88.7% |
+| "coverage bought with width" | p90 width 6×–998× | 1.0×–14.7×, only the 8B hedges |
+| discrimination (survives, strengthens) | AUROC 0.465–0.631 | **0.439–0.575**, leader below chance |
+
+The new headline is the null: **accuracy and calibration-in-level are separable**, and the
+metrics that appear to track capability (OvConf, Brier — both ρ = −1.00) are functions of
+the error rate rather than of calibration shape. That is a better argument for the
+benchmark existing than the coupling would have been, and it is the P5 incremental-validity
+case arriving early. Panel accuracies are now 43.9 / 87.0 / 88.3 / 93.1 / 97.0.
+
+Root cause fixed: `run_eval.py` states the unit convention and stamps `PROMPT_VERSION` (the
+panel is v1; two of five endpoints are withdrawn so it cannot be re-collected under v2 —
+a clean-prompt replication on the three survivors is the top validation item). Paper
+rewritten throughout (abstract, §6 with a new unit-accounting section + table, coupling
+section, metric validity, per-difficulty/category, discussion, conclusion, two new
+limitations, reproducibility), README rewritten, both zips rebuilt, PDF 35pp.
+`evaluation/error_extract.py` builds the failure-coding corpus (361 errors, 346 readable)
+and now excludes corroborated unit mismatches from the coding sample. 83 tests.
+
+**P2 proper (codebook, κ, judge validation) is still not started** — the corpus and the
+sampling instrument are ready, and the sample is much cleaner for it.
+
 **2026-08-16 — P4 closed: the overconfidence cut is formalised and swept.** Again pure
 re-analysis of the committed archives. `evaluation/overconfidence.py` states the cut
 (τ = 0.7, strict `>`) as a reporting choice and sweeps it over {0.5 … 0.99} under both tie
@@ -186,6 +227,13 @@ Without this, "models are failing" is unfalsifiable. With it, you get a ceiling,
 This is the direct answer to the critic. Converts a number into a diagnosis.
 
 ### P2a — Build the taxonomy
+
+*Corpus ready (2026-08-16): `python evaluation/error_extract.py` writes
+`evaluation/errors/errors.jsonl` (361 errors, 346 with readable responses) plus a seeded
+stratified sample. Corroborated unit mismatches are excluded from the sample — coding
+those would be coding our own prompt, not the model. Note that GPT-OSS-120B now has only
+9 errors and Qwen3-32B 17, so a "25 per model" design is no longer available at the clean
+end of the panel; sample proportionally with a floor instead.*
 
 Code a stratified sample of **300 incorrect predictions** (≈ 25 per model × 12 models, stratified by category and difficulty). Proposed initial codebook — refine after reading 50:
 

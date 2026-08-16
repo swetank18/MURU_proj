@@ -45,6 +45,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from evaluation.aggregate_real_llm import DISPLAY_NAMES, find_latest_result, load_problems
 from evaluation.parse_status import MODEL_FAILURE_STATUSES, classify_entry
+from evaluation import unit_accounting as ua
 
 OUT_DIR = PROJECT_ROOT / "evaluation" / "errors"
 
@@ -107,6 +108,13 @@ def error_records(slug, display, data, problems_by_id):
             "framework_match": parsed.get("framework") == problem["required_framework"],
             "parse_status": status,
             "parse_failure": parse_failure,
+            # A corroborated unit mismatch is a right answer in a different
+            # admissible unit, not a reasoning failure. It stays in the corpus
+            # (the count is a finding in its own right) but is excluded from
+            # the coding sample, which is for reading actual failures.
+            "unit_status": ua.classify_prediction(
+                pe, parsed.get("confidence_interval"), problem
+            ),
             "response": response,
             "codeable": is_codeable(response),
         })
@@ -117,11 +125,17 @@ def stratified_sample(records, n, seed):
     """Seeded sample stratified by (model, category).
 
     Proportional allocation with a floor of one per non-empty cell and
-    largest-remainder rounding, so the panel leader's 22 errors are not
-    swamped by the weakest model's 166 and no category drops out entirely.
-    Only codeable records are eligible.
+    largest-remainder rounding, so the panel leader's handful of errors is not
+    swamped by the weakest model's and no category drops out entirely.
+    Eligible records are those with a readable response that are not
+    corroborated unit mismatches --- the latter are right answers in another
+    admissible unit (``unit_accounting``), and coding them as reasoning
+    failures would be coding our own prompt.
     """
-    pool = [r for r in records if r["codeable"]]
+    pool = [
+        r for r in records
+        if r["codeable"] and r["unit_status"] != "unit_mismatch"
+    ]
     if n >= len(pool):
         return sorted(pool, key=lambda r: (r["model"], r["problem_id"]))
 
@@ -200,6 +214,9 @@ def main():
     summary = {
         "n_errors": len(records),
         "n_codeable": sum(1 for r in records if r["codeable"]),
+        "n_unit_mismatch": sum(
+            1 for r in records if r["unit_status"] == "unit_mismatch"
+        ),
         "by_model": dict(by_model),
         "by_category": dict(Counter(r["category"] for r in records)),
         "by_difficulty": dict(Counter(r["difficulty"] for r in records)),
@@ -209,7 +226,8 @@ def main():
         json.dump(summary, f, indent=2)
 
     print(f"{len(records)} errors across {len(by_model)} models "
-          f"({summary['n_codeable']} with readable responses)")
+          f"({summary['n_codeable']} with readable responses, "
+          f"{summary['n_unit_mismatch']} of them right answers in another unit)")
     for model, m in sorted(by_model.items(), key=lambda kv: -kv[1]["errors"]):
         print(f"  {model:20s} {m['errors']:4d} errors  "
               f"{m['codeable']:4d} codeable  {m['parse_failures']:3d} unreadable answers")

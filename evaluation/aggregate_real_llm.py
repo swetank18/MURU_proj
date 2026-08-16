@@ -264,45 +264,26 @@ def main():
             nfw = len(fw_hits)
             boots = [sum(fw_hits[rng.randrange(nfw)] for _ in range(nfw)) / nfw for _ in range(N_BOOTSTRAP)]
             boots.sort()
-            boot["framework_match"] = {
+            framework_match = {
                 "point": sum(fw_hits) / nfw,
                 "ci95": [boots[int(0.025 * N_BOOTSTRAP)], boots[int(0.975 * N_BOOTSTRAP)]],
                 "n": nfw,
             }
         else:
-            boot["framework_match"] = {"point": None, "ci95": [None, None], "n": 0}
+            framework_match = {"point": None, "ci95": [None, None], "n": 0}
+        boot["framework_match"] = framework_match
 
         # Difficulty / category breakdown via canonical metrics
         m = MURUMetrics(sub_problems, preds)
         breakdown = m.compute_all()
 
-        # ── Parse accounting (P0) ────────────────────────────────
-        # Two versions of every headline metric: "lenient" drops responses the
-        # harness could not read, "strict" scores them incorrect. The gap is
-        # the part of the leaderboard that is format compliance rather than
-        # reasoning, and it has to be visible rather than absorbed.
-        status = status_report(data, n_test=len(problems), test_ids=set(problems_by_id))
-        failures = unparsed_model_failures(raw, problems_by_id)
-        if failures:
-            c_strict = c + [0] * len(failures)
-            f_strict = f + [0] * len(failures)
-            o_strict = o + [
-                1 if cf > oc.CANONICAL_THRESHOLD else 0 for _, cf in failures
-            ]
-            conf_strict = conf + [cf for _, cf in failures]
-            boot_strict = bootstrap_metrics(c_strict, f_strict, o_strict, conf_strict)
-        else:
-            boot_strict = boot
-        acc_gap = boot["accuracy"]["point"] - boot_strict["accuracy"]["point"]
-        ece_gap = boot_strict["ece"]["point"] - boot["ece"]["point"]
-
         # ── Unit accounting ──────────────────────────────────────
-        # The prompt asks for "a single number" on problems whose stems are
-        # denominated in $K or in percent, so an answer of 163195 against a
-        # ground truth of 164.7 is a unit reading the prompt never ruled out.
-        # Scored as a third accounting rather than folded in silently: it
-        # moves the leaderboard, and a reader has to be able to see by how
-        # much and on which rows.
+        # The v1 prompt asked for "a single number" on problems whose stems
+        # are denominated in $K or in percent, so an answer of 163195 against
+        # a ground truth of 164.7 is a unit reading the prompt never ruled
+        # out. Correcting it is the primary accounting from here down; the
+        # uncorrected numbers are kept alongside so the size of the correction
+        # stays visible on every row it touches.
         pred_by_id = {p.problem_id: p for p in preds}
         unit_status = [
             ua.classify_prediction(
@@ -316,6 +297,11 @@ def main():
         preds_unit, _ = unit_normalized(preds, problems_by_id)
         c_unit, f_unit, o_unit, _ = per_problem_outcomes(sub_problems, preds_unit)
         boot_unit = bootstrap_metrics(c_unit, f_unit, o_unit, conf)
+        # Framework match is unaffected by the unit correction --- rescaling a
+        # number does not change which framework the model named --- so the
+        # missing-data-aware estimate computed above carries over rather than
+        # being recomputed with salvaged rows scored as wrong.
+        boot_unit["framework_match"] = framework_match
         breakdown_unit = MURUMetrics(sub_problems, preds_unit).compute_all()
         unit_by_category = {}
         for p, raw_ok, unit_ok in zip(sub_problems, c, c_unit):
@@ -325,6 +311,28 @@ def main():
             cell["n"] += 1
             cell["raw"] += raw_ok
             cell["unit_aware"] += unit_ok
+
+        # ── Parse accounting (P0) ────────────────────────────────
+        # Two versions of every headline metric: "lenient" drops responses the
+        # harness could not read, "strict" scores them incorrect. The gap is
+        # the part of the leaderboard that is format compliance rather than
+        # reasoning, and it has to be visible rather than absorbed. Computed
+        # against the unit-aware correctness so that the two accountings
+        # compose rather than double-count.
+        status = status_report(data, n_test=len(problems), test_ids=set(problems_by_id))
+        failures = unparsed_model_failures(raw, problems_by_id)
+        if failures:
+            c_strict = c_unit + [0] * len(failures)
+            f_strict = f_unit + [0] * len(failures)
+            o_strict = o_unit + [
+                1 if cf > oc.CANONICAL_THRESHOLD else 0 for _, cf in failures
+            ]
+            conf_strict = conf + [cf for _, cf in failures]
+            boot_strict = bootstrap_metrics(c_strict, f_strict, o_strict, conf_strict)
+        else:
+            boot_strict = boot_unit
+        acc_gap = boot_unit["accuracy"]["point"] - boot_strict["accuracy"]["point"]
+        ece_gap = boot_strict["ece"]["point"] - boot_unit["ece"]["point"]
 
         # ── Hardened calibration metrics (P4) ────────────────────
         hardened = cm.full_summary(c, conf, records=sharpness_records(preds, problems_by_id))
@@ -343,7 +351,12 @@ def main():
             "subset_difficulty": {
                 str(d): v["count"] for d, v in breakdown["accuracy_by_difficulty"].items()
             },
-            "metrics": boot,
+            # Primary metrics are unit-aware. The uncorrected numbers the v1
+            # prompt produced are kept under the *_v1_prompt keys so the
+            # correction stays auditable on every row rather than only in
+            # the table that reports it.
+            "metrics": boot_unit,
+            "metrics_v1_prompt": boot,
             "metrics_strict": boot_strict,
             "accounting_gap": {
                 "accuracy_pp": 100 * acc_gap,
@@ -359,28 +372,27 @@ def main():
                 "coverage": status["coverage"],
                 "counts": status["counts"],
             },
-            "metrics_unit_aware": boot_unit,
             "unit_accounting": {
                 **unit_report,
                 "by_category": unit_by_category,
             },
-            "hardened": hardened,
-            "hardened_unit_aware": hardened_unit,
-            "overconfidence": overconf,
-            "overconfidence_unit_aware": overconf_unit,
+            "hardened": hardened_unit,
+            "hardened_v1_prompt": hardened,
+            "overconfidence": overconf_unit,
+            "overconfidence_v1_prompt": overconf,
             "per_difficulty_acc": {
-                str(d): v["accuracy"] for d, v in breakdown["accuracy_by_difficulty"].items()
-            },
-            "per_category_acc": {
-                k: v["accuracy"] for k, v in breakdown["accuracy_by_category"].items()
-            },
-            "per_difficulty_acc_unit_aware": {
                 str(d): v["accuracy"]
                 for d, v in breakdown_unit["accuracy_by_difficulty"].items()
             },
-            "per_category_acc_unit_aware": {
+            "per_category_acc": {
                 k: v["accuracy"]
                 for k, v in breakdown_unit["accuracy_by_category"].items()
+            },
+            "per_difficulty_acc_v1_prompt": {
+                str(d): v["accuracy"] for d, v in breakdown["accuracy_by_difficulty"].items()
+            },
+            "per_category_acc_v1_prompt": {
+                k: v["accuracy"] for k, v in breakdown["accuracy_by_category"].items()
             },
         }
 
@@ -539,20 +551,20 @@ def main():
     unit_lines = []
     for s in ordered:
         u = s["unit_accounting"]
-        m, mu = s["metrics"], s["metrics_unit_aware"]
+        raw, m = s["metrics_v1_prompt"], s["metrics"]
         n_err = u["n"] - u["counts"]["correct"]
         unit_lines.append(
             f"{s['display']} & "
             f"{n_err} & "
             f"{u['counts']['unit_mismatch']} & "
             f"{100 * u['unit_mismatch_share_of_errors']:.1f}\\% & "
+            f"{100 * raw['accuracy']['point']:.1f}\\% & "
             f"{100 * m['accuracy']['point']:.1f}\\% & "
-            f"{100 * mu['accuracy']['point']:.1f}\\% & "
-            f"{100 * (mu['accuracy']['point'] - m['accuracy']['point']):+.1f} & "
+            f"{100 * (m['accuracy']['point'] - raw['accuracy']['point']):+.1f} & "
+            f"{raw['ece']['point']:.3f} & "
             f"{m['ece']['point']:.3f} & "
-            f"{mu['ece']['point']:.3f} & "
-            f"{100 * m['overconfidence']['point']:.1f}\\% & "
-            f"{100 * mu['overconfidence']['point']:.1f}\\% \\\\"
+            f"{100 * raw['overconfidence']['point']:.1f}\\% & "
+            f"{100 * m['overconfidence']['point']:.1f}\\% \\\\"
         )
 
     # ─── LaTeX: overconfidence threshold sensitivity (P4) ────────
@@ -646,37 +658,37 @@ def main():
             file=sys.stderr,
         )
 
-    # Cut dependence of the comparative overconfidence claim. What has to
-    # survive is the ordering and the spread, not the absolute rate — the rate
-    # is a function of where the line is drawn and always will be.
     # Unit accounting: how much of the recorded error is a unit reading the
     # prompt never ruled out, and what the leaderboard looks like without it.
     print("\nUnit accounting (corroborated rescales only):", file=sys.stderr)
     for s in ordered:
         u = s["unit_accounting"]
-        m, mu = s["metrics"], s["metrics_unit_aware"]
+        raw, m = s["metrics_v1_prompt"], s["metrics"]
         n_err = u["n"] - u["counts"]["correct"]
         print(
             f"  {s['display']:20s} {n_err:4d} errors, "
             f"{u['counts']['unit_mismatch']:3d} unit mismatches "
             f"({100 * u['unit_mismatch_share_of_errors']:4.1f}% of them)  "
-            f"acc {100 * m['accuracy']['point']:5.1f}% -> "
-            f"{100 * mu['accuracy']['point']:5.1f}%  "
-            f"ECE {m['ece']['point']:.3f} -> {mu['ece']['point']:.3f}",
+            f"acc {100 * raw['accuracy']['point']:5.1f}% -> "
+            f"{100 * m['accuracy']['point']:5.1f}%  "
+            f"ECE {raw['ece']['point']:.3f} -> {m['ece']['point']:.3f}",
             file=sys.stderr,
         )
-    rank_raw = [s["display"] for s in sorted(ordered, key=lambda s: -s["metrics"]["accuracy"]["point"])]
-    rank_unit = [s["display"] for s in sorted(ordered, key=lambda s: -s["metrics_unit_aware"]["accuracy"]["point"])]
+    key_raw = lambda s: -s["metrics_v1_prompt"]["accuracy"]["point"]
+    key_unit = lambda s: -s["metrics"]["accuracy"]["point"]
+    rank_raw = [s["display"] for s in sorted(ordered, key=key_raw)]
+    rank_unit = [s["display"] for s in sorted(ordered, key=key_unit)]
     rho_raw = oc.spearman(
+        [s["metrics_v1_prompt"]["accuracy"]["point"] for s in ordered],
+        [s["metrics_v1_prompt"]["ece"]["point"] for s in ordered],
+    )
+    rho_unit = oc.spearman(
         [s["metrics"]["accuracy"]["point"] for s in ordered],
         [s["metrics"]["ece"]["point"] for s in ordered],
     )
-    rho_unit = oc.spearman(
-        [s["metrics_unit_aware"]["accuracy"]["point"] for s in ordered],
-        [s["metrics_unit_aware"]["ece"]["point"] for s in ordered],
-    )
     print(
-        f"  → accuracy/ECE Spearman: raw {rho_raw:+.2f}, unit-aware {rho_unit:+.2f}"
+        f"  → accuracy/ECE Spearman: v1-prompt {rho_raw:+.2f}, "
+        f"unit-aware {rho_unit:+.2f}"
         f"{'  (ORDERING CHANGES)' if rank_raw != rank_unit else ''}",
         file=sys.stderr,
     )
@@ -696,16 +708,27 @@ def main():
             f"      {r['spread_pp']:5.1f} pp  {ratio:>6s}"
             f"   strict {rc:+.2f} / incl {rci:+.2f}"
             f"   {100*r['max_tie_mass']:5.1f}%  n>={r['min_events']:3d}"
-            f"{'  [degenerate]' if r['degenerate'] else ''}",
+            f"{'  [tie]' if r['tie_degenerate'] else ''}"
+            f"{'  [thin]' if r['thin'] else ''}",
             file=sys.stderr,
         )
+    min_rc = panel_oc["min_rank_corr_informative"]
     print(
-        f"  → over the informative cuts {panel_oc['informative_range']}: "
+        f"  → over the readable cuts {panel_oc['informative_range']}: "
         f"ordering {'identical to' if panel_oc['orderings_agree'] else 'differs from'} "
-        f"tau={oc.CANONICAL_THRESHOLD} "
-        f"(min rank-corr {panel_oc['min_rank_corr_informative']:+.2f}); "
-        f"weakest/strongest ratio at least {panel_oc['min_ratio_all_cuts']:.1f}x "
-        f"across every cut including the degenerate ones.",
+        f"tau={oc.CANONICAL_THRESHOLD}"
+        + (f" (min rank-corr {min_rc:+.2f})" if min_rc is not None else "")
+        + (
+            f"; weakest/strongest ratio at least {panel_oc['min_ratio_all_cuts']:.1f}x"
+            if panel_oc["min_ratio_all_cuts"] is not None
+            else "; the cleanest model reaches zero confident errors at the top cut"
+        )
+        + (
+            f". Thin cuts (fewer than {oc.MIN_EVENTS} confident errors for the "
+            f"cleanest model): {panel_oc['thin_cuts']}"
+            if panel_oc["thin_cuts"]
+            else "."
+        ),
         file=sys.stderr,
     )
 
