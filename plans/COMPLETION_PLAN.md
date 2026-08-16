@@ -391,9 +391,9 @@ As a solo first-year author, you likely do not meet this. **Verify the exact wor
 - [ ] Human baseline row with n, CI, and IAA on the ambiguity subset
 - [ ] Failure taxonomy over ≥ 300 coded errors with reported κ and judge validation
 - [ ] ≥ 5 robustness ablations with quantified effect sizes
-- [ ] Proper scoring rule + hardened ECE + discrimination metric
+- [x] Proper scoring rule + hardened ECE + discrimination metric *(P4, 2026-08-16)*
 - [ ] Incremental-validity result vs. MATH/GSM8K with a residual-variance number
-- [ ] Parse rate reported; metrics computed both ways
+- [x] Parse rate reported; metrics computed both ways *(P0, 2026-08-15; unit accounting added as a third, 2026-08-16)*
 - [ ] Raw responses + human data + annotations publicly archived
 - [ ] HuggingFace dataset live; Croissant validated; Zenodo v2 minted
 - [ ] Public leaderboard with documented submission protocol
