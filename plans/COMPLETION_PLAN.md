@@ -2,6 +2,36 @@
 
 ## Progress log
 
+**2026-08-16 — P4 closed: the overconfidence cut is formalised and swept.** Again pure
+re-analysis of the committed archives. `evaluation/overconfidence.py` states the cut
+(τ = 0.7, strict `>`) as a reporting choice and sweeps it over {0.5 … 0.99} under both tie
+conventions, alongside two cut-free companions. **P4 is now complete.**
+
+- **The comparative claim survives the cut; the absolute level does not.** Ordering is
+  identical to τ = 0.7 at τ = 0.6 and 0.8; the only departure in the informative range is
+  one adjacent swap at τ = 0.5 between two models 0.1 pp apart at the canonical cut. The
+  weakest/strongest ratio is ≥ 7.5× at *every* cut tested.
+- **Verbalised confidence is a point mass, and that breaks high cuts.** The single value
+  0.95 carries 22.9–70.0% of each model's answers, so a strict cut there discards each
+  model's modal block and the ordering collapses (rank corr +0.36) — while the inclusive
+  convention at the same cut restores it exactly (+1.00). τ ≥ 0.9 is marked degenerate
+  (the leader has 7 confident errors left at 0.9, 3 at 0.95). Generalisable lesson for
+  calibration reporting, not a MURU quirk.
+- **New finding — the eightfold collapse is the accuracy factor, not metacognition.**
+  OvConf factors as P(wrong) × P(confident | wrong). The second term is 79.1–95.7% across
+  the panel with no trend in capability (ρ = −0.60, p = 0.35): the leader states high
+  confidence on 19 of its 22 errors. This is the same conclusion as the P4 resolution/AUROC
+  result, reached independently from the safety metric's own decomposition — and it is the
+  reading the paper now gives the metric, replacing an implied metacognitive one.
+- **The threshold-free statistic is cleaner than the thresholded one.** Mean overconfidence
+  E[max(0, c − y)] is perfectly monotone in accuracy (ρ = −1.00, exact permutation
+  p = 0.017) where the rate gives ρ = −0.90 — the near-tie was introduced by the cut.
+
+Shipped: `evaluation/overconfidence.py`, 18 tests (69 total), a sixth generated LaTeX table
+(`real_llm_overconfidence.tex`), paper §Metric Validity + Discussion updated, README
+leaderboard section added. The canonical τ = 0.7 numbers are unchanged — every previously
+published figure still holds.
+
 **2026-08-15 — P0 (parse accounting) and P4 (metric hardening) shipped.** Both were pure
 re-analysis of the committed archives: no new API calls, no new runs. What landed:
 
@@ -41,8 +71,8 @@ Acc@CI alone — which is the same conclusion P5 would reach if MURU turns out t
 redundant on point accuracy.
 
 **Still open, in priority order:** P1b human baseline (the blocking one), P2 failure
-taxonomy, P3 A1/A3/A6 ablations, P1a panel expansion, P5, P6. Nothing below has been
-started.
+taxonomy, P3 A1/A3/A6 ablations, P1a panel expansion, P5, P6. Nothing in those has been
+started. P0 is complete bar the `v1.0` dataset tag; P4 is complete.
 
 ---
 
@@ -218,7 +248,7 @@ Acc@CI as currently defined is gameable: a model that emits [−∞, ∞] scores
 - [x] **Harden ECE.** Report equal-mass (adaptive) binning *and* equal-width; report binning sensitivity across {5, 10, 15, 20} bins; add **smECE** or a debiased estimator. State the small-n bias of ECE at n=301 explicitly.
 - [x] **Add Brier score with Murphy decomposition** (reliability / resolution / uncertainty). Separates "badly calibrated" from "uninformative," which ECE alone conflates.
 - [x] **Add discrimination:** AUROC of stated confidence vs. correctness. A model can be badly calibrated but well-ranked; that distinction matters for downstream use.
-- [ ] **Formalise Overconfidence** with a stated threshold and a sensitivity analysis over that threshold. "High-confidence wrong" needs a defined cut and evidence the finding isn't cut-dependent.
+- [x] **Formalise Overconfidence** with a stated threshold and a sensitivity analysis over that threshold. "High-confidence wrong" needs a defined cut and evidence the finding isn't cut-dependent.
 
 **Acceptance:** every headline metric has a stated failure mode and a companion metric that covers it.
 

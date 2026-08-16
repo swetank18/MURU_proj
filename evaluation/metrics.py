@@ -19,6 +19,8 @@ Usage:
 from collections import defaultdict
 from dataclasses import dataclass
 
+from evaluation.overconfidence import CANONICAL_THRESHOLD
+
 
 @dataclass
 class Prediction:
@@ -78,8 +80,12 @@ class MURUMetrics:
             # Absolute error from point estimate
             absolute_error = abs(pred.predicted_answer - gt["point_estimate"])
 
-            # Overconfidence: model is confident but wrong
-            overconfident = pred.predicted_confidence > 0.7 and not correct
+            # Overconfidence: model is confident but wrong. The cut and its
+            # tie convention (strict >) live in evaluation.overconfidence,
+            # which also sweeps them; this is the canonical setting only.
+            overconfident = (
+                pred.predicted_confidence > CANONICAL_THRESHOLD and not correct
+            )
 
             self.results.append(ProblemResult(
                 problem_id=pid,

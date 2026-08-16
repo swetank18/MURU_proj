@@ -50,7 +50,12 @@ def main():
     cited = set()
     if SUMMARY.exists():
         with open(SUMMARY) as f:
-            cited = {v["result_file"] for v in json.load(f).values()}
+            # Underscore-prefixed keys hold panel-level analyses, not models.
+            cited = {
+                v["result_file"]
+                for k, v in json.load(f).items()
+                if not k.startswith("_")
+            }
 
     entries = []
     for path in sorted(BASELINES.glob("*.json")):

@@ -31,6 +31,7 @@ from evaluation.bootstrap_analysis import (
     per_problem_outcomes,
 )
 from evaluation import calibration_metrics as cm
+from evaluation import overconfidence as oc
 from evaluation.parse_status import (
     MODEL_FAILURE_STATUSES,
     classify_entry,
@@ -254,7 +255,9 @@ def main():
         if failures:
             c_strict = c + [0] * len(failures)
             f_strict = f + [0] * len(failures)
-            o_strict = o + [1 if conf > 0.7 else 0 for _, conf in failures]
+            o_strict = o + [
+                1 if cf > oc.CANONICAL_THRESHOLD else 0 for _, cf in failures
+            ]
             conf_strict = conf + [cf for _, cf in failures]
             boot_strict = bootstrap_metrics(c_strict, f_strict, o_strict, conf_strict)
         else:
@@ -264,6 +267,7 @@ def main():
 
         # ── Hardened calibration metrics (P4) ────────────────────
         hardened = cm.full_summary(c, conf, records=sharpness_records(preds, problems_by_id))
+        overconf = oc.summary(c, conf)
 
         summary[slug] = {
             "display": display,
@@ -291,6 +295,7 @@ def main():
                 "counts": status["counts"],
             },
             "hardened": hardened,
+            "overconfidence": overconf,
             "per_difficulty_acc": {
                 str(d): v["accuracy"] for d, v in breakdown["accuracy_by_difficulty"].items()
             },
@@ -298,6 +303,14 @@ def main():
                 k: v["accuracy"] for k, v in breakdown["accuracy_by_category"].items()
             },
         }
+
+    # Panel-level cut dependence: whether the comparative overconfidence claim
+    # is a property of the models or of the 0.7 threshold. Stored under a
+    # reserved underscore key so per-model consumers can skip it.
+    panel_oc = oc.panel_cut_dependence(
+        {s["display"]: s["overconfidence"]["sweep"] for s in summary.values()}
+    )
+    summary["_panel_overconfidence"] = panel_oc
 
     out = PROJECT_ROOT / "evaluation" / "baselines" / "real_llm_summary.json"
     with open(out, "w") as f:
@@ -309,6 +322,8 @@ def main():
     full = []
     partial = []
     for slug, s in summary.items():
+        if slug.startswith("_"):
+            continue
         s["_slug"] = slug
         if s["n_evaluated"] >= 0.8 * s["n_test"]:
             full.append(s)
@@ -440,6 +455,36 @@ def main():
             f"{_num(h['ece_debiased']['debiased'])} \\\\"
         )
 
+    # ─── LaTeX: overconfidence threshold sensitivity (P4) ────────
+    # The rate at five cuts, plus the two statistics that need no cut at all.
+    # A threshold sitting on a confidence spike is annotated with the tie mass
+    # it straddles, because that is where the strict/inclusive convention
+    # stops being a rounding detail.
+    SWEEP_TAUS = (0.5, 0.7, 0.8, 0.9, 0.95)
+    TIE_MASS_FLAG = 0.10  # annotate a cut this much of the mass sits exactly on
+    oc_lines = []
+    for s in ordered:
+        o = s["overconfidence"]
+        by_tau = {r["tau"]: r for r in o["sweep"]}
+        cells = []
+        for tau in SWEEP_TAUS:
+            r = by_tau[tau]
+            cell = f"{100 * r['rate_strict']:.1f}\\%"
+            if r["tie_mass"] >= TIE_MASS_FLAG:
+                cell += f"$^{{\\dagger}}$"
+            cells.append(cell)
+        cond = o["conditional_error_rate"]
+        cge = o["confident_given_error"]
+        cond_cell = f"{100 * cond:.1f}\\%" if cond is not None else "---"
+        cge_cell = f"{100 * cge:.1f}\\%" if cge is not None else "---"
+        oc_lines.append(
+            f"{s['display']} & "
+            + " & ".join(cells)
+            + f" & {o['mean_overconfidence']:.3f}"
+            + f" & {cond_cell}"
+            + f" & {cge_cell} \\\\"
+        )
+
     # Write to paper-includable .tex files.
     # Trailing %\endinput suppresses the newline LaTeX would otherwise inject
     # at the end of an \input'd file; without it, a stray newline inside the
@@ -464,12 +509,16 @@ def main():
     (paper_dir / "real_llm_sharpness.tex").write_text(
         "\\newcommand{\\realllmsharpnessrows}{%\n" + "\n".join(sharp_lines) + "}\n"
     )
+    (paper_dir / "real_llm_overconfidence.tex").write_text(
+        "\\newcommand{\\realllmoverconfidencerows}{%\n" + "\n".join(oc_lines) + "}\n"
+    )
     for name in (
         "real_llm_main",
         "real_llm_difficulty",
         "real_llm_category",
         "real_llm_accounting",
         "real_llm_sharpness",
+        "real_llm_overconfidence",
     ):
         print(f"Saved: paper/tables/{name}.tex", file=sys.stderr)
 
@@ -492,6 +541,37 @@ def main():
             f"threshold, so the leaderboard is not format-compliance-driven.",
             file=sys.stderr,
         )
+
+    # Cut dependence of the comparative overconfidence claim. What has to
+    # survive is the ordering and the spread, not the absolute rate — the rate
+    # is a function of where the line is drawn and always will be.
+    print("\nOverconfidence threshold sensitivity:", file=sys.stderr)
+    print(
+        "  tau    panel range (strict)   spread   ratio   rank-corr vs "
+        f"tau={oc.CANONICAL_THRESHOLD}   max tie",
+        file=sys.stderr,
+    )
+    for r in panel_oc["per_threshold"]:
+        ratio = f"{r['ratio']:.1f}x" if r["ratio"] else "min=0"
+        rc = r["rank_corr_vs_canonical"]
+        rci = r["rank_corr_inclusive_vs_canonical"]
+        print(
+            f"  {r['tau']:.2f}   {100*r['min']:5.1f}% - {100*r['max']:5.1f}%"
+            f"      {r['spread_pp']:5.1f} pp  {ratio:>6s}"
+            f"   strict {rc:+.2f} / incl {rci:+.2f}"
+            f"   {100*r['max_tie_mass']:5.1f}%  n>={r['min_events']:3d}"
+            f"{'  [degenerate]' if r['degenerate'] else ''}",
+            file=sys.stderr,
+        )
+    print(
+        f"  → over the informative cuts {panel_oc['informative_range']}: "
+        f"ordering {'identical to' if panel_oc['orderings_agree'] else 'differs from'} "
+        f"tau={oc.CANONICAL_THRESHOLD} "
+        f"(min rank-corr {panel_oc['min_rank_corr_informative']:+.2f}); "
+        f"weakest/strongest ratio at least {panel_oc['min_ratio_all_cuts']:.1f}x "
+        f"across every cut including the degenerate ones.",
+        file=sys.stderr,
+    )
 
     # Echo to stdout for convenience.
     print()

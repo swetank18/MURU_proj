@@ -303,9 +303,9 @@ Diff.\ scaling & Diagnostic & --- & Per-difficulty accuracy decomposition \\
 \end{equation}
 where $B_m$ is the set of predictions whose stated confidence falls in the $m$-th bin, $\text{acc}(B_m)$ is the accuracy in that bin, and $\text{conf}(B_m)$ is the mean stated confidence. We use $M = 10$ equal-width bins. A perfectly calibrated model has $\ece = 0$.
 
-\paragraph{Overconfidence rate.} The fraction of predictions on which the model states confidence above 0.7 but the answer is wrong:
-$\text{OvConf} = |\{i : c_i > 0.7 \wedge \hat{y}_i \notin \ci_i\}| / N$.
-This is the most safety-relevant metric in the harness, because every overconfident wrong answer is precisely the kind of output a downstream decision-support system should not propagate.
+\paragraph{Overconfidence rate.} The fraction of predictions on which the model states confidence strictly above $\tau = 0.7$ but the answer is wrong:
+$\text{OvConf}(\tau) = |\{i : c_i > \tau \wedge \hat{y}_i \notin \ci_i\}| / N$.
+This is the most safety-relevant metric in the harness, because every overconfident wrong answer is precisely the kind of output a downstream decision-support system should not propagate. The cut and its tie convention (strict $>$, so answers stating exactly $\tau$ are excluded) are reporting choices, not properties of the models, and Table~\ref{tab:real_llm_overconfidence} sweeps both rather than assuming the finding is invariant to them.
 
 \paragraph{Framework match.} The fraction of predictions on which the model identifies the correct framework. This separates ``the model can compute the answer'' from ``the model knows why this is the right computation.''
 
@@ -431,6 +431,7 @@ We make no claim that real LLMs would rank categories in this order. The simulat
 \input{tables/real_llm_category}
 \input{tables/real_llm_accounting}
 \input{tables/real_llm_sharpness}
+\input{tables/real_llm_overconfidence}
 \section{Language-Model Evaluation on the Test Set}
 \label{sec:real_llm}
 
@@ -538,6 +539,29 @@ Accuracy@CI and ECE are each gameable in a way the other does not catch, and bot
 
 \paragraph{The one rank inversion is an estimator artifact.} Raw ECE has a null floor that differs across models, because it depends on each model's confidence distribution: it is $0.036$ for Qwen3-32B against $0.024$ for Llama-3.3-70B. Subtracting each model's own floor removes the adjacent-rank inversion that limited the accuracy/calibration coupling to $\rho = -0.90$ (Section~\ref{sec:real_llm_calibration}): debiased ECE is monotone in Accuracy@CI across all five rows, giving $\rho = -1.00$ (Pearson $r = -0.995$), and the Brier score, an independent proper scoring rule with no binning at all, gives $\rho = -1.00$ as well. We report this as a metric-estimator result and not as new evidence: it is the same five runs, and two corrected estimators agreeing that a difference of $0.011$ in raw ECE was inside the noise the raw estimator adds. It does not widen the panel, and $n = 5$ remains the binding limitation on the coupling claim.
 
+\paragraph{The overconfidence cut, and what does not depend on it.}
+The overconfidence rate is defined by a threshold, and a threshold invites the objection that the finding is a property of where the line was drawn. Table~\ref{tab:real_llm_overconfidence} sweeps it. The absolute level is indeed threshold-dependent---the panel leader moves from 7.0\% at $\tau = 0.5$ to 2.3\% at $\tau = 0.9$---but the comparative claim is not: the model ordering is identical to the canonical $\tau = 0.7$ at $\tau = 0.6$ and $\tau = 0.8$, the sole departure across the informative range is a single adjacent swap at $\tau = 0.5$ between two models separated by 0.1~pp at the canonical cut (Qwen3-32B and Llama-4-Scout-17B, whose overconfidence intervals overlap almost entirely), and the weakest-to-strongest ratio is at least $7.5\times$ at every cut we tested, including the degenerate ones below.
+
+That degeneracy is worth stating explicitly, because it is a property of verbalised confidence rather than of our choice of grid. Stated confidence is not a distribution over $[0,1]$; it is a point mass on a handful of round values. The single value $0.95$ carries between 22.9\% (GPT-OSS-120B) and 70.0\% (Llama-4-Scout-17B) of a model's answers. A strict cut placed at $0.95$ therefore discards each model's modal block, four of five rows collapse to 1.0--2.0\%, and the panel ordering breaks (rank correlation $+0.36$ against the canonical ordering)---while the inclusive convention at the same cut restores it exactly ($+1.00$). At $\tau = 0.9$ the panel leader has only seven confident errors left, and at $\tau = 0.99$ every model has fewer than ten. We therefore treat $\tau \geq 0.9$ as uninformative and read the sweep over $0.5 \leq \tau \leq 0.8$. The general lesson for calibration reporting is that a threshold sitting on a confidence spike measures the tie convention, not the model.
+
+Two cut-free statistics make the same point without a grid. The mean overconfidence $\mathbb{E}[\max(0, c_i - y_i)]$---the stated confidence carried by wrong answers, averaged over the split---spans $0.062$ to $0.516$ and is \emph{perfectly} monotone in Accuracy@CI ($\rho = -1.00$, exact permutation $p = 0.017$), where the thresholded rate gives $\rho = -0.90$ ($p = 0.083$): the cut, not the underlying quantity, is what introduced the near-tie. And the rate factors exactly as $\text{OvConf} = \Pr(\text{wrong}) \times \Pr(c > \tau \mid \text{wrong})$, of which only the second term is metacognitive. That term is 79.1--95.7\% across the panel with no trend in capability ($\rho = -0.60$ against Accuracy@CI, $p = 0.35$); the panel leader states high confidence on 19 of its 22 errors, against 149 of 166 for the weakest model. The eightfold collapse in the overconfidence rate is therefore almost entirely the accuracy factor: strong models on this panel are not better at knowing when they are wrong, they are wrong less often. This is the same conclusion the Murphy resolution and AUROC reach from the discrimination side, arrived at from the safety metric's own decomposition. The leader's term rests on 22 errors, so its precision is limited---but the direction of the effect would have to be large to survive it, and it is not there.
+
+\begin{table}[t]
+\centering
+\caption{Overconfidence under a swept threshold. Columns 2--6 are $\text{OvConf}(\tau)$ under the strict convention ($c_i > \tau$); $\dagger$ marks a cut on which more than 10\% of that model's answers state \emph{exactly} $\tau$, so the tie convention alone moves that block across the line. \textbf{$\mathbb{E}[\text{OC}]$} is the threshold-free mean overconfidence $\mathbb{E}[\max(0, c_i - y_i)]$. \textbf{$\Pr(\text{err} \mid c{>}0.7)$} is the error rate among confidently-stated answers---what a downstream consumer of those answers faces---and \textbf{$\Pr(c{>}0.7 \mid \text{err})$} is the metacognitive factor of the rate, which is flat in capability where the rate itself is not.}
+\label{tab:real_llm_overconfidence}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccccc}
+\toprule
+& \multicolumn{5}{c}{\textbf{OvConf} at threshold $\tau$} & & & \\
+\cmidrule(lr){2-6}
+\textbf{Model} & $0.50$ & $0.70$ & $0.80$ & $0.90$ & $0.95$ & $\mathbb{E}[\text{OC}]$ & $\Pr(\text{err} \mid c{>}0.7)$ & $\Pr(c{>}0.7 \mid \text{err})$ \\
+\midrule
+\realllmoverconfidencerows
+\bottomrule
+\end{tabular}}
+\end{table}
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.72\textwidth]{figures/coverage_sharpness.png}
@@ -632,7 +656,7 @@ A benchmark of this size has to be able to detect meaningful capability differen
 The 50-percentage-point spread in Accuracy@CI across the panel, together with the accuracy/calibration coupling at Spearman $\rho = -0.90$, supports a stronger empirical claim than the simulator validation alone could license. On \muru{}, a model's stated confidence is a usable proxy for its accuracy, but only because the underlying capability gradient also drives the calibration gradient. This matters operationally, and the resolution result in Section~\ref{sec:real_llm_metrics} sharpens the point considerably. A downstream system that filters language-model outputs by stated confidence cannot increase accuracy beyond what the underlying model already supplies; it can only reduce coverage. The Murphy decomposition says something stronger: with resolution at or below $0.010$ and AUROC in the $0.47$--$0.63$ band, confidence-thresholded filtering on \muru{} discards nearly as many correct answers as wrong ones. Methods that promise calibration without raising accuracy---temperature scaling, self-consistency thresholds, conformal-prediction wrappers---are therefore not free improvements on this benchmark: all of them are monotone transformations of a confidence signal, and a monotone transformation cannot create discrimination that the signal does not already contain. Their gain has to come from somewhere observable, and on this panel the verbalized-confidence channel is not where it is.
 
 \paragraph{Why the overconfidence metric matters.}
-The overconfidence rate is constructed to flag a specific safety-relevant failure: a responder that is high-confidence and wrong. On the panel we measured, the metric collapses more than eightfold---from 51.6\% on Llama-3.1-8B to 6.3\% on GPT-OSS-120B---over the same accuracy range that drives the leaderboard, and is the most accuracy-correlated of the four metrics. In safety-critical decision-support deployment (medical, financial, legal), this metric directly bounds the frequency of high-confidence-wrong outputs that downstream systems must guard against, and the leaderboard makes the bound numerically specific per model.
+The overconfidence rate is constructed to flag a specific safety-relevant failure: a responder that is high-confidence and wrong. On the panel we measured, the metric collapses more than eightfold---from 51.6\% on Llama-3.1-8B to 6.3\% on GPT-OSS-120B---over the same accuracy range that drives the leaderboard, and is the most accuracy-correlated of the four metrics. The collapse is not an artefact of the $0.7$ cut: it is at least $7.5\times$ at every threshold from $0.5$ to $0.99$, and the threshold-free mean overconfidence is monotone in accuracy across the whole panel (Table~\ref{tab:real_llm_overconfidence}). In safety-critical decision-support deployment (medical, financial, legal), this metric directly bounds the frequency of high-confidence-wrong outputs that downstream systems must guard against, and the leaderboard makes the bound numerically specific per model. What it does \emph{not} license is a metacognitive reading. Decomposed as $\Pr(\text{wrong}) \times \Pr(\text{confident} \mid \text{wrong})$, only the first factor moves with capability; every model in the panel, leader included, asserts at least four in five of its errors confidently (79--96\% across the panel, with no trend in capability). The bound tightens because strong models err less often, not because they hedge when they are about to be wrong.
 
 \paragraph{Why the per-category profile matters.}
 The cross-model dispersion in the Decision-Under-Uncertainty column of Table~\ref{tab:real_llm_category}---two models below 31\% on the same category where they otherwise score 90--100\%---is a more actionable signal than the headline leaderboard. It points to a specific reasoning operation, namely composing two independent uncertainties through an expected-utility computation, that several otherwise-strong models fail systematically. Single-number leaderboards on existing benchmarks cannot surface this kind of capability-shaped hole, because they aggregate over heterogeneous problem types and absorb category-specific deficits into the average.

@@ -19,7 +19,7 @@
 - **Proper scoring rules alongside the headline metrics** — Winkler interval score (penalises hedging, which Acc@CI does not), Brier + Murphy decomposition, AUROC, and a debiased ECE with reported binning sensitivity.
 - **Parse-status accounting** — wrong answers, unreadable answers, and absent answers are three different events, tracked separately and scored both ways.
 - **Validated test split** of 301 problems with statistical power to discriminate tier-scale capability gaps as small as **11.6 pp** ($p < 10^{-3}$).
-- **First leaderboard** on five hosted open-weights models — 50-pp spread in Accuracy@CI; Spearman $\rho = -0.90$ between accuracy and ECE; safety-relevant overconfidence rate collapses 10× across the panel.
+- **First leaderboard** on five hosted open-weights models — 50-pp spread in Accuracy@CI; Spearman $\rho = -0.90$ between accuracy and ECE; safety-relevant overconfidence rate collapses more than 8× across the panel (and by at least 7.5× at every confidence cut from 0.5 to 0.99, so the finding is not an artefact of the threshold).
 - **One-line repro**: `python evaluation/run_eval.py --model <name> --save && python evaluation/aggregate_real_llm.py`.
 
 ---
@@ -30,13 +30,13 @@ On the open-weights panel we measured, **miscalibration on MURU-BENCH is dominat
 
 A second, more actionable finding: **single-number leaderboards mask category-shaped capability holes**. Two otherwise-strong models drop to 23–29% on Decision-Under-Uncertainty problems despite scoring 91–100% on the three computational categories — invisible to any aggregate metric. The hole survives all the way to the top of the panel: at 92.7% overall, GPT-OSS-120B's *entire* error budget sits in that one category.
 
-A third finding, from the proper scoring rules: **calibration in level is not metacognition.** Under a Murphy decomposition, every model in the panel has resolution ≤ 0.010 against an outcome uncertainty of 0.154, and AUROC of stated confidence over correctness spans 0.465–0.631 — from marginally *below* chance to weak. Even the panel leader barely ranks its own correct answers above its wrong ones. This is invisible to ECE, which conflates "confidence is systematically too high" with "confidence is uninformative"; the panel is both, and the second is the harder problem. Coverage is also partly purchased with width: every model states an interval more than 10× wider than the defensible one on 10–19% of problems, which Acc@CI does not penalise and the interval score does.
+A third finding, from the proper scoring rules: **calibration in level is not metacognition.** Under a Murphy decomposition, every model in the panel has resolution ≤ 0.010 against an outcome uncertainty of 0.154, and AUROC of stated confidence over correctness spans 0.465–0.631 — from marginally *below* chance to weak. Even the panel leader barely ranks its own correct answers above its wrong ones. This is invisible to ECE, which conflates "confidence is systematically too high" with "confidence is uninformative"; the panel is both, and the second is the harder problem. The safety metric says the same thing under its own decomposition: OvConf = P(wrong) × P(confident | wrong), and only the first factor moves with capability — every model, leader included, states high confidence on 79–96% of its errors. Coverage is also partly purchased with width: every model states an interval more than 10× wider than the defensible one on 10–19% of problems, which Acc@CI does not penalise and the interval score does.
 
 ---
 
 ## Leaderboard
 
-Test split, n = 301. **Parse** = fraction of attempted problems whose response the harness could read; metric columns are over that readable subset. Acc@CI = point estimate within ground-truth CI. ECE = Expected Calibration Error. OvConf = high-confidence wrong. FwMatch = correct framework identified. D5 Acc = accuracy on hardest difficulty band.
+Test split, n = 301. **Parse** = fraction of attempted problems whose response the harness could read; metric columns are over that readable subset. Acc@CI = point estimate within ground-truth CI. ECE = Expected Calibration Error. OvConf = stated confidence > 0.7 and wrong (the cut is swept in the paper). FwMatch = correct framework identified. D5 Acc = accuracy on hardest difficulty band.
 
 | Rank | Model | Attempted | Parse ↑ | Acc@CI ↑ | ECE ↓ | OvConf ↓ | FwMatch ↑ | D5 Acc |
 |-----:|-------|----------:|--------:|---------:|------:|---------:|----------:|-------:|
@@ -63,6 +63,20 @@ Cover = model's own interval contains the ground-truth estimate. Widths are mult
 | Llama-3.1-8B | 48.0% | 0.93 | 20.0 | 13.4% | 8.91 | 0.490 | 0.010 | 0.469 | 0.452 |
 
 Llama-3.3-70B's 78.9% interval coverage is not comparable to Llama-4-Scout-17B's 86.6%: it is bought with a tail two orders of magnitude wider. Note also that debiased ECE and Brier — two estimators without raw ECE's model-dependent finite-*n* bias — are both monotone in accuracy across all five rows (ρ = −1.00), so the single rank inversion behind ρ = −0.90 is an estimator artifact rather than a dissociation. That is a metric correction on the same five runs, not new evidence; n = 5 remains the binding limit.
+
+### Overconfidence is not an artefact of the 0.7 cut
+
+OvConf is defined by a threshold, so the threshold is swept. Absolute levels move; the ordering does not. † marks a cut where >10% of that model's answers state *exactly* that confidence — verbalised confidence is a point mass on round values, and a cut on a spike measures the tie convention, not the model (which is why τ ≥ 0.9 is not read as informative here: at τ = 0.95, 22.9–70.0% of each model's answers sit exactly on the line).
+
+| Model | τ=0.5 | τ=0.7 | τ=0.8 | τ=0.9 | τ=0.95 | E[OC] | P(err \| c>0.7) | P(c>0.7 \| err) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| GPT-OSS-120B | 7.0% | 6.3% | 5.0% | 2.3%† | 1.3%† | 0.062 | 6.5% | 86.4% |
+| Llama-4-Scout-17B | 14.7% | 14.0% | 12.0% | 11.3%† | 1.0%† | 0.141 | 14.5% | 87.5% |
+| Qwen3-32B | 15.5%† | 13.9% | 11.4% | 11.0% | 2.0%† | 0.148 | 18.1% | 79.1% |
+| Llama-3.3-70B | 22.6% | 21.9% | 14.6%† | 13.3% | 1.3%† | 0.201 | 23.0% | 95.7% |
+| Llama-3.1-8B | 53.3% | 51.6% | 49.1% | 46.7% | 12.1%† | 0.516 | 57.5% | 89.8% |
+
+E[OC] = E[max(0, confidence − outcome)], the threshold-free version of the rate; it is *perfectly* monotone in accuracy (ρ = −1.00, exact p = 0.017) where the thresholded rate gives ρ = −0.90. P(c>0.7 | err) is the metacognitive factor of OvConf = P(wrong) × P(confident | wrong): it is flat in capability (ρ = −0.60, p = 0.35), so the eightfold collapse in the rate is the accuracy factor almost entirely. Strong models here are not better at knowing when they are wrong; they are wrong less often.
 
 ### Parse accounting
 
@@ -167,7 +181,7 @@ python evaluation/run_eval.py --model "or:nvidia/nemotron-3-super-120b-a12b:free
 export OPENAI_API_KEY=...        # or ANTHROPIC_API_KEY / GOOGLE_API_KEY
 python evaluation/run_eval.py --model gpt-4o --save
 
-# Aggregate to paper-ready bootstrap CIs and LaTeX (five tables, both accountings):
+# Aggregate to paper-ready bootstrap CIs and LaTeX (six tables, both accountings):
 python evaluation/aggregate_real_llm.py
 python evaluation/leaderboard.py --update-readme
 
@@ -225,6 +239,7 @@ data/                       # 2,398 train · 301 val · 301 test JSONs
 evaluation/
   metrics.py                # six evaluation metrics
   calibration_metrics.py    # interval score, Brier/Murphy, AUROC, debiased ECE
+  overconfidence.py         # the OvConf cut, swept; cut-free companions
   parse_status.py           # wrong vs unreadable vs absent — 10-status taxonomy
   run_eval.py               # unified API harness (6 providers)
   run_baselines.py          # simulated capability tiers
