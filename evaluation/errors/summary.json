@@ -1,0 +1,50 @@
+{
+  "n_errors": 361,
+  "n_codeable": 346,
+  "by_model": {
+    "GPT-OSS-120B": {
+      "errors": 22,
+      "codeable": 19,
+      "parse_failures": 0
+    },
+    "Llama-3.1-8B": {
+      "errors": 178,
+      "codeable": 178,
+      "parse_failures": 12
+    },
+    "Llama-3.3-70B": {
+      "errors": 69,
+      "codeable": 69,
+      "parse_failures": 0
+    },
+    "Llama-4-Scout-17B": {
+      "errors": 49,
+      "codeable": 49,
+      "parse_failures": 1
+    },
+    "Qwen3-32B": {
+      "errors": 43,
+      "codeable": 31,
+      "parse_failures": 0
+    }
+  },
+  "by_category": {
+    "bayesian_updating": 91,
+    "decision_under_uncertainty": 144,
+    "adversarial_ambiguity": 77,
+    "conditional_probability_chains": 36,
+    "distribution_estimation": 13
+  },
+  "by_difficulty": {
+    "3": 117,
+    "1": 54,
+    "2": 64,
+    "5": 57,
+    "4": 69
+  },
+  "sample": {
+    "file": "sample_100.json",
+    "n": 100,
+    "seed": 42
+  }
+}

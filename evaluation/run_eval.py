@@ -44,6 +44,13 @@ from evaluation.metrics import MURUMetrics, Prediction
 # Prompt template
 # ──────────────────────────────────────────────────────────────────────
 
+# Bumped whenever the prompt changes, and recorded in every saved archive:
+# runs made under different prompt versions are not comparable, and the
+# archived five-model panel was collected under version 1, which asked for
+# "a single number" without saying which unit it should be in. See
+# evaluation/unit_accounting.py for what that cost.
+PROMPT_VERSION = 2
+
 SYSTEM_PROMPT = """You are a mathematical reasoning expert. You will be given a problem involving mathematical uncertainty. You must:
 
 1. Identify the correct mathematical framework (bayesian_inference, frequentist_inference, decision_theory, information_theory, or monte_carlo).
@@ -51,6 +58,12 @@ SYSTEM_PROMPT = """You are a mathematical reasoning expert. You will be given a 
 3. Provide your final answer as a single number (point estimate).
 4. Provide a confidence interval [lower, upper] for your answer.
 5. State your confidence in your answer as a probability between 0 and 1.
+
+Report the point estimate and the interval in the SAME units the problem
+statement uses. If the problem is written in thousands of dollars ($473K),
+answer in those units (44.0, not 44000). If the problem asks for a
+probability, answer as a probability in [0, 1], not as a percentage (0.254,
+not 25.4). Write bare numbers with no unit symbols, currency signs, or commas.
 
 Format your response EXACTLY as follows at the end:
 
@@ -607,6 +620,7 @@ def main():
             "model": args.model,
             "timestamp": timestamp,
             "seed": args.seed,
+            "prompt_version": PROMPT_VERSION,
             "resumed": bool(prior_success),
             "n_prior_answered": len(prior_success),
             "n_problems": len(problems),

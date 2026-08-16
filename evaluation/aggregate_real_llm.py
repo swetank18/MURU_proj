@@ -32,6 +32,7 @@ from evaluation.bootstrap_analysis import (
 )
 from evaluation import calibration_metrics as cm
 from evaluation import overconfidence as oc
+from evaluation import unit_accounting as ua
 from evaluation.parse_status import (
     MODEL_FAILURE_STATUSES,
     classify_entry,
@@ -99,6 +100,36 @@ def parse_predictions_from_raw(raw_results, problems_by_id):
             raw_response=r.get("response", ""),
         ))
     return predictions
+
+
+def unit_normalized(preds, problems_by_id):
+    """Predictions restated in the ground truth's units where corroborated.
+
+    Applying the correction here, once, means every downstream statistic --
+    accuracy, ECE, per-category breakdowns, interval widths, the interval
+    score -- sees a prediction that has been read in the unit the model
+    actually used. Predictions that need no correction pass through
+    unchanged, so this is the identity on any run made under a prompt that
+    states the unit convention (``PROMPT_VERSION`` >= 2).
+    """
+    out, factors = [], {}
+    for p in preds:
+        problem = problems_by_id[p.problem_id]
+        k = ua.credited_factor(p.predicted_answer, p.predicted_interval, problem)
+        factors[p.problem_id] = k
+        if k == 1.0:
+            out.append(p)
+            continue
+        interval = p.predicted_interval
+        out.append(Prediction(
+            problem_id=p.problem_id,
+            predicted_answer=p.predicted_answer / k,
+            predicted_confidence=p.predicted_confidence,
+            predicted_interval=(interval[0] / k, interval[1] / k) if interval else None,
+            predicted_framework=p.predicted_framework,
+            raw_response=p.raw_response,
+        ))
+    return out, factors
 
 
 def unparsed_model_failures(raw_results, problems_by_id):
@@ -265,9 +296,43 @@ def main():
         acc_gap = boot["accuracy"]["point"] - boot_strict["accuracy"]["point"]
         ece_gap = boot_strict["ece"]["point"] - boot["ece"]["point"]
 
+        # ── Unit accounting ──────────────────────────────────────
+        # The prompt asks for "a single number" on problems whose stems are
+        # denominated in $K or in percent, so an answer of 163195 against a
+        # ground truth of 164.7 is a unit reading the prompt never ruled out.
+        # Scored as a third accounting rather than folded in silently: it
+        # moves the leaderboard, and a reader has to be able to see by how
+        # much and on which rows.
+        pred_by_id = {p.problem_id: p for p in preds}
+        unit_status = [
+            ua.classify_prediction(
+                pred_by_id[p["id"]].predicted_answer,
+                pred_by_id[p["id"]].predicted_interval,
+                p,
+            )
+            for p in sub_problems
+        ]
+        unit_report = ua.report(unit_status)
+        preds_unit, _ = unit_normalized(preds, problems_by_id)
+        c_unit, f_unit, o_unit, _ = per_problem_outcomes(sub_problems, preds_unit)
+        boot_unit = bootstrap_metrics(c_unit, f_unit, o_unit, conf)
+        breakdown_unit = MURUMetrics(sub_problems, preds_unit).compute_all()
+        unit_by_category = {}
+        for p, raw_ok, unit_ok in zip(sub_problems, c, c_unit):
+            cell = unit_by_category.setdefault(
+                p["category"], {"n": 0, "raw": 0, "unit_aware": 0}
+            )
+            cell["n"] += 1
+            cell["raw"] += raw_ok
+            cell["unit_aware"] += unit_ok
+
         # ── Hardened calibration metrics (P4) ────────────────────
         hardened = cm.full_summary(c, conf, records=sharpness_records(preds, problems_by_id))
+        hardened_unit = cm.full_summary(
+            c_unit, conf, records=sharpness_records(preds_unit, problems_by_id)
+        )
         overconf = oc.summary(c, conf)
+        overconf_unit = oc.summary(c_unit, conf)
 
         summary[slug] = {
             "display": display,
@@ -294,13 +359,28 @@ def main():
                 "coverage": status["coverage"],
                 "counts": status["counts"],
             },
+            "metrics_unit_aware": boot_unit,
+            "unit_accounting": {
+                **unit_report,
+                "by_category": unit_by_category,
+            },
             "hardened": hardened,
+            "hardened_unit_aware": hardened_unit,
             "overconfidence": overconf,
+            "overconfidence_unit_aware": overconf_unit,
             "per_difficulty_acc": {
                 str(d): v["accuracy"] for d, v in breakdown["accuracy_by_difficulty"].items()
             },
             "per_category_acc": {
                 k: v["accuracy"] for k, v in breakdown["accuracy_by_category"].items()
+            },
+            "per_difficulty_acc_unit_aware": {
+                str(d): v["accuracy"]
+                for d, v in breakdown_unit["accuracy_by_difficulty"].items()
+            },
+            "per_category_acc_unit_aware": {
+                k: v["accuracy"]
+                for k, v in breakdown_unit["accuracy_by_category"].items()
             },
         }
 
@@ -455,6 +535,26 @@ def main():
             f"{_num(h['ece_debiased']['debiased'])} \\\\"
         )
 
+    # ─── LaTeX: unit accounting ──────────────────────────────────
+    unit_lines = []
+    for s in ordered:
+        u = s["unit_accounting"]
+        m, mu = s["metrics"], s["metrics_unit_aware"]
+        n_err = u["n"] - u["counts"]["correct"]
+        unit_lines.append(
+            f"{s['display']} & "
+            f"{n_err} & "
+            f"{u['counts']['unit_mismatch']} & "
+            f"{100 * u['unit_mismatch_share_of_errors']:.1f}\\% & "
+            f"{100 * m['accuracy']['point']:.1f}\\% & "
+            f"{100 * mu['accuracy']['point']:.1f}\\% & "
+            f"{100 * (mu['accuracy']['point'] - m['accuracy']['point']):+.1f} & "
+            f"{m['ece']['point']:.3f} & "
+            f"{mu['ece']['point']:.3f} & "
+            f"{100 * m['overconfidence']['point']:.1f}\\% & "
+            f"{100 * mu['overconfidence']['point']:.1f}\\% \\\\"
+        )
+
     # ─── LaTeX: overconfidence threshold sensitivity (P4) ────────
     # The rate at five cuts, plus the two statistics that need no cut at all.
     # A threshold sitting on a confidence spike is annotated with the tie mass
@@ -512,6 +612,9 @@ def main():
     (paper_dir / "real_llm_overconfidence.tex").write_text(
         "\\newcommand{\\realllmoverconfidencerows}{%\n" + "\n".join(oc_lines) + "}\n"
     )
+    (paper_dir / "real_llm_units.tex").write_text(
+        "\\newcommand{\\realllmunitrows}{%\n" + "\n".join(unit_lines) + "}\n"
+    )
     for name in (
         "real_llm_main",
         "real_llm_difficulty",
@@ -519,6 +622,7 @@ def main():
         "real_llm_accounting",
         "real_llm_sharpness",
         "real_llm_overconfidence",
+        "real_llm_units",
     ):
         print(f"Saved: paper/tables/{name}.tex", file=sys.stderr)
 
@@ -545,6 +649,38 @@ def main():
     # Cut dependence of the comparative overconfidence claim. What has to
     # survive is the ordering and the spread, not the absolute rate — the rate
     # is a function of where the line is drawn and always will be.
+    # Unit accounting: how much of the recorded error is a unit reading the
+    # prompt never ruled out, and what the leaderboard looks like without it.
+    print("\nUnit accounting (corroborated rescales only):", file=sys.stderr)
+    for s in ordered:
+        u = s["unit_accounting"]
+        m, mu = s["metrics"], s["metrics_unit_aware"]
+        n_err = u["n"] - u["counts"]["correct"]
+        print(
+            f"  {s['display']:20s} {n_err:4d} errors, "
+            f"{u['counts']['unit_mismatch']:3d} unit mismatches "
+            f"({100 * u['unit_mismatch_share_of_errors']:4.1f}% of them)  "
+            f"acc {100 * m['accuracy']['point']:5.1f}% -> "
+            f"{100 * mu['accuracy']['point']:5.1f}%  "
+            f"ECE {m['ece']['point']:.3f} -> {mu['ece']['point']:.3f}",
+            file=sys.stderr,
+        )
+    rank_raw = [s["display"] for s in sorted(ordered, key=lambda s: -s["metrics"]["accuracy"]["point"])]
+    rank_unit = [s["display"] for s in sorted(ordered, key=lambda s: -s["metrics_unit_aware"]["accuracy"]["point"])]
+    rho_raw = oc.spearman(
+        [s["metrics"]["accuracy"]["point"] for s in ordered],
+        [s["metrics"]["ece"]["point"] for s in ordered],
+    )
+    rho_unit = oc.spearman(
+        [s["metrics_unit_aware"]["accuracy"]["point"] for s in ordered],
+        [s["metrics_unit_aware"]["ece"]["point"] for s in ordered],
+    )
+    print(
+        f"  → accuracy/ECE Spearman: raw {rho_raw:+.2f}, unit-aware {rho_unit:+.2f}"
+        f"{'  (ORDERING CHANGES)' if rank_raw != rank_unit else ''}",
+        file=sys.stderr,
+    )
+
     print("\nOverconfidence threshold sensitivity:", file=sys.stderr)
     print(
         "  tau    panel range (strict)   spread   ratio   rank-corr vs "
