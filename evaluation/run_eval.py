@@ -562,6 +562,8 @@ def main():
     parser.add_argument("--seed", type=int, default=42, help="Seed for the deterministic evaluation-order shuffle (keeps quota-truncated runs difficulty-representative).")
     parser.add_argument("--resume", action="store_true", help="Skip problems already answered in prior archives for this model and merge the new answers in — lets a run split across daily-token-budget windows accumulate to full coverage.")
     parser.add_argument("--save", action="store_true", help="Save results to evaluation/baselines/.")
+    parser.add_argument("--ids", help="JSON file with a 'problem_ids' list; restricts the run to those problems (e.g. data/robustness_subset.json).")
+    parser.add_argument("--tag", help="Label this run as an ablation arm. Tagged archives are written to evaluation/baselines/ablations/ and are NOT picked up as leaderboard rows.")
     args = parser.parse_args()
 
     print(f"\n{'═' * 60}")
@@ -574,6 +576,12 @@ def main():
     if not problems:
         print(f"No problems found in {args.subset}")
         sys.exit(1)
+
+    if args.ids:
+        with open(args.ids) as f:
+            wanted = set(json.load(f)["problem_ids"])
+        problems = [p for p in problems if p["id"] in wanted]
+        print(f"  Restricted to {len(problems)} problems from {args.ids}")
 
     print(f"  Loaded {len(problems)} problems\n")
 
@@ -613,6 +621,15 @@ def main():
         baselines_dir = PROJECT_ROOT / "evaluation" / "baselines"
         baselines_dir.mkdir(parents=True, exist_ok=True)
 
+        # An ablation arm is not a leaderboard row: it uses a different prompt,
+        # a different sample, or a different decoding config, and merging it
+        # into the panel directory would let it be picked up as the model's
+        # latest archive. Tagged runs therefore live in their own directory,
+        # which the aggregator's non-recursive glob does not see.
+        if args.tag:
+            baselines_dir = baselines_dir / "ablations"
+            baselines_dir.mkdir(parents=True, exist_ok=True)
+
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         model_slug = args.model.replace("/", "_").replace(".", "_")
 
@@ -621,6 +638,8 @@ def main():
             "timestamp": timestamp,
             "seed": args.seed,
             "prompt_version": PROMPT_VERSION,
+            "run_tag": args.tag,
+            "problem_ids_file": args.ids,
             "resumed": bool(prior_success),
             "n_prior_answered": len(prior_success),
             "n_problems": len(problems),
@@ -629,7 +648,7 @@ def main():
             "raw_results": raw_results,
         }
 
-        suffix = "_resumed" if prior_success else ""
+        suffix = f"_{args.tag}" if args.tag else ("_resumed" if prior_success else "")
         outpath = baselines_dir / f"{model_slug}_{timestamp}{suffix}.json"
         with open(outpath, "w") as f:
             json.dump(results_data, f, indent=2, default=str)
