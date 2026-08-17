@@ -126,6 +126,20 @@ tier names describe the configured profile, not a measurement of any named model
 | Strong | 60.8% | 0.178 | 20.3% |
 | Expert | 77.1% | 0.183 | 9.6% |
 
+## Known Limitations
+
+Three item-construction defects are known and **not yet fixed**. All three change ground truth, so they are scheduled before the `v1.0` tag rather than patched silently after it. Results computed on the current release remain interpretable if you know which items are affected:
+
+| Defect | Affected | Effect |
+|---|---|---|
+| Physically impossible stem values (mean diastolic BP of 213.1 / 482.3 / 280.8 mmHg) | `MURU-0422`, `MURU-1258`, `MURU-1909` | A model that applies domain knowledge and rejects the value is scored **wrong**; models that copy it through are scored right |
+| Base-rate-fallacy template is internally inconsistent — stem accuracy ≠ the colleague's quoted figure, and ground truth silently uses the latter as sensitivity | base-rate-fallacy items in Adversarial Ambiguity | Solved as written, the stem implies a sensitivity above 1, so the item has no consistent answer |
+| Ground-truth intervals narrower than the precision the prompt invites (as tight as 0.001) | Simpson's-paradox items | Arithmetically correct answers reported to three decimals fall outside |
+
+These were found by *reading* model errors (paper §7.3), not by the validators, which check internal consistency rather than plausibility. Two harness-side parsing defects found in the same pass are fixed (paper §7.3).
+
+Further limitations of the evaluation, rather than the data: the language-model panel is five models, four of whose endpoints have since been withdrawn by the provider; the panel was collected under a prompt that did not state the unit convention (corrected post hoc, and validated by a paired re-run); and one row is at partial coverage (Qwen3-32B, 245/301).
+
 ## Citation
 
 ```bibtex

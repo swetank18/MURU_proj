@@ -12,6 +12,18 @@ A MURU-BENCH problem is accepted if and only if **ALL** of these are true:
 4. **Active reasoning required** — Cannot be solved by retrieval alone
 5. **Non-trivial CI** — The ground truth confidence interval is not [0, 0] or [1, 1]
 
+### Five more, added 2026-08-17 because real items failed them
+
+Criterion 1 is about correctness *given the stated assumptions*, and three defective items passed it while having assumptions that were impossible, inconsistent, or unstated. These checks are what would have caught them (paper §7.3):
+
+6. **Physically possible quantities** — every number in the stem lies in the real range of the quantity it names. Three shipped items state mean diastolic blood pressures of 213–482 mmHg. A model that knows physiology is scored **wrong** for objecting, which inverts what the benchmark is for.
+7. **Internally consistent statistics** — if a stem gives more than one of accuracy / sensitivity / specificity / base rate, they must be mutually satisfiable, and the ground truth must use the figures the stem actually states. The base-rate-fallacy template quotes two different accuracies and takes ground truth from the one that is not in the stem; solved as written it implies a sensitivity above 1.
+8. **Interval wider than the invited precision** — if the answer is naturally reported to three decimals, a ground-truth interval 0.001 wide fails correct arithmetic on rounding. Either widen by a rounding allowance or state the required precision in the prompt.
+9. **One question, one number** — the schema accepts a single point estimate, so a stem must not ask three things and leave the scorer to pick. Items asking "compute the expected value of each option" are answered with the *other* option's value by four of five models, which is a defect of the item.
+10. **State the unit** — if a quantity is denominated in \$K or in percent, say so. A quarter of the panel's recorded errors were right answers in another admissible unit.
+
+If you are unsure whether an item clears 6–10, submit it anyway and say so in the PR: an item that fails one of these is more useful as a documented example than as a silent scoring error.
+
 ## Problem Writing Workflow
 
 ### Step 1: Choose a Scenario

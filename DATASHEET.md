@@ -53,7 +53,17 @@ Problems from the same template share mathematical structure but differ in numer
 Yes. We provide pre-computed stratified splits (train/validation/test) balanced across all 25 cells of the category × difficulty matrix.
 
 ### Are there any errors, sources of noise, or redundancies?
-- 28 problems from the Value-of-Information template had a non-monotonicity bug in CI computation, which was fixed (documented in paper Section A.4)
+
+Yes. Three classes are known and **not yet fixed**; all three change ground truth and are scheduled before the `v1.0` tag rather than patched silently after it.
+
+- **Physically impossible stem values.** `MURU-0422`, `MURU-1258`, `MURU-1909` state mean diastolic blood pressures of 213.1, 482.3 and 280.8 mmHg. The generator samples the mean without reference to the physical range of the quantity it names. On those three items, the only model of five that flagged the impossibility and substituted a physiological value is the only one scored **incorrect**.
+- **An internally inconsistent template.** The base-rate-fallacy items state a test accuracy in the stem, quote the colleague using a *different* figure, and the ground truth silently adopts the colleague's figure as the sensitivity. Solved as written, the stem implies a sensitivity above 1.
+- **Ground-truth intervals narrower than the precision the prompt invites.** On the Simpson's-paradox items the treatment difference is nearly constant in the uncertain proportion, so intervals can be 0.001 wide and arithmetically correct answers reported to three decimals fall outside.
+
+These were found by reading model errors (paper §7.3), not by the validators — which check internal consistency, not plausibility.
+
+Previously found and fixed:
+- 28 problems from the Value-of-Information template had a non-monotonicity bug in CI computation (documented in paper Section A.4)
 - All 3,000 problems pass automated schema and semantic validation
 - No known duplicate stems exist
 

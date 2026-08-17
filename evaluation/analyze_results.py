@@ -274,7 +274,15 @@ def main():
     # Save analysis report as markdown
     report_path = output_dir / "analysis_report.md"
     with open(report_path, "w") as f:
-        f.write("# MURU-BENCH Baseline Analysis Report\n\n")
+        f.write("# MURU-BENCH Harness-Validation Report (simulated tiers)\n\n")
+        f.write(
+            "> **Every row below is a synthetic capability tier**, produced by\n"
+            "> `evaluation/run_baselines.py`, not a measurement of any model. The\n"
+            "> tier names describe a configured profile: \"Expert Model\" is a\n"
+            "> parameter setting, not a frontier system. These rows exist to show\n"
+            "> that the 301-problem split can discriminate tier-scale differences.\n"
+            "> For real models see the language-model leaderboard in `README.md`.\n\n"
+        )
         f.write(f"**Test set size**: {summary['n_problems']} problems\n\n")
 
         f.write("## Main Results\n\n")
@@ -304,12 +312,15 @@ def main():
                     cells.append("--")
             f.write(f"| {display} | {' | '.join(cells)} |\n")
 
-        f.write("\n## Key Findings\n\n")
-        f.write("1. **Difficulty scaling works**: All models show monotonic accuracy decay from D1→D5\n")
-        f.write("2. **D5 is discriminative**: Even the expert model achieves only ~21% on D5 problems\n")
-        f.write("3. **Adversarial Ambiguity is hardest**: Consistent -10-15pp penalty across models\n")
-        f.write("4. **Calibration degrades with capability**: Heuristic baselines are most overconfident\n")
-        f.write("5. **Framework identification correlates with accuracy**: Better models identify the correct reasoning framework more often\n")
+        f.write("\n## Key Findings (about the harness, not about models)\n\n")
+        f.write("1. **Difficulty scaling works**: every tier shows monotonic accuracy decay from D1→D5\n")
+        f.write("2. **D5 is discriminative**: even the expert tier reaches only ~21% on D5 problems\n")
+        f.write("3. **Adversarial Ambiguity is hardest**: consistent -10-15pp penalty across tiers\n")
+        f.write("4. **Accuracy and calibration move together *by construction* here**: the tiers are\n")
+        f.write("   configured that way, so the coupling is an input to this simulation, not a result.\n")
+        f.write("   On the real-model panel it does **not** hold (Spearman ρ = −0.10 between\n")
+        f.write("   Accuracy@CI and ECE); see `README.md`. Do not cite this row as evidence.\n")
+        f.write("5. **Framework identification tracks accuracy**: also configured, same caveat\n")
 
     print(f"  ✓ Analysis report: {report_path.relative_to(PROJECT_ROOT)}")
     print()
