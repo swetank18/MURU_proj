@@ -413,20 +413,30 @@ def prediction_from_raw(entry: dict) -> Prediction | None:
     )
 
 
-def load_prior_success(model_name: str) -> dict[str, dict]:
+def load_prior_success(
+    model_name: str, tag: str | None = None, ids_file: str | None = None
+) -> dict[str, dict]:
     """Collect already-answered problems for a model from prior archives.
 
-    Scans ``evaluation/baselines/`` for archives whose ``model`` field
-    matches ``model_name`` and returns a ``{problem_id: raw_entry}`` map of
-    the successfully-parsed responses. Used by ``--resume`` so a run split
-    across several daily-token-budget windows accumulates coverage instead
-    of re-querying (and re-paying for) problems already answered.
+    Returns a ``{problem_id: raw_entry}`` map of successfully-parsed responses,
+    so ``--resume`` can split a run across several daily-token-budget windows
+    instead of re-querying (and re-paying for) problems already answered.
+
+    **Resume is scoped to the arm being resumed.** Without a tag, only the
+    top-level panel archives count — the non-recursive glob leaves ablation
+    arms out. With a tag, only archives from that same arm count: same
+    ``run_tag``, same ``prompt_version``, same ``problem_ids_file``. The panel
+    is never a source for a tagged resume, which matters because the two arms
+    answer the *same* problems under *different* prompts: an unscoped resume
+    would see every subset problem as already answered and either do nothing or
+    merge v1 answers into an archive stamped v2.
     """
     baselines = PROJECT_ROOT / "evaluation" / "baselines"
+    search_dir = baselines / "ablations" if tag else baselines
     prior: dict[str, dict] = {}
-    if not baselines.exists():
+    if not search_dir.exists():
         return prior
-    archives = sorted(baselines.glob("*.json"), key=lambda p: p.stat().st_mtime)
+    archives = sorted(search_dir.glob("*.json"), key=lambda p: p.stat().st_mtime)
     for path in archives:
         try:
             with open(path) as f:
@@ -434,6 +444,12 @@ def load_prior_success(model_name: str) -> dict[str, dict]:
         except (json.JSONDecodeError, IOError):
             continue
         if data.get("model") != model_name:
+            continue
+        if tag is not None and (
+            data.get("run_tag") != tag
+            or data.get("prompt_version") != PROMPT_VERSION
+            or data.get("problem_ids_file") != ids_file
+        ):
             continue
         for entry in data.get("raw_results", []):
             if entry.get("success") and (entry.get("parsed") or {}).get("point_estimate") is not None:
@@ -587,7 +603,7 @@ def main():
 
     prior_success: dict[str, dict] = {}
     if args.resume:
-        prior_success = load_prior_success(args.model)
+        prior_success = load_prior_success(args.model, tag=args.tag, ids_file=args.ids)
         remaining = len(problems) - len(prior_success)
         print(f"  Resume: {len(prior_success)} already answered in prior archives; "
               f"{remaining} remaining to attempt this run\n")

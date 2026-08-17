@@ -1,0 +1,1502 @@
+{
+  "model": "gpt-oss-120b",
+  "timestamp": "20260816_202446",
+  "seed": 42,
+  "prompt_version": 2,
+  "run_tag": "promptv2",
+  "problem_ids_file": "data/robustness_subset.json",
+  "resumed": false,
+  "n_prior_answered": 0,
+  "n_problems": 100,
+  "n_predictions": 99,
+  "metrics": {
+    "accuracy": 0.9596,
+    "ece": 0.0681,
+    "overconfidence_rate": 0.0303,
+    "framework_match_rate": 0.7273,
+    "accuracy_by_category": {
+      "adversarial_ambiguity": {
+        "accuracy": 1.0,
+        "count": 16,
+        "mean_error": 3.30680625
+      },
+      "bayesian_updating": {
+        "accuracy": 0.9333333333333333,
+        "count": 30,
+        "mean_error": 0.0691999999999999
+      },
+      "conditional_probability_chains": {
+        "accuracy": 1.0,
+        "count": 14,
+        "mean_error": 0.0018714285714285794
+      },
+      "decision_under_uncertainty": {
+        "accuracy": 0.8888888888888888,
+        "count": 18,
+        "mean_error": 5.824444444444443
+      },
+      "distribution_estimation": {
+        "accuracy": 1.0,
+        "count": 21,
+        "mean_error": 0.1724523809523792
+      }
+    },
+    "accuracy_by_difficulty": {
+      "1": {
+        "accuracy": 1.0,
+        "count": 17,
+        "mean_error": 0.20297647058823565
+      },
+      "2": {
+        "accuracy": 1.0,
+        "count": 24,
+        "mean_error": 0.8775583333333343
+      },
+      "3": {
+        "accuracy": 0.9032258064516129,
+        "count": 31,
+        "mean_error": 2.0632064516129005
+      },
+      "4": {
+        "accuracy": 1.0,
+        "count": 18,
+        "mean_error": 4.005400000000001
+      },
+      "5": {
+        "accuracy": 0.8888888888888888,
+        "count": 9,
+        "mean_error": 0.32266666666666416
+      }
+    },
+    "calibration_curve": [
+      {
+        "bin_lower": 0.6,
+        "bin_upper": 0.7,
+        "mean_confidence": 0.635,
+        "accuracy": 0.5,
+        "count": 2
+      },
+      {
+        "bin_lower": 0.7,
+        "bin_upper": 0.8,
+        "mean_confidence": 0.7266666666666666,
+        "accuracy": 1.0,
+        "count": 3
+      },
+      {
+        "bin_lower": 0.8,
+        "bin_upper": 0.9,
+        "mean_confidence": 0.8407407407407407,
+        "accuracy": 0.9259259259259259,
+        "count": 27
+      },
+      {
+        "bin_lower": 0.9,
+        "bin_upper": 1.0,
+        "mean_confidence": 0.9350746268656717,
+        "accuracy": 0.9850746268656716,
+        "count": 67
+      }
+    ],
+    "total_evaluated": 99
+  },
+  "raw_results": [
+    {
+      "problem_id": "MURU-1424",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.678\nCONFIDENCE_INTERVAL: [0.64, 0.72]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.678,
+        "confidence_interval": [
+          0.64,
+          0.72
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1323",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.056\nCONFIDENCE_INTERVAL: [0.026, 0.110]\nCONFIDENCE: 0.98",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.056,
+        "confidence_interval": [
+          0.026,
+          0.11
+        ],
+        "confidence": 0.98
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2779",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 4.62\nCONFIDENCE_INTERVAL: [3.74, 6.31]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 4.62,
+        "confidence_interval": [
+          3.74,
+          6.31
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0421",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 243.5\nCONFIDENCE_INTERVAL: [205.8, 281.2]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 243.5,
+        "confidence_interval": [
+          205.8,
+          281.2
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1922",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.065\nCONFIDENCE_INTERVAL: [0.063, 0.068]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.065,
+        "confidence_interval": [
+          0.063,
+          0.068
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1604",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 180.31\nCONFIDENCE_INTERVAL: [166.46, 194.15]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 180.31,
+        "confidence_interval": [
+          166.46,
+          194.15
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0093",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.444\nCONFIDENCE_INTERVAL: [0.397, 0.491]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.444,
+        "confidence_interval": [
+          0.397,
+          0.491
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2183",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 62.7\nCONFIDENCE_INTERVAL: [60.8, 64.6]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 62.7,
+        "confidence_interval": [
+          60.8,
+          64.6
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0636",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.786\nCONFIDENCE_INTERVAL: [0.704, 0.883]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.786,
+        "confidence_interval": [
+          0.704,
+          0.883
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2355",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.9932\nCONFIDENCE_INTERVAL: [0.9905, 0.9960]\nCONFIDENCE: 1.0",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.9932,
+        "confidence_interval": [
+          0.9905,
+          0.996
+        ],
+        "confidence": 1.0
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2257",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 566\nCONFIDENCE_INTERVAL: [271, 967]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 566.0,
+        "confidence_interval": [
+          271.0,
+          967.0
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0442",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.65\nCONFIDENCE_INTERVAL: [0.55, 0.71]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.65,
+        "confidence_interval": [
+          0.55,
+          0.71
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1760",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.842\nCONFIDENCE_INTERVAL: [0.806, 0.883]\nCONFIDENCE: 0.90",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.842,
+        "confidence_interval": [
+          0.806,
+          0.883
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1798",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 413.0\nCONFIDENCE_INTERVAL: [389.7, 435.7]\nCONFIDENCE: 0.80",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 413.0,
+        "confidence_interval": [
+          389.7,
+          435.7
+        ],
+        "confidence": 0.8
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2251",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.621\nCONFIDENCE_INTERVAL: [0.531, 0.710]\nCONFIDENCE: 0.8",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.621,
+        "confidence_interval": [
+          0.531,
+          0.71
+        ],
+        "confidence": 0.8
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1475",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 0.158\nCONFIDENCE_INTERVAL: [0.129, 0.193]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 0.158,
+        "confidence_interval": [
+          0.129,
+          0.193
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1556",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 79.6\nCONFIDENCE_INTERVAL: [75.7, 83.3]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 79.6,
+        "confidence_interval": [
+          75.7,
+          83.3
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2824",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 371\nCONFIDENCE_INTERVAL: [199, 594]\nCONFIDENCE: 0.8",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 371.0,
+        "confidence_interval": [
+          199.0,
+          594.0
+        ],
+        "confidence": 0.8
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2309",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 175.5\nCONFIDENCE_INTERVAL: [162.5, 188.9]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 175.5,
+        "confidence_interval": [
+          162.5,
+          188.9
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1297",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.595\nCONFIDENCE_INTERVAL: [0.541, 0.648]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.595,
+        "confidence_interval": [
+          0.541,
+          0.648
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1145",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.075\nCONFIDENCE_INTERVAL: [0.0705, 0.0795]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.075,
+        "confidence_interval": [
+          0.0705,
+          0.0795
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0767",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 158.55\nCONFIDENCE_INTERVAL: [152.64, 164.46]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 158.55,
+        "confidence_interval": [
+          152.64,
+          164.46
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1177",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.982\nCONFIDENCE_INTERVAL: [0.953, 0.992]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.982,
+        "confidence_interval": [
+          0.953,
+          0.992
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2891",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.360\nCONFIDENCE_INTERVAL: [0.244, 0.448]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.36,
+        "confidence_interval": [
+          0.244,
+          0.448
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2399",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 0.233\nCONFIDENCE_INTERVAL: [0.118, 0.409]\nCONFIDENCE: 0.94",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 0.233,
+        "confidence_interval": [
+          0.118,
+          0.409
+        ],
+        "confidence": 0.94
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1567",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 63.4\nCONFIDENCE_INTERVAL: [59.2, 67.5]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 63.4,
+        "confidence_interval": [
+          59.2,
+          67.5
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2530",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 353.0\nCONFIDENCE_INTERVAL: [120.9, 691.4]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 353.0,
+        "confidence_interval": [
+          120.9,
+          691.4
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1080",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 5\nCONFIDENCE_INTERVAL: [-40, 50]\nCONFIDENCE: 0.6",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 5.0,
+        "confidence_interval": [
+          -40.0,
+          50.0
+        ],
+        "confidence": 0.6
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2645",
+      "response": "FRAMEWORK: monte_carlo\nPOINT_ESTIMATE: 33.0\nCONFIDENCE_INTERVAL: [31.3, 34.8]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "monte_carlo",
+        "point_estimate": 33.0,
+        "confidence_interval": [
+          31.3,
+          34.8
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1240",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.908\nCONFIDENCE_INTERVAL: [0.746, 0.963]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.908,
+        "confidence_interval": [
+          0.746,
+          0.963
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0410",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.34\nCONFIDENCE_INTERVAL: [0.276, 0.406]\nCONFIDENCE: 0.8",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.34,
+        "confidence_interval": [
+          0.276,
+          0.406
+        ],
+        "confidence": 0.8
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1552",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 218.45\nCONFIDENCE_INTERVAL: [194.0, 245.9]\nCONFIDENCE: 0.78",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 218.45,
+        "confidence_interval": [
+          194.0,
+          245.9
+        ],
+        "confidence": 0.78
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1845",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 217.1\nCONFIDENCE_INTERVAL: [181.8, 252.3]\nCONFIDENCE: 0.97",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 217.1,
+        "confidence_interval": [
+          181.8,
+          252.3
+        ],
+        "confidence": 0.97
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1909",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 269.7\nCONFIDENCE_INTERVAL: [225.1, 323.5]\nCONFIDENCE: 0.70",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 269.7,
+        "confidence_interval": [
+          225.1,
+          323.5
+        ],
+        "confidence": 0.7
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2280",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.195\nCONFIDENCE_INTERVAL: [0.172, 0.218]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.195,
+        "confidence_interval": [
+          0.172,
+          0.218
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1470",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.039\nCONFIDENCE_INTERVAL: [0.017, 0.061]\nCONFIDENCE: 0.98",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.039,
+        "confidence_interval": [
+          0.017,
+          0.061
+        ],
+        "confidence": 0.98
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2980",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 272.4\nCONFIDENCE_INTERVAL: [252.5, 292.3]\nCONFIDENCE: 0.97",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 272.4,
+        "confidence_interval": [
+          252.5,
+          292.3
+        ],
+        "confidence": 0.97
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1707",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 120.8\nCONFIDENCE_INTERVAL: [115.7, 125.9]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 120.8,
+        "confidence_interval": [
+          115.7,
+          125.9
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2575",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 473.7\nCONFIDENCE_INTERVAL: [415.8, 531.6]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 473.7,
+        "confidence_interval": [
+          415.8,
+          531.6
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0545",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.413\nCONFIDENCE_INTERVAL: [0.311, 0.496]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.413,
+        "confidence_interval": [
+          0.311,
+          0.496
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1290",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 47\nCONFIDENCE_INTERVAL: [33, 148]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 47.0,
+        "confidence_interval": [
+          33.0,
+          148.0
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0862",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 377.7\nCONFIDENCE_INTERVAL: [364.7, 390.7]\nCONFIDENCE: 0.97",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 377.7,
+        "confidence_interval": [
+          364.7,
+          390.7
+        ],
+        "confidence": 0.97
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1310",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 124.4\nCONFIDENCE_INTERVAL: [112.78, 136.02]\nCONFIDENCE: 0.98",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 124.4,
+        "confidence_interval": [
+          112.78,
+          136.02
+        ],
+        "confidence": 0.98
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1313",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.056\nCONFIDENCE_INTERVAL: [0.055, 0.057]\nCONFIDENCE: 0.99",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.056,
+        "confidence_interval": [
+          0.055,
+          0.057
+        ],
+        "confidence": 0.99
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0687",
+      "response": "FRAMEWORK: monte_carlo\nPOINT_ESTIMATE: 122.7\nCONFIDENCE_INTERVAL: [111.3, 134.6]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "monte_carlo",
+        "point_estimate": 122.7,
+        "confidence_interval": [
+          111.3,
+          134.6
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1934",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 58.9\nCONFIDENCE_INTERVAL: [54.6, 63.1]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 58.9,
+        "confidence_interval": [
+          54.6,
+          63.1
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1889",
+      "response": "FRAMEWORK: monte_carlo\nPOINT_ESTIMATE: 137.5\nCONFIDENCE_INTERVAL: [131.4, 143.9]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "monte_carlo",
+        "point_estimate": 137.5,
+        "confidence_interval": [
+          131.4,
+          143.9
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1885",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.539\nCONFIDENCE_INTERVAL: [0.498, 0.579]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.539,
+        "confidence_interval": [
+          0.498,
+          0.579
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0327",
+      "response": "FRAMEWORK: monte_carlo\nPOINT_ESTIMATE: 110.9\nCONFIDENCE_INTERVAL: [104.2, 117.6]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "monte_carlo",
+        "point_estimate": 110.9,
+        "confidence_interval": [
+          104.2,
+          117.6
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1246",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 2.96\nCONFIDENCE_INTERVAL: [2.47, 3.64]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 2.96,
+        "confidence_interval": [
+          2.47,
+          3.64
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-3020",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: -15.5\nCONFIDENCE_INTERVAL: [-57, 96]\nCONFIDENCE: 0.67",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": -15.5,
+        "confidence_interval": [
+          -57.0,
+          96.0
+        ],
+        "confidence": 0.67
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1509",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 146.22\nCONFIDENCE_INTERVAL: [117.24, 175.2]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 146.22,
+        "confidence_interval": [
+          117.24,
+          175.2
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0152",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.804\nCONFIDENCE_INTERVAL: [0.776, 0.825]\nCONFIDENCE: 0.90",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.804,
+        "confidence_interval": [
+          0.776,
+          0.825
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1690",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 347.45\nCONFIDENCE_INTERVAL: [100.66, 726.74]\nCONFIDENCE: 0.70",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 347.45,
+        "confidence_interval": [
+          100.66,
+          726.74
+        ],
+        "confidence": 0.7
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0640",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.40\nCONFIDENCE_INTERVAL: [0.24, 0.50]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.4,
+        "confidence_interval": [
+          0.24,
+          0.5
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1309",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 2.38\nCONFIDENCE_INTERVAL: [1.97, 3.01]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 2.38,
+        "confidence_interval": [
+          1.97,
+          3.01
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1826",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 112.1\nCONFIDENCE_INTERVAL: [106.7, 117.8]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 112.1,
+        "confidence_interval": [
+          106.7,
+          117.8
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2033",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.54\nCONFIDENCE_INTERVAL: [0.49, 0.59]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.54,
+        "confidence_interval": [
+          0.49,
+          0.59
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0858",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.558\nCONFIDENCE_INTERVAL: [0.499, 0.604]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.558,
+        "confidence_interval": [
+          0.499,
+          0.604
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1906",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.613\nCONFIDENCE_INTERVAL: [0.547, 0.679]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.613,
+        "confidence_interval": [
+          0.547,
+          0.679
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0916",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.82\nCONFIDENCE_INTERVAL: [0.75, 0.89]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.82,
+        "confidence_interval": [
+          0.75,
+          0.89
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0265",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 190.8\nCONFIDENCE_INTERVAL: [167.2, 214.4]\nCONFIDENCE: 0.97",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 190.8,
+        "confidence_interval": [
+          167.2,
+          214.4
+        ],
+        "confidence": 0.97
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0279",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.81\nCONFIDENCE_INTERVAL: [0.75, 0.87]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.81,
+        "confidence_interval": [
+          0.75,
+          0.87
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1947",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.439\nCONFIDENCE_INTERVAL: [0.38, 0.49]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.439,
+        "confidence_interval": [
+          0.38,
+          0.49
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2507",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 133.69\nCONFIDENCE_INTERVAL: [126.34, 141.04]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 133.69,
+        "confidence_interval": [
+          126.34,
+          141.04
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0724",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.84\nCONFIDENCE_INTERVAL: [0.815, 0.887]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.84,
+        "confidence_interval": [
+          0.815,
+          0.887
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2384",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.056\nCONFIDENCE_INTERVAL: [0.055, 0.058]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.056,
+        "confidence_interval": [
+          0.055,
+          0.058
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1468",
+      "response": "FRAMEWORK: frequentist_inference\nPOINT_ESTIMATE: 240.0\nCONFIDENCE_INTERVAL: [224.1, 255.9]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "frequentist_inference",
+        "point_estimate": 240.0,
+        "confidence_interval": [
+          224.1,
+          255.9
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2702",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.141\nCONFIDENCE_INTERVAL: [0.081, 0.194]\nCONFIDENCE: 0.90",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.141,
+        "confidence_interval": [
+          0.081,
+          0.194
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0725",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 152.8\nCONFIDENCE_INTERVAL: [125.3, 180.2]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 152.8,
+        "confidence_interval": [
+          125.3,
+          180.2
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0007",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.96\nCONFIDENCE_INTERVAL: [0.93, 0.99]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.96,
+        "confidence_interval": [
+          0.93,
+          0.99
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2876",
+      "response": "",
+      "parsed": {
+        "framework": null,
+        "point_estimate": null,
+        "confidence_interval": null,
+        "confidence": 0.5
+      },
+      "success": false
+    },
+    {
+      "problem_id": "MURU-1823",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.879\nCONFIDENCE_INTERVAL: [0.846, 0.917]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.879,
+        "confidence_interval": [
+          0.846,
+          0.917
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2838",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.992\nCONFIDENCE_INTERVAL: [0.991, 0.993]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.992,
+        "confidence_interval": [
+          0.991,
+          0.993
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1712",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.084\nCONFIDENCE_INTERVAL: [0.080, 0.088]\nCONFIDENCE: 1.0",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.084,
+        "confidence_interval": [
+          0.08,
+          0.088
+        ],
+        "confidence": 1.0
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2692",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.572\nCONFIDENCE_INTERVAL: [0.525, 0.621]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.572,
+        "confidence_interval": [
+          0.525,
+          0.621
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1032",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.936\nCONFIDENCE_INTERVAL: [0.921, 0.952]\nCONFIDENCE: 0.90",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.936,
+        "confidence_interval": [
+          0.921,
+          0.952
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2205",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.147\nCONFIDENCE_INTERVAL: [0.103, 0.188]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.147,
+        "confidence_interval": [
+          0.103,
+          0.188
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2531",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.069\nCONFIDENCE_INTERVAL: [0.068, 0.0704]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.069,
+        "confidence_interval": [
+          0.068,
+          0.0704
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2334",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.996\nCONFIDENCE_INTERVAL: [0.994, 0.998]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.996,
+        "confidence_interval": [
+          0.994,
+          0.998
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1912",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.51\nCONFIDENCE_INTERVAL: [0.38, 0.61]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.51,
+        "confidence_interval": [
+          0.38,
+          0.61
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1142",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 181.8\nCONFIDENCE_INTERVAL: [173.44, 190.08]\nCONFIDENCE: 0.97",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 181.8,
+        "confidence_interval": [
+          173.44,
+          190.08
+        ],
+        "confidence": 0.97
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1087",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.675\nCONFIDENCE_INTERVAL: [0.600, 0.750]\nCONFIDENCE: 0.8",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.675,
+        "confidence_interval": [
+          0.6,
+          0.75
+        ],
+        "confidence": 0.8
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2654",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 152.05\nCONFIDENCE_INTERVAL: [138.62, 165.48]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 152.05,
+        "confidence_interval": [
+          138.62,
+          165.48
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2921",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 59.2\nCONFIDENCE_INTERVAL: [54.3, 64.9]\nCONFIDENCE: 0.90",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 59.2,
+        "confidence_interval": [
+          54.3,
+          64.9
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0252",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.43\nCONFIDENCE_INTERVAL: [0.29, 0.54]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.43,
+        "confidence_interval": [
+          0.29,
+          0.54
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1748",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.382\nCONFIDENCE_INTERVAL: [0.216, 0.548]\nCONFIDENCE: 0.93",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.382,
+        "confidence_interval": [
+          0.216,
+          0.548
+        ],
+        "confidence": 0.93
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2284",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.483\nCONFIDENCE_INTERVAL: [0.455, 0.511]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.483,
+        "confidence_interval": [
+          0.455,
+          0.511
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0493",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 200.4\nCONFIDENCE_INTERVAL: [172.35, 228.45]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 200.4,
+        "confidence_interval": [
+          172.35,
+          228.45
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2052",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.45\nCONFIDENCE_INTERVAL: [0.416, 0.501]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.45,
+        "confidence_interval": [
+          0.416,
+          0.501
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2576",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.17\nCONFIDENCE_INTERVAL: [0.11, 0.23]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.17,
+        "confidence_interval": [
+          0.11,
+          0.23
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0615",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 93.0\nCONFIDENCE_INTERVAL: [87.2, 99.1]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 93.0,
+        "confidence_interval": [
+          87.2,
+          99.1
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0680",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.25\nCONFIDENCE_INTERVAL: [0.10, 0.36]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.25,
+        "confidence_interval": [
+          0.1,
+          0.36
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1138",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.498\nCONFIDENCE_INTERVAL: [0.426, 0.574]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.498,
+        "confidence_interval": [
+          0.426,
+          0.574
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1170",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.657\nCONFIDENCE_INTERVAL: [0.570, 0.715]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.657,
+        "confidence_interval": [
+          0.57,
+          0.715
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-1252",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 423.3\nCONFIDENCE_INTERVAL: [366.5, 480.0]\nCONFIDENCE: 0.85",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 423.3,
+        "confidence_interval": [
+          366.5,
+          480.0
+        ],
+        "confidence": 0.85
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2852",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.819\nCONFIDENCE_INTERVAL: [0.755, 0.894]\nCONFIDENCE: 0.90",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.819,
+        "confidence_interval": [
+          0.755,
+          0.894
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0191",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.167\nCONFIDENCE_INTERVAL: [0.091, 0.232]\nCONFIDENCE: 0.90",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.167,
+        "confidence_interval": [
+          0.091,
+          0.232
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-0635",
+      "response": "FRAMEWORK: decision_theory\nPOINT_ESTIMATE: 0.374\nCONFIDENCE_INTERVAL: [0.325, 0.422]\nCONFIDENCE: 0.9",
+      "parsed": {
+        "framework": "decision_theory",
+        "point_estimate": 0.374,
+        "confidence_interval": [
+          0.325,
+          0.422
+        ],
+        "confidence": 0.9
+      },
+      "success": true
+    },
+    {
+      "problem_id": "MURU-2450",
+      "response": "FRAMEWORK: bayesian_inference\nPOINT_ESTIMATE: 0.338\nCONFIDENCE_INTERVAL: [0.248, 0.409]\nCONFIDENCE: 0.95",
+      "parsed": {
+        "framework": "bayesian_inference",
+        "point_estimate": 0.338,
+        "confidence_interval": [
+          0.248,
+          0.409
+        ],
+        "confidence": 0.95
+      },
+      "success": true
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "display": "GPT-OSS-120B",
+    "n": 100,
+    "v1_raw": 0.92,
+    "v1_unit": 0.97,
+    "v2_raw": 0.96,
+    "v2_unit": 0.96,
+    "v1_mismatches": 5,
+    "v2_mismatches": 0,
+    "mcnemar_vs_v1_unit": {
+      "v2_only": 1,
+      "v1_only": 2,
+      "p_value": 1.0
+    },
+    "mcnemar_vs_v1_raw": {
+      "v2_only": 5,
+      "v1_only": 1,
+      "p_value": 0.21875
+    },
+    "n_v2_answered": 100,
+    "n_subset": 100
+  },
+  {
+    "display": "Llama-3.3-70B",
+    "n": 73,
+    "v1_raw": 0.7671232876712328,
+    "v1_unit": 0.863013698630137,
+    "v2_raw": 0.8493150684931506,
+    "v2_unit": 0.8493150684931506,
+    "v1_mismatches": 7,
+    "v2_mismatches": 0,
+    "mcnemar_vs_v1_unit": {
+      "v2_only": 2,
+      "v1_only": 3,
+      "p_value": 1.0
+    },
+    "mcnemar_vs_v1_raw": {
+      "v2_only": 9,
+      "v1_only": 3,
+      "p_value": 0.14599609375
+    },
+    "n_v2_answered": 73,
+    "n_subset": 100
+  },
+  {
+    "display": "Llama-3.1-8B",
+    "n": 94,
+    "v1_raw": 0.4787234042553192,
+    "v1_unit": 0.5,
+    "v2_raw": 0.44680851063829785,
+    "v2_unit": 0.4787234042553192,
+    "v1_mismatches": 2,
+    "v2_mismatches": 3,
+    "mcnemar_vs_v1_unit": {
+      "v2_only": 12,
+      "v1_only": 17,
+      "p_value": 0.45825831964612007
+    },
+    "mcnemar_vs_v1_raw": {
+      "v2_only": 13,
+      "v1_only": 16,
+      "p_value": 0.711071103811264
+    },
+    "n_v2_answered": 94,
+    "n_subset": 100
+  }
+]
