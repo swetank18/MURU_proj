@@ -158,6 +158,26 @@ R4 (corroborated unit mismatch) is credited correct by the unit accounting, so i
 
 **83% of real errors carry no mechanical code.** That is stated, not hidden: assigning the computation codes needs a second coder and an inter-rater statistic, and a balanced sample (25/model, stratified by category) is prepared for that pass. GPT-OSS-120B has only 9 codeable errors in total, which bounds any per-model claim about the leader. Reproduce with `make reanalyze` then `python evaluation/failure_codebook.py`.
 
+### Do failure modes shift with capability? (judgment pass)
+
+83% of real errors carry no rule-decidable code, so all 86 errors in the balanced sample were **read** — full problem, ground-truth derivation, complete model response — and given one primary code each, with a verbatim quote licensing every code. Coding file: `evaluation/coding/coding_claude.json` (committed; it is the one artifact here that cannot be regenerated). Report: `python evaluation/judgment_coding.py`.
+
+| Model | n | computation | reporting | no comp. | item defect | format | reporting 95% CI |
+|---|---:|---:|---:|---:|---:|---:|---|
+| GPT-OSS-120B | 6 | 1 (17%) | **3 (50%)** | 2 (33%) | — | — | [19, 81] |
+| Qwen3-32B | 5 | 1 (20%) | **3 (60%)** | — | 1 (20%) | — | [23, 88] |
+| Llama-4-Scout-17B | 25 | 14 (56%) | 8 (32%) | 2 (8%) | — | 1 (4%) | [17, 52] |
+| Llama-3.3-70B | 25 | 18 (72%) | 4 (16%) | 1 (4%) | 2 (8%) | — | [6, 35] |
+| Llama-3.1-8B | 25 | **19 (76%)** | 2 (8%) | 4 (16%) | — | — | [2, 25] |
+
+**The composition shifts.** Computation failures fall monotonically down the leaderboard (76% → 72% → 56% → 20% → 17%) while *reporting* failures rise (8% → 16% → 32% → 60% → 50%). **GPT-OSS-120B makes no arithmetic error anywhere in its sampled failures** — every codeable one is a right computation reported as the wrong quantity. Honest caveat: 86 items, and the two rows carrying the strongest signal are the thinnest. Among the three full rows the trend is directional but not significant (8B 2/25 vs Scout 8/25, Fisher exact p=0.074); pooling the two strongest against the weakest gives p=0.005, but that is a post-hoc grouping.
+
+**One failure dominates.** 10 of the 11 wrong-quantity codes are value-of-information items: the *price* of the information reported as its value, a yes/no decision flag where a magnitude was asked, or the EV *without* information. Llama-4-Scout on MURU-3019 computes the VOI as −7.176K against a ground truth of −7.3K and then reports 334.8.
+
+**Reading also found bugs in the benchmark and the harness.** Three test items carry physiologically impossible values (diastolic BP of 482.3 mmHg); the base-rate-fallacy template states one accuracy in the stem and a different one in the colleague's quote, with ground truth silently using the latter as sensitivity; and the Simpson's-paradox items have ground-truth intervals as narrow as 0.001, so arithmetically correct answers fail on rounding. Two parser defects (confidence read from prose; unit-suffixed intervals dropped) are fixed — re-parsing all 1,339 readable responses moves exactly two cells: 8B accuracy 43.9→44.3%, Qwen framework-match 80.2→83.0%.
+
+**One coder, so no κ.** `judgment_coding.py` computes Cohen's κ the moment a second coding exists and refuses to report reliability before then: `python evaluation/judgment_coding.py --against <coder>`.
+
 ### Harness validation baselines (simulated — not a ranking of models)
 
 These five tiers are **simulator profiles**, not language models. They exist to show the harness recovers a configured ordering and to establish its resolution (smallest detectable gap: 11.6 pp at p < 10⁻³). They are reported separately from the leaderboard because ranking a simulator against a model compares a configuration to a measurement.

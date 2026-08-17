@@ -2,6 +2,31 @@
 
 ## Progress log
 
+**2026-08-17 (2) — the judgment pass answered P2c, and found bugs in the benchmark.**
+
+All 86 sampled errors read in full and coded (paper §7.3, `evaluation/coding/coding_claude.json`).
+**Failure modes shift with capability rather than merely shrinking:** computation failures
+76% → 72% → 56% → 20% → 17% down the leaderboard, reporting failures 8% → 16% → 32% → 60%
+→ 50%, and GPT-OSS-120B makes no arithmetic error at all in its sampled failures. Directional
+only at this n (Fisher p = 0.074 across the three full rows; p = 0.005 on a post-hoc pooling).
+10 of 11 wrong-quantity codes are value-of-information items — the *price* of the information,
+a yes/no flag, or the EV *without* information reported as the value; Llama-4-Scout on
+MURU-3019 computes the VOI as −7.176K against a GT of −7.3K and then reports 334.8.
+
+Four codes had to be added mid-coding, and **two of them describe our items, not the models**:
+three test stems carry physiologically impossible values (diastolic BP 482.3 mmHg — one model
+noticed and was the only one scored wrong for it); the base-rate-fallacy template states one
+accuracy in the stem and a different one in the colleague's quote, with the GT silently using
+the latter as sensitivity, which makes the stem unsolvable as written; and Simpson's-paradox
+GT intervals can be 0.001 wide, so correct arithmetic fails on rounding. See the new P0 item.
+
+Two **harness** bugs also fell out: confidence was read from the first match anywhere (prose
+"Confidence: 1 - (upper-lower)/..." recorded as 1.0) and unit-suffixed intervals
+(`[224.32K, 253.5K]`) did not parse — both removing exactly the corroboration the unit rule
+needs, so both made the correction more conservative. Fixed, 13 tests. Re-parsing all 1,339
+readable responses moves two cells only: 8B accuracy 43.9→44.3%, Qwen framework-match
+80.2→83.0%. Tables keep the archived parse; the deltas are disclosed. **136 tests, PDF 39pp.**
+
 **2026-08-17 — the post-hoc correction is validated; P2's rule-decidable half is done; the
 provider deleted most of the panel.**
 
@@ -213,7 +238,11 @@ These are cheap and they change what the numbers mean.
 - [x] **Un-gitignore `evaluation/baselines/`** or publish it as a Zenodo artifact with a manifest. "Reconstructs bit-exactly" is not verifiable if reviewers can't see the archive.
 - [x] **Retire simulated tiers from the main leaderboard.** Move Expert/Strong/Competent/Heuristic/Random to a *separate* table labelled "harness validation baselines." Reviewers discount simulated rows, and mixing them into a ranked leaderboard reads as padding. Keep them — they justify the metric — just don't rank them alongside real models.
 - [x] **Kill partial-coverage rows or complete them.** A row at n=59 next to a row at n=300 in the same table is a reviewer magnet. Either finish the run (see P1) or drop it to an appendix table with an explicit caveat.
-- [ ] **Freeze a `v1.0` dataset tag** and pin it in the citation. Any later problem edits go to `v1.1`.
+- [ ] **Fix the three item-construction defects the judgment pass found (2026-08-17), then freeze.** These are generator bugs, not scoring choices, and one of them scores a model *down* for applying domain knowledge:
+  - **Physically impossible stem values.** `MURU-0422`, `MURU-1258`, `MURU-1909` give diastolic blood pressures of 213.1, 482.3 and 280.8 mmHg. The generator samples the mean without reference to the physical range of the named quantity. Llama-3.3-70B alone flagged 482.3 as a typo and substituted 82.3, and is the only one of the 15 model×item cells scored incorrect on those three items. Constrain the sampler per quantity.
+  - **The base-rate-fallacy template is unsolvable as written.** The stem gives "N% accuracy" and a specificity, the colleague's quote uses a *different* percentage, and the ground truth silently adopts the colleague's figure as the sensitivity. From the stem's own numbers the implied sensitivity exceeds 1 — Qwen3-32B derives 3.29, correctly rejects it, and never answers. Either state sensitivity explicitly or make the two figures agree.
+  - **Ground-truth intervals narrower than the invited precision.** On the Simpson's-paradox items the treatment difference is nearly constant in the uncertain proportion, so intervals can be 0.001 wide; Llama-3.3-70B's arithmetically correct 0.0579 reported as 0.058 falls outside. Either widen by a rounding allowance or state the required precision in the prompt.
+- [ ] **Freeze a `v1.0` dataset tag** and pin it in the citation. Any later problem edits go to `v1.1`. *Do the three fixes above first — they change ground truth, so they must not land after a tag.*
 - [x] **Add a `results/schema.json`** for the prediction record format so third-party submissions are possible.
 
 **Acceptance:** every number in the README is traceable to a committed JSON archive, and no metric silently absorbs a parse failure.
@@ -329,7 +358,8 @@ Original plan text follows. Code a stratified sample of **300 incorrect predicti
 ### P2b — Code it
 
 - [x] **Rule-coded pass (not in the original plan, and it should have been).** Five of the twelve codes are decidable from the record without reading anything: R2 ambiguous-target, R3 wrong-summary, R4 unit-mismatch, M2 false-precision, S1 off-schema. `failure_codebook.py` decides those, unit-tested one rule at a time (17 tests, mostly negative cases), and returns *nothing* for the other seven rather than guessing. This is what makes the κ pass affordable: it removes 46 of 275 errors from the human queue and, more importantly, fixes the denominator before any judgment enters.
-- [ ] **Human coding:** you code 100 items. A second coder codes an overlapping 50. Report **Cohen's κ**. Target κ > 0.7; if below, the codebook is ambiguous — revise and recode. *Sample ready: `evaluation/errors/sample_86.json`, balanced 25/25/25 + GPT-OSS 6 + Qwen 5, seeded and redrawable from the committed archives. The 86 excludes corroborated unit mismatches.*
+- [x] **First coding pass done (2026-08-17), by an LLM coder rather than a human.** All 86 sampled errors read in full and given one primary code with a verbatim quote: `evaluation/coding/coding_claude.json`, report via `python evaluation/judgment_coding.py`. This is *not* the human coding this line asked for and does not substitute for it — it is one reader with its evidence attached.
+- [ ] **Second coder + Cohen's κ — this is now the binding item.** The apparatus is built and tested: `cohens_kappa` runs on `--against <coder>`, the validator rejects a code with no evidence quote, and κ is deliberately not reported for a single coder. What is missing is a second reading of the same 86 items. *Sample: `evaluation/errors/sample_86.json`, balanced 25/25/25 + GPT-OSS 6 + Qwen 5, seeded and redrawable from the committed archives; excludes corroborated unit mismatches.*
 - [ ] **LLM-judge scale-up:** use a strong model as a judge on the remaining 200, *validated against* the human-coded 100. Report judge–human agreement. Never report LLM-judge numbers without that validation figure — reviewers will (correctly) reject it otherwise. *Caveat that has appeared since: only `gpt-oss-120b` is still served on Groq (see P1a), so the judge is either that endpoint — judging its own errors among others — or a paid one.*
 - [x] **Output:** a `model × failure-mode` matrix — for the mechanical codes, with `_uncoded` reported as a column. Per-difficulty breakdown still open; it needs the judgment codes to be worth splitting.
 
@@ -352,6 +382,26 @@ composition claim at any significance. **The κ pass is what converts this into 
 in the acceptance criterion.** A second, cleaner signal is already reportable: 21% of
 surviving errors are wrong point estimates whose own stated interval contains the truth
 (31% Llama-3.3, 33% Scout, 6% Qwen) — that is in the paper as §7.2's second finding.
+
+**ANSWERED later the same day by the judgment pass — direction: shift, not shrink**
+(paper §7.3, Table 19). All 86 sampled errors coded. Computation failures fall
+monotonically down the leaderboard — 76%, 72%, 56%, 20%, 17% — and *reporting* failures
+rise — 8%, 16%, 32%, 60%, 50%. **GPT-OSS-120B makes no arithmetic error at all in its
+sampled failures.** The acceptance sentence can now be completed:
+
+> Models fail on MURU-BENCH primarily by **arithmetic and formula error inside the right
+> framework** (76% of the weakest model's coded errors), and this shifts to **reporting a
+> correct computation as the wrong quantity** as capability increases (50–60% at the top
+> of the panel; reporting-share 95% CI [2, 25] at the bottom versus [19, 81] at the top).
+
+**It has a CI but not a p below 0.05.** Across the three rows with a full sample of 25 the
+trend is directional only (8B 2/25 vs Scout 8/25, Fisher exact p = 0.074); pooling the two
+strongest models against the weakest gives p = 0.005, but that is a post-hoc grouping and
+is reported as one. What would settle it is *more errors from strong models*, i.e. more
+models rather than more coding — GPT-OSS contributes 9 codeable errors in total.
+**This is now the strongest argument for P1a.** Also: 10 of the 11 wrong-quantity codes
+land on value-of-information items, which is why the Decision-Under-Uncertainty column
+should not be read as a plain capability gap.
 
 - [ ] **6–8 worked failure examples** in the appendix: full problem, full model output, annotated with what went wrong and what the correct chain was. This is the single most persuasive artifact for a skeptical reader. One page of a model confidently botching a base rate does more than three tables.
 

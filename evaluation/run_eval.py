@@ -340,8 +340,44 @@ def get_client(model_name: str) -> ModelClient:
 # Response parser
 # ──────────────────────────────────────────────────────────────────────
 
+# A number as models actually write one in the schema block: optional sign,
+# optional currency mark, digits. An endpoint may carry a unit suffix --- a
+# model answering in thousands writes ``[224.32K, 253.5K]`` --- and dropping
+# the interval in that case is exactly backwards, because a unit suffix is the
+# strongest available signal that the answer needs the rescale of
+# ``unit_accounting``. The suffix is consumed and discarded; the numbers are
+# recorded as written, and deciding what unit they are in is not the parser's
+# job (Section: unit accounting).
+_NUM = r"[-+]?\$?\s*\d*\.?\d+"
+_UNIT = r"(?:\s*(?:%|[A-Za-zµ°][A-Za-zµ°/³²]*))?"
+
+_FRAMEWORK_RE = re.compile(r"FRAMEWORK:\s*(\w+)", re.IGNORECASE)
+_PE_RE = re.compile(rf"POINT_ESTIMATE:\s*({_NUM})", re.IGNORECASE)
+_CI_RE = re.compile(
+    rf"CONFIDENCE_INTERVAL:\s*\[\s*({_NUM})\s*{_UNIT}\s*,\s*({_NUM})\s*{_UNIT}\s*\]",
+    re.IGNORECASE,
+)
+# Confidence is read from a line that contains the field and nothing else.
+# Matching anywhere finds prose first --- one model opens its final step with
+# "Confidence: 1 - (upper bound - lower bound) / ...", and reading that as a
+# stated confidence of 1.0 turns a hedged answer into an overconfident one.
+_CONF_LINE_RE = re.compile(
+    rf"^[ \t]*CONFIDENCE[ \t]*:[ \t]*({_NUM})[ \t]*$", re.IGNORECASE | re.MULTILINE
+)
+_CONF_ANY_RE = re.compile(rf"CONFIDENCE:\s*({_NUM})", re.IGNORECASE)
+
+
+def _to_float(text: str) -> float:
+    return float(text.replace("$", "").replace(" ", ""))
+
+
 def parse_response(response: str) -> dict:
-    """Extract structured answer from model response."""
+    """Extract structured answer from model response.
+
+    Where a field could match more than once, the *last* match wins: the schema
+    block is emitted at the end of a response, and everything before it is
+    working.
+    """
     result = {
         "framework": None,
         "point_estimate": None,
@@ -349,28 +385,22 @@ def parse_response(response: str) -> dict:
         "confidence": 0.5,  # default
     }
 
-    # Extract FRAMEWORK
-    fw_match = re.search(r"FRAMEWORK:\s*(\w+)", response, re.IGNORECASE)
-    if fw_match:
-        result["framework"] = fw_match.group(1).lower()
+    fw = _FRAMEWORK_RE.findall(response)
+    if fw:
+        result["framework"] = fw[-1].lower()
 
-    # Extract POINT_ESTIMATE
-    pe_match = re.search(r"POINT_ESTIMATE:\s*([-+]?\d*\.?\d+)", response, re.IGNORECASE)
-    if pe_match:
-        result["point_estimate"] = float(pe_match.group(1))
+    pe = _PE_RE.findall(response)
+    if pe:
+        result["point_estimate"] = _to_float(pe[-1])
 
-    # Extract CONFIDENCE_INTERVAL
-    ci_match = re.search(
-        r"CONFIDENCE_INTERVAL:\s*\[\s*([-+]?\d*\.?\d+)\s*,\s*([-+]?\d*\.?\d+)\s*\]",
-        response, re.IGNORECASE
-    )
-    if ci_match:
-        result["confidence_interval"] = (float(ci_match.group(1)), float(ci_match.group(2)))
+    ci = _CI_RE.findall(response)
+    if ci:
+        lo, hi = ci[-1]
+        result["confidence_interval"] = (_to_float(lo), _to_float(hi))
 
-    # Extract CONFIDENCE
-    conf_match = re.search(r"CONFIDENCE:\s*([-+]?\d*\.?\d+)", response, re.IGNORECASE)
-    if conf_match:
-        result["confidence"] = float(conf_match.group(1))
+    conf = _CONF_LINE_RE.findall(response) or _CONF_ANY_RE.findall(response)
+    if conf:
+        result["confidence"] = _to_float(conf[-1])
 
     return result
 

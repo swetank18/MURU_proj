@@ -1,0 +1,663 @@
+{
+  "coder": "claude-opus-5",
+  "date": "2026-08-17",
+  "protocol": "Read every sampled error in full alongside its stem, ground-truth derivation and the model's complete response. Primary code = the FIRST point at which the derivation left the rails; secondary codes recorded but excluded from agreement statistics. Every code carries a verbatim quote. Four codes (T1, D1, A1, R5) were added during coding for recurring kinds the codebook written from the mechanical pass did not anticipate; items coded before a code existed were revisited and are marked with recoded_from.",
+  "single_coder_caveat": "One coder, no second reading, so no chance-corrected agreement is available. Every claim from this file is one reader's opinion with its evidence attached, not a validated measurement.",
+  "codes": [
+    {
+      "key": "gpt-oss-120b:MURU-0007",
+      "primary": "XX",
+      "secondary": [],
+      "evidence": "",
+      "note": "Response is the four-line schema block only; GPT-OSS returns no visible reasoning, so there is no derivation to code."
+    },
+    {
+      "key": "gpt-oss-120b:MURU-1290",
+      "primary": "XX",
+      "secondary": [],
+      "evidence": "",
+      "note": "Schema-only response. Answer 20000 is in dollars but does not rescale onto the GT interval, so not a unit mismatch either."
+    },
+    {
+      "key": "gpt-oss-120b:MURU-1922",
+      "primary": "C1",
+      "secondary": [],
+      "evidence": "POINT_ESTIMATE: -0.065 / CONFIDENCE_INTERVAL: [-0.068, -0.063]",
+      "note": "Sign inversion decidable without a reasoning trace: magnitude and both interval endpoints are the exact mirror of GT 0.065 [0.063,0.068]. Simpson's-paradox direction reversed."
+    },
+    {
+      "key": "gpt-oss-120b:MURU-1962",
+      "primary": "R1",
+      "secondary": [
+        "M2"
+      ],
+      "evidence": "POINT_ESTIMATE: -12",
+      "note": "Stem: 'can purchase a Phase I results for $12K'. Reports the price of the information as its value. GT -47.1. Zero-width interval at confidence 1.0."
+    },
+    {
+      "key": "gpt-oss-120b:MURU-3001",
+      "primary": "R1",
+      "secondary": [
+        "M2"
+      ],
+      "evidence": "POINT_ESTIMATE: -21000",
+      "note": "Stem: 'purchase a seismic data for $21K'. Price reported as value, in dollars. GT -53.5. Zero-width interval, confidence 1.0."
+    },
+    {
+      "key": "gpt-oss-120b:MURU-3015",
+      "primary": "R1",
+      "secondary": [
+        "M2"
+      ],
+      "evidence": "POINT_ESTIMATE: -39000",
+      "note": "Stem: 'purchase a pilot study for $39K'. Price reported as value, in dollars. GT -93.5. Zero-width interval, confidence 1.0."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-0007",
+      "primary": "C2",
+      "secondary": [
+        "R3"
+      ],
+      "evidence": "We want to calculate the posterior probability that the drug's true improvement rate exceeds the placebo rate (10% or 0.1)",
+      "note": "Fixes the uncertain placebo range 10-18% at its lower endpoint, so the answer is P(theta>0.10)=0.999 rather than a range. Reported CI [0.11,0.99] is the theta interval, not an interval on the probability."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-0058",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "= 0.855 * (0.81 - 0.67) = 0.855 * 0.14 = 0.1197",
+      "note": "Integrates P(M|R) with respect to itself, yielding the interval width as a factor, and drops P(R)=0.78 entirely. Right framework, invented formula."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-0068",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "P(D|B') = 0.92575 / 0.025 = 37.03 (this is not possible, so we will assume",
+      "note": "Sets up a law-of-total-probability detour needing quantities the stem never gives, derives impossible probabilities, and loops until truncation. The task needs only the product of three stated rates."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-0079",
+      "primary": "C3",
+      "secondary": [
+        "M2"
+      ],
+      "evidence": "we can model this as a beta distribution with parameters alpha = 1 and beta = 1",
+      "note": "Models a stated uniform on [0.67,0.78] as Beta(1,1), updates to Beta(2,2), and takes detection = 0.5 -- a value outside the stated range. Then CI = [0.621,0.621] with 'this is a point estimate, so the confidence interval is the same' at confidence 1.0."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-0239",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "P(Detection | No Detection) = 0.034754 / 0.034754 = 1",
+      "note": "Constructs a ratio that is identically 1, notices it is impossible, recomputes the identical integral, then substitutes 0.75 from an unperformed trapezoid rule. Truncated."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-0457",
+      "primary": "C3",
+      "secondary": [
+        "R1"
+      ],
+      "evidence": "Let's assume the posterior distribution is approximately normal with mean 0.045 and standard deviation 0.015",
+      "note": "Writes Bayes' theorem, never evaluates it: substitutes an assumed normal centred on the prevalence midpoint, so the reported 0.061 is essentially the prior, not the PPV. Sensitivity and specificity never enter the arithmetic."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-0513",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "alpha' = alpha + np = 0.008 + 1(0.91) = 0.919",
+      "note": "Base-rate neglect via a type error: uses the prevalence bounds 0.008/0.017 as Beta hyperparameters, so the answer 0.817 is approximately sens/(sens+1-spec) and the base rate never affects it. CODEBOOK GAP: base-rate neglect, the benchmark's authored F2, has no dedicated code and lands in C3."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1323",
+      "primary": "R3",
+      "secondary": [],
+      "evidence": "POINT_ESTIMATE: 0.0263 / CONFIDENCE_INTERVAL: [0.0263, 0.0995]",
+      "note": "Bayes computed correctly at both base-rate bounds (0.0263, 0.0995 against GT [0.0268,0.111]); then reports the lower endpoint of its own interval as the point estimate instead of a central value. GT point 0.0708. Computation right, summary wrong."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1457",
+      "primary": "C3",
+      "secondary": [
+        "R1"
+      ],
+      "evidence": "Expected value = ($292K * (0.58 - 0.39) / 2) + ($62K * (0.39 - 0.58) / 2)",
+      "note": "Had already computed wheat's EV at both bounds as $151.70K and $195.40K -- exactly the GT interval [151.7,195.4] -- then discarded it for an unnormalised integral, oscillated between 'EV of the best option' and 'EV of the maximum payoff', and looped until truncation. The answer was on the page and was thrown away."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1528",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "P(S_lower) = 0.83 * 0.71 * 0.58 = 0.384",
+      "note": "Correct formula, wrong multiplication: 0.83*0.71*0.58 = 0.342, not 0.384; likewise 0.415 for 0.395. Both bounds slip, so the midpoint 0.400 lands outside GT [0.342,0.395]."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1567",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "N((37.0 * 100.0 + 66.0 * 7.0) / (100.0 + 7.0^2), 1 / (1/100.0 + 1/7.0^2))",
+      "note": "Precision/variance inversion: weights the anchor by its standard deviation rather than its precision, so a deliberately vague prior (sd 100) dominates a tight likelihood (sd 7) and the estimate collapses to 40.5 against a data mean of 66.0. Mechanism behind the authored F1 anchoring mode."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1702",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "P(H|E1) = 0.21 * 2.875 / 1 = 0.61",
+      "note": "Multiplies probabilities by likelihood ratios instead of odds, and divides by P(E)=1 throughout. HARNESS BUG: recorded confidence is 1.0 but the schema block states 0.83 -- the parser matched the prose line 'Confidence: 1 - (upper bound - lower bound)/...' first."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1730",
+      "primary": "C3",
+      "secondary": [
+        "R1"
+      ],
+      "evidence": "Expected value = 227K * p + 91K - 91K * p / Expected value = 136K + 136K * p",
+      "note": "Algebra slip repeated for all four options: the constant term should be the bad-weather payoff (91), not the difference (136). Then reads 'expected value of the best option' as the maximum over p, reporting the value at the upper bound 0.63. Interval [224.32K, 253.5K] was not parsed at all -- the K suffix defeats the interval parser."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1742",
+      "primary": "C5",
+      "secondary": [],
+      "evidence": "measurements = np.array([65.8, 64.1, 67.3, 63.9, 66.5,",
+      "note": "Fabricates a several-hundred-element array of individual measurements the stem never provided (it gives only n=30, mean, sd), then truncates inside the fabricated data. CODEBOOK GAP: inventing inputs is not transcription, but there is no fabrication code."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1760",
+      "primary": "R1",
+      "secondary": [],
+      "evidence": "P(Dig Site South | no artifact found in Dig Site North) = 0.66 * 0.21 / 0.21 = 0.66",
+      "note": "The integral it writes cancels identically, returning the prior 0.66 unchanged; it then reports the prior as the posterior. Negative evidence never updates anything. GT 0.844."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1893",
+      "primary": "A1",
+      "secondary": [],
+      "evidence": "Using numerical integration, we get: P(hazard detected) ~ 0.999",
+      "note": "Builds binomial likelihoods with an undefined n and a normal prior on stated constants, none of which is ever evaluated; the final number is asserted rather than computed. The task needs only 1 - product of three failure probabilities.",
+      "recoded_from": "C3"
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1962",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "EU_with_I = p|I * p * $929K + p|I * (1-p) * -$160K + (1-p|I) * p * -$160K",
+      "note": "Treats the signal as if it multiplied payoffs directly: no posterior update on the signal and no option to abandon after a negative one, so the information can only destroy value. Answers -116453 in dollars."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-1986",
+      "primary": "C4",
+      "secondary": [],
+      "evidence": "Based on this principle, we should use Reference Class C as the most appropriate reference class",
+      "note": "Commits to the smallest, most specific reference class and reports its rate, which is exactly the formalisation choice the item is built to expose. Its interval [43.5%, 78.5%] was not parsed (percent suffix), so the unit accounting had no interval with which to corroborate the percent reading."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-2033",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "P(no submarine in Sector Alpha) = 0.7 * [theta - 0.5theta^2] ... + 0.3 * [theta - 0.5theta^2]",
+      "note": "Applies the miss likelihood (1-theta) to the Bravo branch as well as Alpha, where it should be 1. The two branches then share a factor and cancel, returning the prior 0.30 as the posterior."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-2355",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "R_system_lower = 1 - 0.31 * 0.22 * 0.14 / R_system_lower = 1 - 0.001106",
+      "note": "Correct parallel-reliability formula, arithmetic slip of about 8.6x: 0.31*0.22*0.14 = 0.00955, not 0.001106. Confidence 1.0 justified by 'the probability that the true value of R1 is within this range, which is 1'."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-2384",
+      "primary": "A1",
+      "secondary": [],
+      "evidence": "difference = expected_value - 0.55",
+      "note": "Writes Python it cannot run, then reports the difference between the posterior mean of the junior-employee proportion and Treatment X's aggregate rate -- two incommensurable quantities. The stratified standardisation the item is about is never performed.",
+      "recoded_from": "C3"
+    },
+    {
+      "key": "llama-3_1-8b:MURU-2660",
+      "primary": "A1",
+      "secondary": [],
+      "evidence": "L(theta) = (0.94)^(0.075theta) x (0.11)^(0.925theta)",
+      "note": "Invents a likelihood in which sensitivity and specificity appear as exponents of the prevalence; Bayes is written but never evaluated and 0.63 is asserted from 'numerical integration'.",
+      "recoded_from": "C3"
+    },
+    {
+      "key": "llama-3_1-8b:MURU-2921",
+      "primary": "A1",
+      "secondary": [
+        "R1"
+      ],
+      "evidence": "fit <- brm(mean ~ 1 + (1|school), data = rbind(school_A,",
+      "note": "Writes R/brms code it cannot execute and reports 60.15, essentially school C's raw mean 60.4. The shrinkage factor the item is about is never computed.",
+      "recoded_from": "C3"
+    },
+    {
+      "key": "llama-3_1-8b:MURU-3001",
+      "primary": "C3",
+      "secondary": [
+        "M2"
+      ],
+      "evidence": "p(S|data) = 0.79 * 0.44 + 0.21 * 0.56 = 0.4652",
+      "note": "Computes P(positive signal) and uses it as P(success|signal): no Bayes update, no option to abandon after a negative signal, cost never subtracted. Zero-width interval at confidence 1.0."
+    },
+    {
+      "key": "llama-3_1-8b:MURU-3020",
+      "primary": "C3",
+      "secondary": [
+        "R3"
+      ],
+      "evidence": "EU_with = (0.37 * 0.68 + (1-0.37) * (1-0.68)) * $2035K",
+      "note": "Same signal-as-reweighting error, plus the $57K cost is never subtracted and max(0,.) never applied. Reports the largest of its four scenarios, which is also the upper endpoint of its own interval."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-0255",
+      "primary": "R2",
+      "secondary": [],
+      "evidence": "EV_{B,mid} = 39,340 ... POINT_ESTIMATE: 53000",
+      "note": "Computes EV(B) exactly right at both bounds and the midpoint (30,100 / 48,580 / 39,340 against GT [30.1,48.6] point 39.3 in $K), then reports Option A's guaranteed $53K instead. The arithmetic is perfect; the wrong quantity is reported."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-0533",
+      "primary": "R2",
+      "secondary": [],
+      "evidence": "EV_{lower} = 134,790 ... POINT_ESTIMATE: 198000",
+      "note": "Same template, same failure: EV(B) bounds computed exactly (134,790 and 191,600 against GT [134.7,191.6]) and then Option A's guaranteed $198K is reported."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-0927",
+      "primary": "C1",
+      "secondary": [],
+      "evidence": "Lower bound: measured concentration / (1 + 0.067) = 156.1 / 1.067 = 146.3",
+      "note": "The sensor UNDERestimates, so the correction must raise the reading; the model divides instead of multiplying and moves 156.1 down to 149.5 when the truth is 163.5. Correct magnitude of correction, wrong direction."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1240",
+      "primary": "C3",
+      "secondary": [
+        "M1"
+      ],
+      "evidence": "We multiply the prior odds by the supporting likelihood ratios and then divide by the contradicting likelihood ratios",
+      "note": "Contradicting evidence has LR<1, so dividing by it amplifies rather than attenuates: 0.99 against GT 0.907. The response then says four times that the calculation is mistaken ('this step was incorrectly simplified', 'the mistake in the calculation process') and still reports CONFIDENCE 0.95."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1258",
+      "primary": "D1",
+      "secondary": [],
+      "evidence": "the given value of 482.3 seems unrealistic for diastolic blood pressure, so we'll assume a typo and use 82.3",
+      "note": "ITEM DEFECT, not a model failure. 482.3 mmHg diastolic is not survivable; the generator sampled outside the physical range. The model applied domain knowledge, said so explicitly, and was scored wrong for it. Of the 15 model x item cells on the three impossible-value stems, this is the only one that flagged the problem and the only one scored incorrect.",
+      "recoded_from": "C5"
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1290",
+      "primary": "C3",
+      "secondary": [
+        "R3"
+      ],
+      "evidence": "EVWI = [p x a + (1-p) x (1-a)] x (R - C - I) + [p x (1-a) + (1-p) x a] x (-I)",
+      "note": "Treats a positive signal as guaranteeing the payoff R-C-I regardless of the true state, so information is worth far more than it is. Compares an EVWI computed at the midpoint against EV values at the endpoints, and reports the upper endpoint of its own interval."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1441",
+      "primary": "C3",
+      "secondary": [
+        "M1"
+      ],
+      "evidence": "= 165,421,000,000 / 52,704 ~ $3,136,111",
+      "note": "Mixes units, taking sigma in thousands and mu in units, producing a $3.1M posterior mean for a $328K-$525K problem. Says 'my calculation approach was illustrative but not fully precise', restarts with the correct precision-weighted form, abandons it unfinished, and emits 342059 -- a number that appears nowhere in the derivation -- at confidence 0.95."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1565",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "Simplifying, we get: 0.08p + 0.08 = 0.08(p + 1)",
+      "note": "Drops the (1-p) factor: the difference is 0.08p + 0.08(1-p) = 0.08 exactly, independent of p. The slip manufactures a spurious dependence on p and shifts the answer to 0.09."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1702",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "Posterior probability, P(H|E1) = (2.875 * 0.21) / ((2.875 * 0.21) + (1 * (1 - 0.21))) = 0.545",
+      "note": "The update formula is correct in probability form; the arithmetic is not -- 2.875x0.21/(0.604+0.79) = 0.433, not 0.545. The error compounds through five sequential updates to 0.065 against GT 0.544."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1808",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "hat{y}_C = frac{n_C sigma_C^2 mu + tau^2 y_C}{n_C sigma_C^2 + tau^2}",
+      "note": "Shrinkage weights inverted: the within-site term multiplies the grand mean and the between-site term multiplies the site mean, so a site with 15 observations is pulled almost entirely to the grand mean (70.4 against a raw 49.9 and a GT of 50.3). Same precision-inversion family as MURU-1567."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1962",
+      "primary": "C3",
+      "secondary": [
+        "R1"
+      ],
+      "evidence": "The value of imperfect information (EVII) can be estimated by multiplying EVPI by the accuracy of the information.",
+      "note": "Invents EVII = EVPI x accuracy, then reports a value LEVEL (319,683) where the question asks for a difference. Its own step 6 had already concluded, correctly, that the information is not beneficial at either bound -- matching the GT's negative sign -- before the final answer contradicted it."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-1986",
+      "primary": "C4",
+      "secondary": [],
+      "evidence": "a reasonable approach might be to use the base rate from Reference Class B as a point estimate",
+      "note": "Commits to one reference class (B, 41%) as if the item had a determinate answer. The item's point is that no class is objectively correct and the interval must span them. Different class from the 8B's choice, same failure."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2132",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "(0.37 * 0.76) + ((1-0.37) * 0.58) = 0.2812 + 0.3688 = 0.65",
+      "note": "0.63 x 0.58 = 0.3654, not 0.3688. The 0.0034 slip is larger than the whole GT interval [0.071,0.074], so a nearly-correct standardisation lands outside. Interval bounds also computed with a sign error that inverts them."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2355",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "= 0.0308 * [x - 0.5x^2] from 0.69 to 0.87 ... = 0.0397",
+      "note": "Integrates over the uniform prior without dividing by the interval width 0.18, inflating P(all fail) about fivefold. It then computes the correct bounds 0.9909 and 0.9962 (GT [0.9905,0.996]) further down, calls them 'still not the confidence interval we are looking for', and discards them for an asserted [0.93,0.99]."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2384",
+      "primary": "T1",
+      "secondary": [],
+      "evidence": "diff = perf_X - perf_Y = 0.6086 - 0.5507 = 0.0579",
+      "note": "ITEM TOLERANCE ARTEFACT. The arithmetic is right: 0.0579 against a GT point of 0.057. Reported to three decimals as 0.058, it falls outside a ground-truth interval of [0.056, 0.057] -- width 0.001. The interval encodes only parameter uncertainty and leaves no room for the rounding the four-field schema invites."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2438",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "hat{mu}_B = frac{n_B s_B^2 mu + tau^2 bar{y}_B}{n_B s_B^2 + tau^2}",
+      "note": "Same inverted shrinkage weights as MURU-1808, giving 45.45 against a raw 42.6 and a GT of 42.9. The model reproduces the error verbatim on a different stem, so it is a stable misremembering of the formula rather than a slip."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2531",
+      "primary": "C3",
+      "secondary": [
+        "S1"
+      ],
+      "evidence": "= [0.01 * p^2 + 0.06 * p] from 0.4 to 0.52 ... = 0.0075",
+      "note": "Integrates the difference over the prior without dividing by the width 0.12, giving 0.0075 instead of about 0.069; the reported 0.75 is then a further hundredfold slip from its own figure. The schema block contains two CONFIDENCE_INTERVAL lines with prose argument between them."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2617",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "mu_posterior = [(87^2 * 586) + (100^2 * 399)] / [(87^2) + (100^2)]",
+      "note": "Correct conjugate form for a SINGLE observation, applied to a mean of 20: the sample size never enters the likelihood precision, so 20 comparable sales carry the weight of one and the anchor holds 43% of the estimate. Answer 478.3 against a data mean of 399."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2802",
+      "primary": "R1",
+      "secondary": [
+        "M1"
+      ],
+      "evidence": "we cannot directly calculate the point estimate or the confidence interval as requested ... POINT_ESTIMATE: 24",
+      "note": "States plainly that it cannot compute the answer, then reports the $24K price of the information as the value of the information -- the same substitution GPT-OSS makes on three items -- and attaches confidence 0.8."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2942",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "B = frac{228.01}{228.01 + 38.44}",
+      "note": "Correct shrinkage formula, but sigma_B^2/n_B = 6.2^2/10 = 3.84 is entered as 38.44: the division by n is dropped. B falls from 0.982 to 0.856 and the estimate is over-shrunk to 62.79 against a GT of 63.8. The grand mean is also guessed rather than computed."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2972",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "R_X = 0.52 x 0.87 + (1-0.52) x 0.53 = 0.4524 + 0.2418 = 0.6942",
+      "note": "0.48 x 0.53 = 0.2544; the model reuses 0.2418, the value it computed for Treatment Y in the same step. The copy makes the treatment difference fall with p when it should rise, inverting the sensitivity analysis."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-2993",
+      "primary": "C3",
+      "secondary": [
+        "M1"
+      ],
+      "evidence": "Simplifying this expression, we get: 0.05p + 0.09",
+      "note": "Drops the (1-p) factor exactly as on MURU-1565, so 0.05p + 0.09(1-p) becomes 0.05p + 0.09 and the answer inflates to 0.115 against GT 0.07. It then notices 'our point estimate is higher than the upper bound of this interval ... it seems there was an error', declines to fix it, and reports confidence 0.8."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-3001",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "EV_{with} = 0.79 x (0.44 x (1382K - 178K - 21K) + 0.56 x (-21K)) + 0.21 x (0.44 x 1183K - 0.56 x 199K)",
+      "note": "The decision never changes on the signal -- both branches drill -- so buying information can only add value, giving +57.65K where the GT is -53.5K. The sign of the answer is determined by the missing abandonment option."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-3019",
+      "primary": "R1",
+      "secondary": [],
+      "evidence": "The expected value of avoiding the investment if the analysis predicts failure is: EV_{avoid} = P(failure) x A_{accuracy} x C_{investment}",
+      "note": "Abandons the VOI computation and substitutes 'expected avoidance of loss', a different quantity, then truncates before emitting a schema block."
+    },
+    {
+      "key": "llama-3_3-70b:MURU-3020",
+      "primary": "XX",
+      "secondary": [
+        "M1"
+      ],
+      "evidence": "",
+      "note": "Sets up the correct decision structure, declares the precise calculation 'complex without further simplification', and emits the round numbers 100 and [50,150], which appear nowhere in the derivation, at confidence 0.8."
+    },
+    {
+      "key": "llama-4-scout:MURU-0029",
+      "primary": "S1",
+      "secondary": [
+        "C4"
+      ],
+      "evidence": "**Point Estimate:** 0.65",
+      "note": "Answers in markdown headers rather than the requested schema, so nothing parses. It also treats the market-efficiency meta-question as noise -- 'we recognize this adds complexity but doesn't directly compute a simple numeric solution' -- and averages the two analysts' posteriors, which is the single-formalisation move the item is built to expose."
+    },
+    {
+      "key": "llama-4-scout:MURU-0255",
+      "primary": "R2",
+      "secondary": [
+        "M2"
+      ],
+      "evidence": "E_{low} = 30.1K ... E_{high} = 48.58K ... POINT_ESTIMATE: 53",
+      "note": "Third model to compute EV(B) exactly and then report Option A's guaranteed value. Zero-width interval [53,53] at confidence 1.0."
+    },
+    {
+      "key": "llama-4-scout:MURU-0575",
+      "primary": "C1",
+      "secondary": [],
+      "evidence": "For B = 0.08, adjusted mean = 73.9 / 0.92 = 80.3",
+      "note": "The sensor OVERestimates, so the correction must lower the reading; dividing by (1-b) raises it to 80.3 when the truth is 69.9. Mirror image of Llama-3.3-70B's MURU-0927, where an underestimating sensor was corrected downward: both models apply a division whose direction is independent of the stated bias sign."
+    },
+    {
+      "key": "llama-4-scout:MURU-1167",
+      "primary": "C4",
+      "secondary": [],
+      "evidence": "the weights are proportional to the sample sizes of the reference classes",
+      "note": "Weights the three reference classes by sample size, which makes the least specific class dominate and yields 25.4% against a specificity-weighted GT of 49%. A determinate answer to an item whose subject is that no weighting is objectively correct."
+    },
+    {
+      "key": "llama-4-scout:MURU-1290",
+      "primary": "R1",
+      "secondary": [],
+      "evidence": "POINT_ESTIMATE: 62",
+      "note": "Four restarts, no completed calculation, then the $62K price of the core sample analysis is reported as its value. Third distinct model to make this exact substitution."
+    },
+    {
+      "key": "llama-4-scout:MURU-1313",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "E_X = int_{0.31}^{0.48} (0.28p_j + 0.54) dp_j ... E_X = 0.1106",
+      "note": "Integrates the effectiveness over the prior without dividing by the interval width 0.17, so both treatment rates come out about six times too small; the difference inherits the same factor, giving 0.0095 against GT 0.056."
+    },
+    {
+      "key": "llama-4-scout:MURU-1441",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "Point Estimate = frac{525.0 + 328.0}{2} = 426.5",
+      "note": "Gives up on precision weighting and averages a motivated seller's asking price with 20 comparable sales. The reported interval [305.2,350.8] is the data-only CI, so the point estimate lies outside its own interval by 76."
+    },
+    {
+      "key": "llama-4-scout:MURU-1556",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "hat{theta}_D = frac{frac{20}{1.789^2}81.2 + frac{1}{15.25^2}56.56}{...}",
+      "note": "Double-counts the sample size: sigma_D is already the standard ERROR 8.0/sqrt(20), and n is then applied again on top of it, so the site mean gets 20x the weight it should. The grand mean is also wrong -- the five subtotals sum to 4732.6, not 3732.6 -- giving 56.56 instead of 71.7."
+    },
+    {
+      "key": "llama-4-scout:MURU-1567",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "Estimate = 0.5 times 37.0 + 0.5 times 66.0 = 51.5",
+      "note": "Writes the correct precision-weighted formula three times, declares it intractable without a prior variance, and settles on equal weights for a biased anchor and ten observations."
+    },
+    {
+      "key": "llama-4-scout:MURU-1579",
+      "primary": "A1",
+      "secondary": [],
+      "evidence": "Running the simulation: - **POINT_ESTIMATE**: approximately 0.664",
+      "note": "Writes a Monte Carlo simulation that is structurally CORRECT -- executed, it returns about 0.54, the ground truth -- and then reports 0.664 as its output, with a confidence interval of simulation-error width. The method was right and its result was invented."
+    },
+    {
+      "key": "llama-4-scout:MURU-1712",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "D = 0.06p + 0.10",
+      "note": "Drops the (1-p) factor from the second term, then integrates without normalising, so the reported 0.025 disagrees with its own endpoint calculations (0.1186, 0.1306) reported as the interval."
+    },
+    {
+      "key": "llama-4-scout:MURU-1733",
+      "primary": "C1",
+      "secondary": [],
+      "evidence": "D(p) = Improvement_Y(p) - Improvement_X(p) ... D(0.485) = -7.545",
+      "note": "Computes Y minus X where the question asks how much better the better treatment is, and works in percentage points. The magnitude 7.545pp is within rounding of the GT 0.076; only the sign and scale are wrong, and the sign error blocks any unit corroboration."
+    },
+    {
+      "key": "llama-4-scout:MURU-1742",
+      "primary": "C1",
+      "secondary": [],
+      "evidence": "Bias-corrected mean = frac{65.8}{0.961} approx 68.5",
+      "note": "Overestimating sensor corrected upward. Step 10 then computes 65.8 x 0.939 = 61.8 and 65.8 x 0.983 = 64.7 -- the correct direction and very nearly the correct bounds -- and the schema still reports 68.5, pairing that lower bound with an upper bound derived the wrong way."
+    },
+    {
+      "key": "llama-4-scout:MURU-1794",
+      "primary": "R1",
+      "secondary": [
+        "M1"
+      ],
+      "evidence": "POINT_ESTIMATE: 1 (yes, buy the information, as it is likely to increase expected value)",
+      "note": "Reports a yes/no decision where a magnitude is asked, with [0,1] as the interval. States that a precise calculation needs numbers it says it lacks, then gives confidence 0.8."
+    },
+    {
+      "key": "llama-4-scout:MURU-2090",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "Delta = 0.06p + 0.05",
+      "note": "Drops the (1-p) factor and integrates unnormalised, giving 0.00764. Its own endpoint calculations give [0.0734,0.0794], which it reports as the interval while noting it 'seems too narrow' -- leaving a point estimate an order of magnitude below its own lower bound."
+    },
+    {
+      "key": "llama-4-scout:MURU-2375",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "Weight for Grand mean = 65.61 / 73.41125 approx 0.894",
+      "note": "The factor tau^2/(tau^2+sigma^2/n) weights the GROUP mean, not the grand mean; the model assigns it to the grand mean and pulls chain B from 69.4 down to 68.14 when the correct estimate barely moves."
+    },
+    {
+      "key": "llama-4-scout:MURU-2438",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "hat{mu}_B = frac{frac{sigma_w^2}{n_B} cdot bar{y}_B + sigma_B^2 cdot bar{y}_{grand}}{...}",
+      "note": "Shrinkage weights inverted again, this time by a third model: region B's own mean is weighted by the within-region variance and the grand mean by the between-region variance, so the estimate lands on the grand mean 44.63 rather than near 42.9."
+    },
+    {
+      "key": "llama-4-scout:MURU-2585",
+      "primary": "R5",
+      "secondary": [],
+      "evidence": "E(theta_A | data) approx 61.19 ... POINT_ESTIMATE: 58.4",
+      "note": "After several false starts the model derives the shrinkage estimate CORRECTLY -- 61.19, inside the GT interval [61.0,61.2] -- and then reports 58.4, a number that appears nowhere in the response. The derivation is right and the answer field contradicts it."
+    },
+    {
+      "key": "llama-4-scout:MURU-2696",
+      "primary": "R3",
+      "secondary": [],
+      "evidence": "The best option's expected value (at P = 0.48) is $164.84K",
+      "note": "Every expected value, the crossover at p=0.432 and the switch from corn to soybeans are computed correctly. The model then reports the best option's value at the TOP of the probability range rather than at a central estimate, which is also the upper endpoint of its own interval."
+    },
+    {
+      "key": "llama-4-scout:MURU-2802",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "Expected payoff with information = (0.4505 times 438K times 0.705) - 24K",
+      "note": "Multiplies the payoff by both P(positive) and P(success|positive), double-discounting, and drops the negative-signal branch entirely. Structure closer to correct than most on this template; the answer 39.42 still overshoots GT 14.7."
+    },
+    {
+      "key": "llama-4-scout:MURU-2921",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "The weight for shrinkage towards the grand mean is frac{sigma_b^2}{sigma_b^2 + frac{sigma_w^2}{n_C}}",
+      "note": "Same inversion: the quantity named is the weight on the SCHOOL mean, and the model applies it to the grand mean, over-shrinking school C from 60.4 to 56.39 against a GT of 59.4."
+    },
+    {
+      "key": "llama-4-scout:MURU-2942",
+      "primary": "XX",
+      "secondary": [],
+      "evidence": "",
+      "note": "Computes the grand mean and pooled within-chain variance correctly, then declines the shrinkage step -- 'let's estimate the true score for chain B considering it will be closer to the grand mean' -- and asserts 58.6 with an interval to match."
+    },
+    {
+      "key": "llama-4-scout:MURU-3015",
+      "primary": "R1",
+      "secondary": [
+        "M2"
+      ],
+      "evidence": "POINT_ESTIMATE: 0 (Should not buy the pilot study, as the expected value decreases)",
+      "note": "Computes EV with information (340.01K) and without (608.54K) and reaches the correct qualitative conclusion, which matches the GT's negative sign. It then reports 0 -- a decision flag -- instead of the difference, with a zero-width interval."
+    },
+    {
+      "key": "llama-4-scout:MURU-3019",
+      "primary": "R1",
+      "secondary": [],
+      "evidence": "The difference is $-7.175695K ... POINT_ESTIMATE: 334.8",
+      "note": "The most complete VOI derivation in the sample: full Bayes update on the signal, both branch outcomes, and a value of information of -7.176K against a ground truth of -7.3K. The schema block then reports 334.8, the expected value WITHOUT information, discarding a correct answer computed two steps earlier."
+    },
+    {
+      "key": "llama-4-scout:MURU-3020",
+      "primary": "R1",
+      "secondary": [
+        "C3"
+      ],
+      "evidence": "POINT_ESTIMATE: 0",
+      "note": "Assumes the two signals are equally likely 'for simplicity', which is false, then reaches the right qualitative conclusion and reports the decision flag 0 rather than the value."
+    },
+    {
+      "key": "qwen3-32b:MURU-0533",
+      "primary": "R2",
+      "secondary": [],
+      "evidence": "the problem says 'compute the expected value of each option'. For Option B, since the probability is uncertain, how do we compute its EV? Hmm, maybe the problem expects us to take the midpoint",
+      "note": "ITEM AMBIGUITY, visible in the model's own reasoning. It computes EV(B) exactly (134.69 and 191.6 against GT [134.7,191.6]), states the stem asks for BOTH options' expected values, notes the schema accepts one number, and reports Option A's. Fourth model to answer this template the other admissible way."
+    },
+    {
+      "key": "qwen3-32b:MURU-0680",
+      "primary": "D1",
+      "secondary": [],
+      "evidence": "Divide by 0.0455: 0.1496 / 0.0455 approx 3.288. Wait, that can't be right because sensitivity can't be over 100%",
+      "note": "ITEM DEFECT. The stem gives '97% accuracy' and 86% specificity; at any base rate in the stated range those imply a sensitivity above 1, which the model derives and correctly rejects. The stem then quotes the colleague using a different figure (96%), and the ground truth silently adopts 96% as the sensitivity. The model spends its whole budget trying to reconcile numbers that cannot be reconciled and never answers."
+    },
+    {
+      "key": "qwen3-32b:MURU-1386",
+      "primary": "C3",
+      "secondary": [],
+      "evidence": "0.88 = Sensitivity * p + 0.84 * (1 - p) ... But we don't know p here.",
+      "note": "Same defective template: stem says 88% accuracy, the colleague says 93%, and the GT uses 93% as sensitivity. The model correctly identifies the base-rate fallacy but its 0.3185 corresponds to no defensible reading of the stem, so the error is coded to the model rather than the item -- with the item defect recorded."
+    },
+    {
+      "key": "qwen3-32b:MURU-2677",
+      "primary": "R4",
+      "secondary": [],
+      "evidence": "Minimum premium: ... 56,120 * 1.22 = 68,466.4. Maximum premium: ... 467,200 * 1.22 = 569,984.",
+      "note": "CORRECT ANSWER, scored wrong. Point 260,116 against GT 261.3K and bounds 68,466/569,984 against GT [68.4, 570.0] -- exact to three figures under a factor of 1000. It is recorded as an UNCORROBORATED unit mismatch only because the response was cut off before the schema block, so no interval field survived for the mechanical rule to corroborate. A reader can corroborate it from the reasoning text; the rule cannot."
+    },
+    {
+      "key": "qwen3-32b:MURU-2696",
+      "primary": "R3",
+      "secondary": [],
+      "evidence": "since the optimal choice changes, there isn't a single best option. However, maybe the question is asking for the best option at the midpoint",
+      "note": "Complete and correct analysis, including the crossover at 43.24%. The model then explicitly names the item's under-specification -- at which probability should 'the expected value of the best option' be evaluated -- and reports the value at the top of the range, which is the upper endpoint of its own interval. The ground truth silently uses the midpoint. Llama-4-Scout answered the same item the same way."
+    }
+  ]
+}

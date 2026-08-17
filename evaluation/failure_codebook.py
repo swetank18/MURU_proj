@@ -41,6 +41,26 @@ Codes fall into three groups, and only one of them is about arithmetic:
   FORMAT
     S1  off-schema            answer present but not in the requested block
 
+Four more codes were added after the judgment pass (``judgment_coding.py``) read
+the sample. They are listed separately because they were *not* derivable from
+the mechanical pass, and because two of them are not failures of the model at
+all --- reading the errors turned up defects in the benchmark:
+
+  R5  answer-derivation-mismatch
+                              the schema block reports a number that does not
+                              appear in, and does not follow from, the model's
+                              own completed derivation
+  A1  asserted-execution      presents code or a numerical procedure it never
+                              ran and reports a fabricated result. Distinct
+                              from having no derivation: the method is often
+                              correct, and executing it would answer the item
+  T1  tolerance-artefact      *item defect.* The answer is right to the
+                              precision the stem invites, and the ground-truth
+                              interval is narrower than that precision
+  D1  defective-item          *item defect.* The stem is internally
+                              inconsistent or physically impossible, and the
+                              model's response is a reasonable reaction to that
+
 Detection is deliberately split. R2, R3, R4, M2 and S1 are decidable from the
 record alone and are detected here, with the rule for each written down. C1--C5
 and M1 require reading the reasoning and are left to the human/judge pass ---
@@ -71,7 +91,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MECHANICAL_CODES = ("R2", "R3", "R4", "M2", "S1")
 
 # Codes that require reading the reasoning chain.
-JUDGMENT_CODES = ("R1", "C1", "C2", "C3", "C4", "C5", "M1")
+JUDGMENT_CODES = ("R1", "R5", "C1", "C2", "C3", "C4", "C5", "M1", "A1")
+
+# Codes that describe a defect in the item rather than in the model. Kept
+# separate everywhere: counting these as model failures would inflate the
+# error rate with our own construction bugs.
+ITEM_DEFECT_CODES = ("T1", "D1")
 
 CODE_LABELS = {
     "R1": "wrong-quantity",
@@ -86,6 +111,10 @@ CODE_LABELS = {
     "M1": "acknowledged-error",
     "M2": "false-precision",
     "S1": "off-schema",
+    "R5": "answer-derivation-mismatch",
+    "A1": "asserted-execution",
+    "T1": "tolerance-artefact",
+    "D1": "defective-item",
 }
 
 # R3: how close to an endpoint of its own interval the point estimate has to be
