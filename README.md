@@ -139,6 +139,25 @@ Lenient drops responses the harness could not read; strict scores them incorrect
 
 The largest gap anywhere is 1.8 pp, so the leaderboard is not covertly measuring format compliance — but that holds *because* four of five models parse above 99%, and must be rechecked as weaker instruction-followers are added. Llama-3.1-8B's failures are diagnostic rather than incidental: 11 of 12 are the model exhausting its token budget mid-derivation on repeated or circular algebra.
 
+### What the errors actually are (failure codebook)
+
+The benchmark's authored F1–F4 taxonomy was written *before* the data. So we also extracted all 361 wrong answers with their problems and full responses (`evaluation/error_extract.py`), read them, and wrote a second codebook *afterwards* (`evaluation/failure_codebook.py`) — 12 codes, of which 5 are decidable by a written-down rule and 7 need a reasoning-chain read. Only the rule-decidable ones are reported; the rest are counted as uncoded rather than guessed.
+
+R4 (corroborated unit mismatch) is credited correct by the unit accounting, so it is broken out and excluded from the columns to its right.
+
+| Model | raw err | R4 | rem | R2 ambig-target | R3 wrong-summary | M2 false-precision | S1 off-schema | **CI covers truth** | uncoded |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| GPT-OSS-120B | 22 | 13 | 9 | 1 | — | 3 | — | 1 (11%) | 5 (56%) |
+| Qwen3-32B | 43 | 26 | 17 | 5 | 1 | — | — | 1 (6%) | 11 (65%) |
+| Llama-4-Scout-17B | 49 | 13 | 36 | 2 | 3 | 3 | 1 | 12 (33%) | 28 (78%) |
+| Llama-3.3-70B | 69 | 30 | 39 | 2 | 3 | — | — | 12 (31%) | 36 (92%) |
+| Llama-3.1-8B | 178 | 4 | 174 | 3 | 12 | 13 | — | 32 (18%) | 149 (86%) |
+| **panel** | **361** | **86** | **275** | **13** | **19** | **19** | **1** | **58 (21%)** | **229 (83%)** |
+
+**58 of the 275 real errors (21%) are wrong point estimates whose own stated interval contains the ground truth** — 31% for Llama-3.3-70B, 33% for Llama-4-Scout, against 6% for Qwen3-32B. That is the sharpest argument here for scoring more than a point estimate: an accuracy-only benchmark cannot tell those apart from errors of ignorance, and would report a capability gap where the difference is a summarisation convention. False precision (zero-width intervals) is overwhelmingly the 8B's failure, 13 of 19.
+
+**83% of real errors carry no mechanical code.** That is stated, not hidden: assigning the computation codes needs a second coder and an inter-rater statistic, and a balanced sample (25/model, stratified by category) is prepared for that pass. GPT-OSS-120B has only 9 codeable errors in total, which bounds any per-model claim about the leader. Reproduce with `make reanalyze` then `python evaluation/failure_codebook.py`.
+
 ### Harness validation baselines (simulated — not a ranking of models)
 
 These five tiers are **simulator profiles**, not language models. They exist to show the harness recovers a configured ordering and to establish its resolution (smallest detectable gap: 11.6 pp at p < 10⁻³). They are reported separately from the leaderboard because ranking a simulator against a model compares a configuration to a measurement.

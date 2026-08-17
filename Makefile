@@ -26,6 +26,7 @@ bootstrap:
 reanalyze:
 	$(PYTHON) evaluation/parse_status.py
 	$(PYTHON) evaluation/error_extract.py
+	$(PYTHON) evaluation/failure_codebook.py
 	$(PYTHON) evaluation/aggregate_real_llm.py
 	$(PYTHON) scripts/generate_figures.py
 	$(PYTHON) scripts/make_manifest.py

@@ -121,33 +121,64 @@ def error_records(slug, display, data, problems_by_id):
     return out
 
 
-def stratified_sample(records, n, seed):
-    """Seeded sample stratified by (model, category).
+def stratified_sample(records, n, seed, balanced=True, cap=25):
+    """Seeded coding sample: balanced across models by default.
 
-    Proportional allocation with a floor of one per non-empty cell and
-    largest-remainder rounding, so the panel leader's handful of errors is not
-    swamped by the weakest model's and no category drops out entirely.
     Eligible records are those with a readable response that are not
     corroborated unit mismatches --- the latter are right answers in another
     admissible unit (``unit_accounting``), and coding them as reasoning
     failures would be coding our own prompt.
+
+    Two allocations, because they answer different questions:
+
+      * **balanced** (default) --- up to ``cap`` errors per model, stratified
+        by category within each model. The taxonomy's central question is
+        whether failure modes *shift* with capability or merely shrink, and
+        that is a within-model composition question. Proportional allocation
+        cannot answer it here: the weakest model contributes half the panel's
+        errors, so a proportional sample of 100 is two-thirds one model and
+        the strongest models arrive with a handful of items each.
+      * **proportional** --- allocation by error mass, which is the right
+        design for "what does the panel's total error consist of" and the
+        wrong one for the question above.
+
+    Neither can manufacture items that do not exist: GPT-OSS-120B has nine
+    codeable errors in total, so its cell is nine however the sample is drawn,
+    and any per-model claim about it is bounded by that.
     """
     pool = [
         r for r in records
         if r["codeable"] and r["unit_status"] != "unit_mismatch"
     ]
+    rng = random.Random(seed)
+
+    if balanced:
+        picked = []
+        for model in sorted({r["model"] for r in pool}):
+            rows = [r for r in pool if r["model"] == model]
+            picked.extend(_draw_within(rows, min(cap, len(rows)), rng))
+        return sorted(picked, key=lambda r: (r["model"], r["problem_id"]))
+
     if n >= len(pool):
         return sorted(pool, key=lambda r: (r["model"], r["problem_id"]))
+    return sorted(
+        _draw_within(pool, n, rng, key=lambda r: (r["model"], r["category"])),
+        key=lambda r: (r["model"], r["problem_id"]),
+    )
 
+
+def _draw_within(rows, n, rng, key=None):
+    """Proportional-with-floor draw over strata, largest remainder to hit n."""
+    if n >= len(rows):
+        return list(rows)
+    key = key or (lambda r: r["category"])
     cells = defaultdict(list)
-    for r in pool:
-        cells[(r["model"], r["category"])].append(r)
+    for r in rows:
+        cells[key(r)].append(r)
 
-    total = len(pool)
+    total = len(rows)
     exact = {k: n * len(v) / total for k, v in cells.items()}
     alloc = {k: min(len(cells[k]), max(1, int(v))) for k, v in exact.items()}
-
-    # Largest-remainder pass to land exactly on n without exceeding any cell.
     while sum(alloc.values()) != n:
         short = n - sum(alloc.values())
         if short > 0:
@@ -162,22 +193,23 @@ def stratified_sample(records, n, seed):
             if not over:
                 break
             over.sort(key=lambda k: alloc[k] - exact[k], reverse=True)
-            for k in over[: -short]:
+            for k in over[:-short]:
                 alloc[k] -= 1
 
-    rng = random.Random(seed)
     picked = []
-    for key in sorted(cells):
-        bucket = sorted(cells[key], key=lambda r: r["problem_id"])
+    for k in sorted(cells, key=str):
+        bucket = sorted(cells[k], key=lambda r: r["problem_id"])
         rng.shuffle(bucket)
-        picked.extend(bucket[: alloc[key]])
-    return sorted(picked, key=lambda r: (r["model"], r["problem_id"]))
+        picked.extend(bucket[: alloc[k]])
+    return picked
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sample", type=int, default=100, help="hand-coding sample size")
+    ap.add_argument("--sample", type=int, default=100, help="sample size (proportional mode only)")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--cap", type=int, default=25, help="max coded errors per model in balanced mode")
+    ap.add_argument("--proportional", action="store_true", help="allocate by error mass instead of balancing across models")
     args = ap.parse_args()
 
     problems = load_problems(PROJECT_ROOT / "data" / "test")
@@ -200,10 +232,18 @@ def main():
         for r in records:
             f.write(json.dumps(r) + "\n")
 
-    sample = stratified_sample(records, args.sample, args.seed)
+    sample = stratified_sample(
+        records, args.sample, args.seed,
+        balanced=not args.proportional, cap=args.cap,
+    )
     sample_path = OUT_DIR / f"sample_{len(sample)}.json"
     with open(sample_path, "w") as f:
-        json.dump({"seed": args.seed, "n": len(sample), "records": sample}, f, indent=2)
+        json.dump({
+            "seed": args.seed,
+            "n": len(sample),
+            "allocation": "proportional" if args.proportional else f"balanced (cap {args.cap}/model)",
+            "records": sample,
+        }, f, indent=2)
 
     by_model = defaultdict(lambda: {"errors": 0, "codeable": 0, "parse_failures": 0})
     for r in records:

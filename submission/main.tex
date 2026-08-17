@@ -434,6 +434,7 @@ We make no claim that real LLMs would rank categories in this order. The simulat
 \input{tables/real_llm_overconfidence}
 \input{tables/real_llm_units}
 \input{tables/prompt_versions}
+\input{tables/failure_codes}
 \section{Language-Model Evaluation on the Test Set}
 \label{sec:real_llm}
 
@@ -698,6 +699,37 @@ The benchmark is built around four failure modes drawn from the uncertainty-reas
 \paragraph{F3: Single-formalisation commitment.} Adversarial Ambiguity problems admit several defensible formalisations (Simpson's-Paradox-style aggregate-versus-subgroup conflicts, reference-class problems). A responder that commits to one formalisation with high stated confidence is penalised both by Accuracy@CI (whose ground-truth interval spans the defensible range) and by the overconfidence rate. Adversarial Ambiguity is the weakest category for Llama-3.3-70B (70.2\%) and Llama-4-Scout-17B (76.1\%), and the second-weakest for Qwen3-32B (84.4\%), which is consistent with this failure mode being the binding constraint at the top of the panel. It is also the category where the four-field output schema works against the responder: a model that correctly identifies two defensible formalisations still has to report one point estimate, so the schema cannot distinguish acknowledged ambiguity from unrecognised ambiguity. Section~\ref{sec:conclusion} lists this as an open question rather than a settled failure attribution.
 
 \paragraph{F4: Framework confusion.} Applying frequentist machinery where Bayesian machinery is appropriate, or vice versa. The framework-match metric is designed to surface this failure independently of whether the numerical answer falls in range. All rows of Table~\ref{tab:real_llm_main} place framework-match rates between 77\% and 93\% (computed over each row's framework-carrying answers; see Section~\ref{sec:real_llm_anomalies}), indicating that framework selection is not the bottleneck on the panel we evaluated: models identify the correct machinery far more often than they execute it correctly, so the accuracy gaps are driven by computation rather than by framework confusion.
+
+\subsection{What the Errors Actually Are}
+\label{sec:codebook}
+
+The taxonomy above was designed into the dataset: each problem's \texttt{common\_failure\_modes} field records which of F1--F4 it is built to elicit, and the evidence for it in Section~\ref{sec:real_llm} is a category-accuracy pattern consistent with each mode. That is weaker evidence than it looks. A taxonomy written before the data will find the categories it invented, and a category-level accuracy gap is compatible with many mechanisms. So we did the other thing as well: extracted every incorrect prediction with the problem it got wrong and the model's full response (\texttt{evaluation/error\_extract.py}, 361 records), read them, and wrote a second codebook \emph{afterwards} (\texttt{evaluation/failure\_codebook.py}). The two largest things in it were not on the list we would have written first, and neither is about arithmetic.
+
+\paragraph{The codebook.} Twelve codes in four groups. \textbf{Reporting}, where the computation is right and the reported number is not the answer: R1 wrong-quantity (reports an input or intermediate --- on value-of-information problems, the \emph{price} of the information rather than its value), R2 ambiguous-target (reports the other admissible answer on a stem that does not say which it wants), R3 wrong-summary (reports an endpoint of its own stated interval), R4 unit-mismatch (Section~\ref{sec:real_llm_units}). \textbf{Computation}: C1 direction, C2 uncertainty-collapse, C3 arithmetic, C4 single-formalisation, C5 transcription. \textbf{Confidence reporting}: M1 acknowledged-error (the reasoning says the calculation is rough or wrong; the stated confidence does not reflect it), M2 false-precision (zero-width interval). \textbf{Format}: S1 off-schema.
+
+Detection is deliberately split, and the split is the methodological point. R2, R3, R4, M2 and S1 are decidable from the record by a rule, and each rule is written down, unit-tested, and narrow enough to be checkable --- R2 fires only when the point estimate equals the stem's stated risk-free payoff, R3 only when it sits within 2\% of the width from an endpoint of the model's own interval. C1--C5, R1 and M1 require reading a reasoning chain, and the mechanical coder returns nothing for them rather than guessing. Table~\ref{tab:failure_codes} therefore reports which cells a rule can fill and, in its last column, how much of the corpus is left over. We regard that last column as the most important one in the table: a taxonomy that reports only its hits can claim any coverage it likes.
+
+\begin{table}[t]
+\centering
+\caption{Mechanically-decidable failure codes over all 361 incorrect predictions. \textbf{R4} is the corroborated unit mismatch of Section~\ref{sec:real_llm_units}: those answers are credited correct under the paper's primary accounting, so they are broken out here and excluded from every column to their right, leaving \textbf{rem} genuine errors per model. \textbf{CI covers} counts errors whose \emph{own stated interval} contains the ground-truth estimate. \textbf{uncoded} is the share carrying no mechanically-decidable code --- the denominator the judgment-coded classes must account for, reported rather than hidden. GPT-OSS-120B's row rests on nine errors in total, which bounds every per-model claim about it.}
+\label{tab:failure_codes}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccrr}
+\toprule
+& \multicolumn{3}{c}{\textbf{Corpus}} & \multicolumn{4}{c}{\textbf{Mechanical codes (of \emph{rem})}} & & \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-8}
+\textbf{Model} & raw err & R4 & rem & R2 & R3 & M2 & S1 & \textbf{CI covers} & \textbf{uncoded} \\
+\midrule
+\failurecoderows
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\paragraph{Reporting failures are a large share of what is left at the top of the panel.} Of 361 raw errors, 86 (23.8\%) are unit mismatches and drop out under the paper's accounting, leaving 275. Of those, a rule can name 46 (16.7\%), carrying 52 codes between them --- six errors are coded twice --- distributed as 19 wrong-summary, 19 false-precision, 13 ambiguous-target and 1 off-schema. The composition differs sharply by capability. For GPT-OSS-120B and Qwen3-32B, between a third and a half of surviving errors carry a reporting or confidence code (4 of 9 and 6 of 17); for Llama-3.3-70B only 3 of 39 do. And the codes themselves separate: false precision is overwhelmingly the small model's failure (13 of the 19 zero-width intervals are Llama-3.1-8B's), while ambiguous-target concentrates in Qwen3-32B (5 of its 17), which more often computes both admissible answers and then reports the one we did not store.
+
+\paragraph{A fifth of errors are wrong summaries of a distribution that contained the truth.} Across the panel, 58 of the 275 surviving errors (21.1\%) are predictions whose own stated interval contains the ground-truth estimate: the model's uncertainty representation was right and its point summary was not. The rate is 31\% for Llama-3.3-70B and 33\% for Llama-4-Scout-17B, against 6\% for Qwen3-32B. This is the clearest single argument in the paper for scoring more than a point estimate. A benchmark that grades only the number cannot tell those errors apart from errors of ignorance, would score both models identically wrong on them, and would report a capability gap where the difference is a summarisation convention. It also cuts the other way: Qwen3-32B's near-total absence of such errors means its wrong answers are wrong all the way through, which is the worse failure and is invisible to accuracy alone.
+
+\paragraph{What is not established.} 229 of 275 surviving errors (83.3\%) carry no mechanically-decidable code, and we do not claim to have explained them. Assigning C1--C5, R1 and M1 requires reading reasoning chains, which needs a second coder and an inter-rater statistic to be worth reporting; a balanced sample of 86 errors (capped at 25 per model, stratified by category within model) is prepared for that pass, drawn by a seeded rule that redraws identically from the committed archives. Two limits on it are already visible. GPT-OSS-120B contributes nine codeable errors in total, so no per-model composition claim about the panel leader will reach significance whatever the coding says. And the corpus is drawn from the archived version-1 panel, so the reporting codes are measured under the prompt whose ambiguity Section~\ref{sec:real_llm_promptv2} showed to be real: R2 and R3 rates in particular should be re-measured under version 2 before being treated as properties of the models rather than of the instrument.
 
 \subsection{Calibration-Metric Behaviour}
 \label{sec:calibration}
