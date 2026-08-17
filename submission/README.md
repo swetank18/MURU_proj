@@ -14,7 +14,7 @@ repository. Everything the document needs is here.
 | Path | Description |
 |------|-------------|
 | `main.tex` | Full paper source. Uses an inline `thebibliography` (no external `.bib`). |
-| `main.pdf` | Pre-built PDF (35 pages), for reference. |
+| `main.pdf` | Pre-built PDF (37 pages), for reference. |
 | `neurips_2024.sty` | NeurIPS style file. |
 | `tables/` | Auto-generated result tables, `\input{}` by `main.tex`. Regenerated bit-for-bit by `evaluation/aggregate_real_llm.py` in the main repo. |
 | `figures/` | All figures (PNG). |
@@ -34,19 +34,23 @@ pdflatex main.tex && pdflatex main.tex   # twice, to settle cross-references
 ```
 
 The build is expected to finish with **no undefined references** and produce a
-35-page PDF. (A handful of harmless `Overfull/Underfull \hbox` and
+37-page PDF. (A handful of harmless `Overfull/Underfull \hbox` and
 UTF-8-in-`.sty` warnings are emitted by the NeurIPS style file and can be
 ignored.)
 
 ## Reproducing the numbers in the tables
 
 The `tables/*.tex` files are not hand-edited — they are generated from the raw
-model-response archives in `evaluation/baselines/` of the main repository:
+model-response archives in `evaluation/baselines/` of the main repository by
+three scripts:
 
 ```bash
-python evaluation/aggregate_real_llm.py
+python evaluation/aggregate_real_llm.py        # the seven real_llm_*.tex tables
+python evaluation/compare_prompt_versions.py   # prompt_versions.tex
+python evaluation/error_extract.py \
+  && python evaluation/failure_codebook.py     # failure_codes.tex
 ```
 
-This rewrites `paper/tables/real_llm_{main,difficulty,category}.tex`
-deterministically from the archives, so every row in the paper reconstructs
-from committed data.
+Each rewrites its tables deterministically from the archives, so every row in
+the paper reconstructs from committed data. `make reanalyze` runs the whole
+chain.

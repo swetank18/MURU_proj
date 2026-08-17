@@ -48,7 +48,7 @@
   "description": "MURU-BENCH (Mathematical Reasoning Under Uncertainty Benchmark) is a 3,000-problem benchmark for evaluating language models on calibrated mathematical reasoning. Every problem requires a point estimate, a confidence interval, a stated confidence probability, and an identified reasoning framework. Problems span five categories (Bayesian Updating, Conditional Probability Chains, Distribution Estimation, Decision Under Uncertainty, Adversarial Ambiguity) stratified across five difficulty levels.",
   "conformsTo": "http://mlcommons.org/croissant/1.0",
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "url": "https://github.com/swetank18/MURU",
+  "url": "https://github.com/swetank18/MURU_proj",
   "version": "1.0.0",
   "datePublished": "2026-05-03",
   "creator": {
@@ -75,7 +75,7 @@
       "@id": "github-repo",
       "name": "github-repo",
       "description": "MURU-BENCH GitHub repository",
-      "contentUrl": "https://github.com/swetank18/MURU",
+      "contentUrl": "https://github.com/swetank18/MURU_proj",
       "encodingFormat": "git+https",
       "sha256": "main"
     },

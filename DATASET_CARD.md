@@ -92,15 +92,39 @@ Models are scored on 6 metrics:
 - **Category Breakdown**: Per-category accuracy
 - **Difficulty Scaling**: Per-difficulty accuracy
 
-## Baseline Results (Test Set, n=301)
+## Language-Model Results (Test Set, n=301)
 
-| Model Tier | Accuracy | ECE ↓ | Overconfidence ↓ |
+Five hosted open-weights models. All columns are **unit-aware**: predictions stated in a
+different admissible unit are read in the ground truth's unit before scoring, under the
+corroboration rule in `evaluation/unit_accounting.py`. See the README for the same table
+under the original scoring.
+
+| Model | Accuracy@CI | ECE ↓ | Overconfidence ↓ |
+|---|---:|---:|---:|
+| GPT-OSS-120B | 97.0% | 0.067 | 3.0% |
+| Qwen3-32B (245/301) | 93.1% | 0.117 | 5.7% |
+| Llama-4-Scout-17B | 88.3% | 0.052 | 10.0% |
+| Llama-3.3-70B | 87.0% | 0.051 | 12.0% |
+| Llama-3.1-8B | 43.9% | 0.468 | 50.2% |
+
+Accuracy and calibration-in-level are **separable** on this panel: Spearman ρ between
+Accuracy@CI and ECE is −0.10 (exact p = 0.95, n = 5). Four of the five endpoints have
+since been withdrawn by the provider; every raw API response is committed, so the numbers
+rebuild from the archives without a live endpoint.
+
+## Harness-Validation Baselines (simulated — **not** a ranking of real models)
+
+These five rows are **synthetic capability tiers** produced by `evaluation/run_baselines.py`,
+used to establish that the 301-problem split can discriminate tier-scale differences. The
+tier names describe the configured profile, not a measurement of any named model.
+
+| Simulated Tier | Accuracy | ECE ↓ | Overconfidence ↓ |
 |------------|----------|-------|-----------------|
 | Random | 7.3% | 0.515 | 36.2% |
 | Heuristic | 31.2% | 0.470 | 44.5% |
-| Competent (GPT-3.5 tier) | 49.2% | 0.239 | 21.6% |
-| Strong (GPT-4 tier) | 60.8% | 0.178 | 20.3% |
-| Expert (frontier) | 77.1% | 0.183 | 9.6% |
+| Competent | 49.2% | 0.239 | 21.6% |
+| Strong | 60.8% | 0.178 | 20.3% |
+| Expert | 77.1% | 0.183 | 9.6% |
 
 ## Citation
 
@@ -110,7 +134,7 @@ Models are scored on 6 metrics:
   author={Kumar, Swetank},
   booktitle={NeurIPS Datasets and Benchmarks Track},
   year={2026},
-  url={https://github.com/swetank18/MURU}
+  url={https://github.com/swetank18/MURU_proj}
 }
 ```
 

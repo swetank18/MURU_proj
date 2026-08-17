@@ -2,6 +2,48 @@
 
 ## Progress log
 
+**2026-08-17 — the post-hoc correction is validated; P2's rule-decidable half is done; the
+provider deleted most of the panel.**
+
+*The validation.* The paper rests on `unit_accounting`, a rule applied after the fact to
+data we already had, so the check that counts is whether a prompt that states the
+convention lands where the rule predicts. Registered three outcomes in
+`compare_prompt_versions.py` before the answers arrived; got the first one. On the two
+models that follow the instruction, v2 is indistinguishable from the v1 *corrected*
+scoring and differs from the raw one, and **corroborated unit mismatches go 5→0 and 7→0**.
+
+| model | n | v1 raw | v1 unit | v2 | McNemar vs v1-unit |
+|---|---|---|---|---|---|
+| GPT-OSS-120B | 100 | 92.0% | **97.0%** | **96.0%** | p = 1.000 (+1/−2) |
+| Llama-3.3-70B | 73 | 76.7% | **86.3%** | **84.9%** | p = 1.000 (+2/−3) |
+| Llama-3.1-8B | 94 | 47.9% | 50.0% | 44.7% | p = 0.458 (+12/−17) |
+
+The 8B is the caveat, not a counterexample: 29 of 94 pairs flip, so it is near-unstable
+under re-prompting and contributes no evidence either way — and it is the only row still
+emitting unit mismatches *after* being told the convention. Paper §6.3.
+
+*Endpoint attrition is now a first-class fact.* Groq withdrew `llama-3.3-70b-versatile`
+and `llama-3.1-8b-instant` **while the replication was running** (that is why two arms are
+73 and 94, not 100). With the two withdrawn in August, **four of five panel endpoints are
+gone in fourteen weeks and only `gpt-oss-120b` survives**; re-querying reproduces one row
+of five. Rewrote the reproducibility section around the consequence: the committed
+archives are the artefact, and a substituted endpoint is a new row rather than a
+reproduction. This constrains P1a, P1b and P3 — see the warning added to P1a.
+
+*P2's mechanical half.* Read the corpus, wrote the codebook afterwards, and split
+detection: 5 codes decided by written-down rules, 7 left to a judgment pass that returns
+nothing rather than guessing. Of 361 raw errors, 86 are unit mismatches credited correct,
+leaving 275; rules name 46 (17%) and **229 (83%) are reported as uncoded**. Two results
+worth keeping: at the clean end of the panel a large share of what remains is *reporting*
+rather than arithmetic (4 of 9 for GPT-OSS, 6 of 17 for Qwen, against 3 of 39 for
+Llama-3.3), and **21% of surviving errors are wrong point estimates whose own interval
+contains the truth** (31% Llama-3.3, 33% Scout, 6% Qwen) — the sharpest argument in the
+paper for scoring more than a point estimate, and it cuts both ways. Paper §7.2.
+
+*Also:* found and fixed a resume bug that would have merged v1 answers into an archive
+stamped `prompt_version: 2`. 105 tests. PDF 37pp. Pushed — `origin/main` at `b7b3308`,
+which also carried the five commits that had been sitting unpushed since `d220f64`.
+
 **2026-08-16 (2) — P2 groundwork found a scoring artifact that invalidated the headline.**
 Step 6 of the old 72-hour list said to read the wrong answers instead of guessing at a
 codebook. The first thing they said is that a quarter of them are not wrong.
@@ -184,11 +226,24 @@ These are cheap and they change what the numbers mean.
 
 The claim "capability drives calibration" is a claim about a *curve*. Five points, three of them simulated, is not a curve.
 
+**⚠️ Read this before using the table below (2026-08-17).** The Groq row is largely
+obsolete and the reason is itself a planning constraint: **four of the five panel
+endpoints were withdrawn within fourteen weeks** — `qwen/qwen3-32b` and
+`meta-llama/llama-4-scout-17b-16e-instruct` by 08-03, `llama-3.3-70b-versatile` and
+`llama-3.1-8b-instant` by 08-17. Of the panel, only `openai/gpt-oss-120b` is still served.
+Verify any endpoint with `client.models.list()` (the `openai` SDK against Groq's base URL;
+raw `urllib` gets a meaningless Cloudflare 403) **before** planning a run around it, and
+expect roughly a one-quarter-per-month attrition rate when scheduling multi-day
+accumulation. Currently served and relevant: `openai/gpt-oss-120b`, `openai/gpt-oss-20b`,
+`qwen/qwen3.6-27b`, `groq/compound`. The practical implication for this item is that
+"expand to 12 models" now means *collect fast and archive everything*, because a row you
+did not finish is a row you may never finish.
+
 **Zero-cost sources:**
 
 | Provider | Models to add | Cost | Notes |
 |---|---|---|---|
-| Groq free tier | Llama-3.1-8B, Llama-3.3-70B, Llama-4-Scout, Llama-4-Maverick, GPT-OSS-20B/120B, Qwen3-32B, Kimi-K2 | ₹0 | Daily token cap — checkpointing already exists, use it. Spread runs across days. |
+| Groq free tier | ~~Llama-3.1-8B, Llama-3.3-70B, Llama-4-Scout, Qwen3-32B~~ (all withdrawn), GPT-OSS-20B/120B, Qwen3.6-27B, Llama-4-Maverick / Kimi-K2 *if still listed* | ₹0 | Daily token cap — checkpointing already exists, use it. Spread runs across days. Re-check the roster first. |
 | OpenRouter `:free` | Nemotron, GLM-4.x, Hermes, DeepSeek-R1-distills, Mistral-small | ₹0 | Rate-limited, not token-capped. Good for overnight. |
 | Google AI Studio free tier | Gemini 2.x Flash / Pro | ₹0 | **This is your one free frontier-class model. Do not skip it.** |
 | Cerebras / SambaNova free tiers | Llama variants at high throughput | ₹0 | Worth 30 min to check current availability |
@@ -228,14 +283,35 @@ This is the direct answer to the critic. Converts a number into a diagnosis.
 
 ### P2a — Build the taxonomy
 
-*Corpus ready (2026-08-16): `python evaluation/error_extract.py` writes
-`evaluation/errors/errors.jsonl` (361 errors, 346 with readable responses) plus a seeded
-stratified sample. Corroborated unit mismatches are excluded from the sample — coding
-those would be coding our own prompt, not the model. Note that GPT-OSS-120B now has only
-9 errors and Qwen3-32B 17, so a "25 per model" design is no longer available at the clean
-end of the panel; sample proportionally with a floor instead.*
+**DONE 2026-08-17 for the rule-decidable half — and the codebook below was superseded by
+one written after reading the errors.** See `evaluation/failure_codebook.py`, paper §7.2,
+Table 18. What changed against the plan:
 
-Code a stratified sample of **300 incorrect predictions** (≈ 25 per model × 12 models, stratified by category and difficulty). Proposed initial codebook — refine after reading 50:
+*Corpus (2026-08-16): `python evaluation/error_extract.py` writes
+`evaluation/errors/errors.jsonl` (361 errors, 346 with readable responses) plus a seeded
+sample. Corroborated unit mismatches are excluded from the sample — coding those would be
+coding our own prompt, not the model.*
+
+*Sampling: the note here previously said to sample proportionally with a floor, because
+GPT-OSS-120B has only 9 codeable errors and Qwen3-32B 17. **Reversed.** Proportional
+allocation answers "what does the panel's total error consist of"; the question P2c
+actually asks — do failure modes shift with capability or merely shrink — is a
+within-model composition question, and proportional allocation makes the sample
+two-thirds Llama-3.1-8B. `error_extract.py` now draws **balanced** by default (cap 25 per
+model, stratified by category within model) with `--proportional` for the old behaviour.
+The clean end of the panel is still bounded by what exists: GPT-OSS contributes 9 however
+the sample is drawn, and no per-model claim about the leader can escape that.*
+
+*Codebook: the F1–F10 table below was written from the armchair and is kept only as a
+record of what we expected to find. The codebook actually used was written after reading
+the corpus, and its two largest categories are not on this list — answers right but in
+another unit (24% of raw errors), and answers reporting a different quantity from the
+same computation. It also splits detection: 5 codes decidable by a written-down rule, 7
+needing a reasoning-chain read, with the uncoded remainder reported as a column. The
+plan's F1 "prior neglect" collides with the paper's authored F1 "anchoring"; the new
+codebook uses R/C/M/S prefixes to avoid that.*
+
+Original plan text follows. Code a stratified sample of **300 incorrect predictions** (≈ 25 per model × 12 models, stratified by category and difficulty). Proposed initial codebook — refine after reading 50:
 
 | Code | Failure mode |
 |---|---|
@@ -252,9 +328,10 @@ Code a stratified sample of **300 incorrect predictions** (≈ 25 per model × 1
 
 ### P2b — Code it
 
-- [ ] **Human coding:** you code 100 items. A second coder codes an overlapping 50. Report **Cohen's κ**. Target κ > 0.7; if below, the codebook is ambiguous — revise and recode.
-- [ ] **LLM-judge scale-up:** use a strong model as a judge on the remaining 200, *validated against* the human-coded 100. Report judge–human agreement. Never report LLM-judge numbers without that validation figure — reviewers will (correctly) reject it otherwise.
-- [ ] **Output:** a `model × failure-mode` matrix, plus per-difficulty breakdown.
+- [x] **Rule-coded pass (not in the original plan, and it should have been).** Five of the twelve codes are decidable from the record without reading anything: R2 ambiguous-target, R3 wrong-summary, R4 unit-mismatch, M2 false-precision, S1 off-schema. `failure_codebook.py` decides those, unit-tested one rule at a time (17 tests, mostly negative cases), and returns *nothing* for the other seven rather than guessing. This is what makes the κ pass affordable: it removes 46 of 275 errors from the human queue and, more importantly, fixes the denominator before any judgment enters.
+- [ ] **Human coding:** you code 100 items. A second coder codes an overlapping 50. Report **Cohen's κ**. Target κ > 0.7; if below, the codebook is ambiguous — revise and recode. *Sample ready: `evaluation/errors/sample_86.json`, balanced 25/25/25 + GPT-OSS 6 + Qwen 5, seeded and redrawable from the committed archives. The 86 excludes corroborated unit mismatches.*
+- [ ] **LLM-judge scale-up:** use a strong model as a judge on the remaining 200, *validated against* the human-coded 100. Report judge–human agreement. Never report LLM-judge numbers without that validation figure — reviewers will (correctly) reject it otherwise. *Caveat that has appeared since: only `gpt-oss-120b` is still served on Groq (see P1a), so the judge is either that endpoint — judging its own errors among others — or a paid one.*
+- [x] **Output:** a `model × failure-mode` matrix — for the mechanical codes, with `_uncoded` reported as a column. Per-difficulty breakdown still open; it needs the judgment codes to be worth splitting.
 
 ### P2c — Make it a finding, not an appendix
 
@@ -263,6 +340,18 @@ The interesting result to look for: **do failure modes shift with capability, or
 - If strong models fail *differently* (e.g. F8 arithmetic slips give way to F7 ambiguity collapse) → there is a qualitative transition, which is a much more interesting paper.
 
 Either result is publishable. **Do not decide which one you want before you look.**
+
+*Partial answer as of 2026-08-17, from the mechanical codes only, and it points at "shift"
+rather than "shrink" — but it cannot yet carry that claim.* Of the errors surviving the
+unit correction, a reporting or confidence code names 4 of 9 for GPT-OSS-120B and 6 of 17
+for Qwen3-32B, against 3 of 39 for Llama-3.3-70B; false precision is 13/19 the 8B's. So at
+the clean end of the panel a large share of what is left is *not arithmetic*. Two reasons
+this is not yet the finding: 83% of surviving errors carry no mechanical code at all, so
+the comparison is over the coded minority, and GPT-OSS's nine errors cannot support a
+composition claim at any significance. **The κ pass is what converts this into the sentence
+in the acceptance criterion.** A second, cleaner signal is already reportable: 21% of
+surviving errors are wrong point estimates whose own stated interval contains the truth
+(31% Llama-3.3, 33% Scout, 6% Qwen) — that is in the paper as §7.2's second finding.
 
 - [ ] **6–8 worked failure examples** in the appendix: full problem, full model output, annotated with what went wrong and what the correct chain was. This is the single most persuasive artifact for a skeptical reader. One page of a model confidently botching a base rate does more than three tables.
 
@@ -276,7 +365,7 @@ This is where the "is it an artifact" objection dies. Run all ablations on a fix
 
 - [ ] **A1 — Repeated sampling.** k = 5 samples per problem at T = 0.7, on ≥ 4 models spanning the capability range. Gives per-model variance, self-consistency, and lets you report whether the leaderboard ordering is stable under resampling. **Without this you have no error bars on individual model scores.**
 - [ ] **A2 — Temperature sweep.** T ∈ {0.0, 0.3, 0.7, 1.0}. Does overconfidence track temperature? (Prediction: greedy decoding inflates stated confidence. Test it.)
-- [ ] **A3 — Prompt-format ablation.** ≥ 3 variants: (i) current, (ii) reworded but semantically identical, (iii) different output-schema ordering. If Acc@CI moves > 5 pp between (i) and (ii), the benchmark is measuring prompt sensitivity and you must report the spread, not a point estimate.
+- [ ] **A3 — Prompt-format ablation.** ≥ 3 variants: (i) current, (ii) reworded but semantically identical, (iii) different output-schema ordering. If Acc@CI moves > 5 pp between (i) and (ii), the benchmark is measuring prompt sensitivity and you must report the spread, not a point estimate. **Arm (ii) is done (2026-08-17)** — the v1→v2 prompt-version replication, which doubles as the validation of the unit correction (paper §6.3, `evaluation/compare_prompt_versions.py`, infrastructure in `data/robustness_subset.json` + `run_eval.py --ids/--tag`). Result: on GPT-OSS-120B and Llama-3.3-70B, v2 is indistinguishable from the v1 *corrected* scoring (McNemar p = 1.000 both) and moves 4.0 / 8.2 pp against the v1 *raw* scoring; unit mismatches 5→0 and 7→0. **Llama-3.1-8B is the warning the acceptance criterion was written for:** 29 of 94 paired problems flip, which is prompt sensitivity swamping the effect at that capability. Arms (iii) and the remaining variants are unaffected by endpoint withdrawal only for GPT-OSS — everything else in the panel is now uncollectable, so **A3 as originally scoped (≥3 variants × the panel) is no longer possible**; scope it to the surviving endpoint plus any newly-added models.
 - [ ] **A4 — Confidence elicitation method.** Verbalized probability (current) vs. multi-sample empirical frequency vs. token-logprob-derived (where the API exposes logprobs). Known result in the literature: these disagree substantially. Showing *which* your benchmark measures — and how it compares — is a genuine contribution.
 - [ ] **A5 — CoT vs. direct answer.** Does chain-of-thought improve calibration or just accuracy? Directly relevant to your headline.
 - [ ] **A6 — Contamination / memorisation probe.** Regenerate the test split with a **new seed** (same templates, new parameter draws). If accuracy is statistically indistinguishable → strong evidence against memorisation and a real selling point of parametric generation. If it *moves*, you've found either contamination or template-level difficulty variance — both must be reported.
@@ -389,8 +478,8 @@ As a solo first-year author, you likely do not meet this. **Verify the exact wor
 
 - [ ] ≥ 12 real models, full coverage, bootstrap CIs on every cell
 - [ ] Human baseline row with n, CI, and IAA on the ambiguity subset
-- [ ] Failure taxonomy over ≥ 300 coded errors with reported κ and judge validation
-- [ ] ≥ 5 robustness ablations with quantified effect sizes
+- [ ] Failure taxonomy over ≥ 300 coded errors with reported κ and judge validation *(codebook written from the corpus and the 5 rule-decidable codes applied to all 361 errors, 2026-08-17; the κ and judge halves are what remain — see P2b)*
+- [ ] ≥ 5 robustness ablations with quantified effect sizes *(1 of 5: A3 arm (ii), the prompt-version replication, 2026-08-17. Note the ceiling: with four of five endpoints withdrawn, further ablations can only run on `gpt-oss-120b` or on newly-added models)*
 - [x] Proper scoring rule + hardened ECE + discrimination metric *(P4, 2026-08-16)*
 - [ ] Incremental-validity result vs. MATH/GSM8K with a residual-variance number
 - [x] Parse rate reported; metrics computed both ways *(P0, 2026-08-15; unit accounting added as a third, 2026-08-16)*

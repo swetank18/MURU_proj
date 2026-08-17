@@ -104,7 +104,7 @@ The generation process is deterministic given a seed, so the raw data can be reg
 Yes — simulated baseline evaluation with 5 capability tiers, described in the accompanying paper.
 
 ### Is there a repository that links to any or all papers or systems that use the dataset?
-https://github.com/swetank18/MURU
+https://github.com/swetank18/MURU_proj
 
 ### What (other) tasks could the dataset be used for?
 - Fine-tuning LLMs for calibrated mathematical reasoning
@@ -123,7 +123,7 @@ https://github.com/swetank18/MURU
 Yes — the dataset is publicly available under the MIT License.
 
 ### How will the dataset be distributed?
-Via GitHub: https://github.com/swetank18/MURU
+Via GitHub: https://github.com/swetank18/MURU_proj
 
 ### When was the dataset first released?
 April 2026 (initial release).
