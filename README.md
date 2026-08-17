@@ -20,7 +20,7 @@
 - **Parse-status accounting** — wrong answers, unreadable answers, and absent answers are three different events, tracked separately and scored both ways.
 - **Validated test split** of 301 problems with statistical power to discriminate tier-scale capability gaps as small as **11.6 pp** ($p < 10^{-3}$).
 - **First leaderboard** on five hosted open-weights models — 53-pp spread in Accuracy@CI; accuracy and calibration-in-level turn out to be **separable** (Spearman $\rho = -0.10$ between accuracy and ECE); the safety-relevant overconfidence rate collapses 16.8× across the panel, but that metric is a function of the error rate rather than of calibration shape.
-- **Unit accounting** — the evaluation prompt asked for "a single number" on problems denominated in \$K or in percent, and **24.7% of the panel's recorded errors were correct answers in an admissible unit**. Correcting it reorders the leaderboard and kills three findings. Prompt fixed; archives now stamp a `PROMPT_VERSION`.
+- **Unit accounting** — the evaluation prompt asked for "a single number" on problems denominated in \$K or in percent, and **24.7% of the panel's recorded errors were correct answers in an admissible unit**. Correcting it reorders the leaderboard and kills three findings. Prompt fixed; archives now stamp a `PROMPT_VERSION`. A paired 100-problem re-run under the fixed prompt lands on the corrected scoring, not the raw one, and emits zero unit mismatches.
 - **One-line repro**: `python evaluation/run_eval.py --model <name> --save && python evaluation/aggregate_real_llm.py`.
 
 ---
@@ -53,7 +53,7 @@ Test split, n = 301. **Parse** = fraction of attempted problems whose response t
 
 **GPT-OSS-120B, Llama-3.3-70B and Llama-4-Scout-17B are at complete 301/301 coverage.** All metric columns are unit-aware (see below); the same table under the original scoring is in the unit-accounting section. GPT-OSS-120B has 9 errors in total, 6 of them in Decision-Under-Uncertainty. Llama-3.3-70B carries the strongest framework-match of any model (92.7%). Qwen3-32B's 100% D5 cell is on n=18 and should not be read as evidence that adversarial structure is easy for it.
 
-\* Qwen3-32B is frozen at 245/301: `qwen/qwen3-32b` was withdrawn from the Groq roster (as was `meta-llama/llama-4-scout-17b-16e-instruct`), so its remaining 56 problems can no longer be queried on that provider. Its coverage was filled across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so the subset is difficulty-representative rather than easy-skewed (D4+D5 share 24.9% vs 28.6% in the full split), but the intervals are on 245 rather than 301 problems and are the widest in the table. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=212, GPT-OSS n=222, Llama-3.1-8B n=287). Every raw API response is committed, so `aggregate_real_llm.py` alone rebuilds every number here without touching a live endpoint. *Last updated: 2026-08-15.*
+\* Qwen3-32B is frozen at 245/301: `qwen/qwen3-32b` was withdrawn from the Groq roster (as have three of the other four panel endpoints — see *Endpoint availability* below), so its remaining 56 problems can no longer be queried on that provider. Its coverage was filled across daily budget windows in seeded-shuffle order (`run_eval.py --resume`), so the subset is difficulty-representative rather than easy-skewed (D4+D5 share 24.9% vs 28.6% in the full split), but the intervals are on 245 rather than 301 problems and are the widest in the table. FwMatch is computed over each row's framework-carrying answers (Qwen3 n=212, GPT-OSS n=222, Llama-3.1-8B n=287). Every raw API response is committed, so `aggregate_real_llm.py` alone rebuilds every number here without touching a live endpoint. *Last updated: 2026-08-17.*
 
 ### Calibration hardening
 
@@ -95,7 +95,25 @@ The v1 prompt asked for "a single number" without stating a unit. A rescale is c
 | Llama-3.3-70B | 69 | 30 | 43.5% | 77.1% | 87.0% | +10.0 | 0.144 | 0.051 |
 | Llama-3.1-8B | 166 | 4 | 2.4% | 42.6% | 43.9% | +1.4 | 0.482 | 0.468 |
 
-The correction is not a constant shift, which is why it reorders the leaderboard: +10.6 pp for Qwen3-32B against +1.4 pp for Llama-3.1-8B. Fixed at the root — `run_eval.py` now states the unit convention and stamps `PROMPT_VERSION` into every archive — but the panel cannot be re-collected under the corrected prompt, because two of its five endpoints have been withdrawn.
+The correction is not a constant shift, which is why it reorders the leaderboard: +10.6 pp for Qwen3-32B against +1.4 pp for Llama-3.1-8B. Fixed at the root — `run_eval.py` now states the unit convention and stamps `PROMPT_VERSION` into every archive.
+
+### Does the correction hold up? (prompt-version replication)
+
+The correction is a rule we applied after the fact, so it needs a check that is not us re-reading our own reasoning. A fixed 100-problem subset (`data/robustness_subset.json`) was re-run under the v2 prompt, paired against the archived answers. The three outcomes and their meanings were written into `evaluation/compare_prompt_versions.py` before the answers arrived: matching v1-corrected validates the correction, matching v1-raw says it is too lenient, matching neither is a prompt-sensitivity finding.
+
+| Model | n | Acc v1 raw | Acc v1 unit | **Acc v2** | UM v1 | **UM v2** | McNemar vs v1-unit | vs v1-raw |
+|---|---:|---:|---:|---:|---:|---:|---|---|
+| GPT-OSS-120B | 100 | 92.0% | 97.0% | **96.0%** | 5 | **0** | p=1.000 (+1/−2) | p=0.219 (+5/−1) |
+| Llama-3.3-70B | 73 | 76.7% | 86.3% | **84.9%** | 7 | **0** | p=1.000 (+2/−3) | p=0.146 (+9/−3) |
+| Llama-3.1-8B | 94 | 47.9% | 50.0% | 44.7% | 2 | 3 | p=0.458 (+12/−17) | p=0.711 (+13/−16) |
+
+**It holds on both models that follow the instruction:** stating the convention drives corroborated unit mismatches to zero, and the fresh answers are indistinguishable from the corrected v1 scoring while differing from the raw one in the predicted direction. Llama-3.1-8B contributes no evidence either way — 29 of its 94 paired problems flip (against 3 and 5 for the larger models), i.e. it is near-unstable under re-prompting, and it is the only row still emitting unit mismatches after being told the convention. Reproduce with `python evaluation/compare_prompt_versions.py`.
+
+Two arms are short of 100 because their endpoints were withdrawn mid-experiment — see below.
+
+### Endpoint availability
+
+Four of the five panel endpoints have been withdrawn from the Groq roster in fourteen weeks: `qwen/qwen3-32b` and `meta-llama/llama-4-scout-17b-16e-instruct` by 2026-08-03, `llama-3.3-70b-versatile` and `llama-3.1-8b-instant` by 2026-08-17. Only `openai/gpt-oss-120b` is still served, so re-querying reproduces **one** of the five rows. This is why every raw API response is committed: `aggregate_real_llm.py` alone rebuilds every number in this README from the archives, and that path does not touch a live endpoint. A substituted endpoint is a new row, not a reproduction of an old one.
 
 ### Per-category accuracy
 

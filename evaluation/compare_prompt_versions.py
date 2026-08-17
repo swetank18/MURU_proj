@@ -184,7 +184,31 @@ def main():
     with open(out, "w") as f:
         json.dump(rows, f, indent=2)
     print(f"\nSaved: {out.relative_to(PROJECT_ROOT)}")
+
+    write_latex(rows)
     return 0
+
+
+def write_latex(rows):
+    """Emit the paper table, same macro-wrapping convention as the aggregator."""
+    lines = []
+    for r in rows:
+        mc = r["mcnemar_vs_v1_unit"]
+        raw = r["mcnemar_vs_v1_raw"]
+        lines.append(
+            f"{r['display']} & {r['n']} & "
+            f"{100 * r['v1_raw']:.1f}\\% & {100 * r['v1_unit']:.1f}\\% & "
+            f"{100 * r['v2_raw']:.1f}\\% & "
+            f"{r['v1_mismatches']} & {r['v2_mismatches']} & "
+            f"{mc['v2_only']}/{mc['v1_only']} & {mc['p_value']:.3f} & "
+            f"{raw['v2_only']}/{raw['v1_only']} & {raw['p_value']:.3f} \\\\"
+        )
+    path = PROJECT_ROOT / "paper" / "tables" / "prompt_versions.tex"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "\\newcommand{\\promptversionrows}{%\n" + "\n".join(lines) + "}\n"
+    )
+    print(f"Saved: {path.relative_to(PROJECT_ROOT)}")
 
 
 if __name__ == "__main__":
