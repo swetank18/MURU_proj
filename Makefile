@@ -1,4 +1,4 @@
-.PHONY: test validate baselines bootstrap reanalyze eval-openai eval-anthropic eval-google eval-groq paper submission clean
+.PHONY: test validate audit baselines bootstrap reanalyze eval-openai eval-anthropic eval-google eval-groq paper submission clean
 
 PYTHON ?= .venv/bin/python
 
@@ -28,8 +28,16 @@ reanalyze:
 	$(PYTHON) evaluation/error_extract.py
 	$(PYTHON) evaluation/failure_codebook.py
 	$(PYTHON) evaluation/aggregate_real_llm.py
+	$(PYTHON) evaluation/defect_leaveout.py
 	$(PYTHON) scripts/generate_figures.py
 	$(PYTHON) scripts/make_manifest.py
+
+# Audit the corpus for the item-construction defect classes (D1 physically
+# implausible stem values, D2 contradictory/ambiguous test accuracy, D3
+# ground-truth intervals narrower than the precision they invite). Exits
+# non-zero when anything is found, so CI can gate on it.
+audit:
+	$(PYTHON) scripts/audit_item_defects.py
 
 # Real-LLM evaluations on the test split (n=301). Each target requires the
 # corresponding API key in the environment. Outputs land in evaluation/baselines/.
