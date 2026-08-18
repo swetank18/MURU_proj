@@ -54,13 +54,17 @@ Yes. We provide pre-computed stratified splits (train/validation/test) balanced 
 
 ### Are there any errors, sources of noise, or redundancies?
 
-Yes. Three classes are known and **not yet fixed**; all three change ground truth and are scheduled before the `v1.0` tag rather than patched silently after it.
+Yes. Three classes are known, **fixed at the generator, and shipped as a `v1.1` errata set** rather than patched into `v1.0`. `v1.0` is the corpus the model panel answered; the committed archives hold responses to those exact stems and four of the five endpoints have since been withdrawn, so editing a stem in place would leave an archived answer attached to a question nobody asked. `v1.0` therefore stays as answered, and `errata/v1.1/` carries the repairs.
 
-- **Physically impossible stem values.** `MURU-0422`, `MURU-1258`, `MURU-1909` state mean diastolic blood pressures of 213.1, 482.3 and 280.8 mmHg. The generator samples the mean without reference to the physical range of the quantity it names. On those three items, the only model of five that flagged the impossibility and substituted a physiological value is the only one scored **incorrect**.
-- **An internally inconsistent template.** The base-rate-fallacy items state a test accuracy in the stem, quote the colleague using a *different* figure, and the ground truth silently adopts the colleague's figure as the sensitivity. Solved as written, the stem implies a sensitivity above 1.
-- **Ground-truth intervals narrower than the precision the prompt invites.** On the Simpson's-paradox items the treatment difference is nearly constant in the uncertain proportion, so intervals can be 0.001 wide and arithmetically correct answers reported to three decimals fall outside.
+They were found by *reading* model errors (paper §7.3), which only surfaces a defect a model happened to trip over. `scripts/audit_item_defects.py` checks the corpus directly for all three classes and is the authority on the count: **402 findings over 280 of the 3,000 problems** — 219 train, 32 validation, **29 of the 301 test items**.
 
-These were found by reading model errors (paper §7.3), not by the validators — which check internal consistency, not plausibility.
+- **D1 — physically implausible stem values (64 items).** The sample-mean generator drew the population mean from a single global range with no reference to the quantity it had just named, so `MURU-0422`, `MURU-1258` and `MURU-1909` state mean diastolic blood pressures of 213.1, 482.3 and 280.8 mmHg. On those three, the only model of five that flagged the impossibility and substituted a physiological value is the only one scored **incorrect**. The blood pressures were caught because a model complained; the audit also found 18 stems giving fuel consumptions up to 424 L/100km and 16 giving per-hectare yields up to 471 tonnes, which nobody had queried.
+- **D2 — contradictory and ambiguous test accuracy (301 findings over the base-rate template).** Each scenario hard-coded its own accuracy figure while the drawn value went to the colleague's quote and to the ground truth, so 170 of 185 items state two different numbers. Both were called "accuracy": read as overall accuracy rather than sensitivity, 131 items imply a sensitivity above 1 and have no consistent answer.
+- **D3 — ground-truth intervals narrower than the precision the prompt invites (37 findings).** On the Simpson's-paradox items the treatment difference is nearly constant in the uncertain proportion, so intervals can be 0.001 wide and arithmetically correct answers reported to three decimals fall outside. The same collapse turned up in `hierarchical_bayes` and in saturated `parallel_redundancy` systems — two templates no sampled model error ever reached.
+
+The validators did not catch any of this: they check internal consistency and schema conformance, not plausibility. `make audit` now does, and exits non-zero when anything is found.
+
+**How much of the published result rests on them:** `evaluation/defect_leaveout.py` re-scores every archive on the clean 272 test items. No model moves by more than 1.0 pp, the leaderboard ordering is unchanged, and the headline null holds (accuracy/ECE Spearman −0.10 → −0.20). Every model scores at or above its own average on the 29 — the defects were mildly inflating the panel, not depressing it.
 
 Previously found and fixed:
 - 28 problems from the Value-of-Information template had a non-monotonicity bug in CI computation (documented in paper Section A.4)

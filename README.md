@@ -174,9 +174,35 @@ R4 (corroborated unit mismatch) is credited correct by the unit accounting, so i
 
 **One failure dominates.** 10 of the 11 wrong-quantity codes are value-of-information items: the *price* of the information reported as its value, a yes/no decision flag where a magnitude was asked, or the EV *without* information. Llama-4-Scout on MURU-3019 computes the VOI as −7.176K against a ground truth of −7.3K and then reports 334.8.
 
-**Reading also found bugs in the benchmark and the harness.** Three test items carry physiologically impossible values (diastolic BP of 482.3 mmHg); the base-rate-fallacy template states one accuracy in the stem and a different one in the colleague's quote, with ground truth silently using the latter as sensitivity; and the Simpson's-paradox items have ground-truth intervals as narrow as 0.001, so arithmetically correct answers fail on rounding. Two parser defects (confidence read from prose; unit-suffixed intervals dropped) are fixed — re-parsing all 1,339 readable responses moves exactly two cells: 8B accuracy 43.9→44.3%, Qwen framework-match 80.2→83.0%.
+**Reading also found bugs in the benchmark and the harness.** Three test items carry physiologically impossible values (diastolic BP of 482.3 mmHg); the base-rate-fallacy template states one accuracy in the stem and a different one in the colleague's quote, with ground truth silently using the latter as sensitivity; and the Simpson's-paradox items have ground-truth intervals as narrow as 0.001, so arithmetically correct answers fail on rounding. Auditing the corpus for those three classes directly found **280 affected items, not three** — see [Item defects](#item-defects-and-what-they-cost) below. Two parser defects (confidence read from prose; unit-suffixed intervals dropped) are fixed — re-parsing all 1,339 readable responses moves exactly two cells: 8B accuracy 43.9→44.3%, Qwen framework-match 80.2→83.0%.
 
 **One coder, so no κ.** `judgment_coding.py` computes Cohen's κ the moment a second coding exists and refuses to report reliability before then: `python evaluation/judgment_coding.py --against <coder>`.
+
+### Item defects, and what they cost
+
+Reading 86 sampled model errors found three broken items. That method only surfaces a defect a model happened to trip over, so `scripts/audit_item_defects.py` checks the corpus directly for the same three classes. It finds **402 findings over 280 of the 3,000 problems** — 219 train, 32 validation, **29 of 301 test**.
+
+| Class | What it is | Found |
+|---|---|---:|
+| **D1** | Physically implausible stem value — the sample-mean generator drew the mean with no reference to the quantity it named | 64 items |
+| **D2** | Base-rate stem states one accuracy and quotes another; read as overall accuracy, 131 imply a sensitivity above 1 | 301 findings |
+| **D3** | Ground-truth interval narrower than the precision the answer format invites | 37 findings |
+
+The blood pressures were caught because Llama-3.3-70B flagged 482.3 mmHg as a typo and was scored wrong for it. Nobody had queried the 18 stems giving a fuel consumption up to 424 L/100km, the 16 giving per-hectare yields up to 471 tonnes, or the D3 collapse in `hierarchical_bayes` and saturated `parallel_redundancy` systems.
+
+**Fixed at the generator; shipped as `v1.1`, not patched into `v1.0`.** `data/` is the corpus the panel answered. The archives hold responses to those exact stems and four of five endpoints are gone, so editing a stem would leave an archived answer attached to a question nobody asked. `v1.0` stays as answered and `make reanalyze` keeps reproducing every published number; `errata/v1.1/` holds the 280 repaired items, and `python scripts/repair_items.py --apply` materialises the v1.1 tree.
+
+**The panel result does not rest on the broken items** (`python evaluation/defect_leaveout.py`):
+
+| Model | all items | clean 272 | Δ | on the 29 defective |
+|---|---:|---:|---:|---:|
+| GPT-OSS-120B | 97.0% | 96.7% | −0.3 | 100.0% (n=29) |
+| Qwen3-32B | 93.1% | 93.6% | +0.6 | 88.0% (n=25) |
+| Llama-4-Scout-17B | 88.3% | 88.2% | −0.1 | 89.7% (n=29) |
+| Llama-3.3-70B | 87.0% | 87.1% | +0.1 | 86.2% (n=29) |
+| Llama-3.1-8B | 43.9% | 42.9% | −1.0 | 53.6% (n=28) |
+
+Ordering unchanged, nothing moves by more than a point, and the headline null survives (accuracy/ECE Spearman −0.10 → −0.20). Read the last column too: every model scores at or above its own average on the defective items, and GPT-OSS-120B scores 100% on all 29. These items are *easier*, not harder — D2 rewards lifting the colleague's quoted figure and penalises reasoning from the stem, which is exactly what Qwen3-32B did when it derived a sensitivity of 3.29 and declined to answer.
 
 ### Harness validation baselines (simulated — not a ranking of models)
 
@@ -329,6 +355,7 @@ evaluation/
   parse_status.py           # wrong vs unreadable vs absent — 10-status taxonomy
   unit_accounting.py        # right answer in the wrong unit — corroborated rescales
   error_extract.py          # every wrong answer + its problem, for failure coding
+  defect_leaveout.py        # re-score the panel without the 29 defective test items
   run_eval.py               # unified API harness (6 providers)
   run_baselines.py          # simulated capability tiers
   bootstrap_analysis.py     # paired McNemar + bootstrap CIs (seed 42)
@@ -337,6 +364,8 @@ evaluation/
   baselines/                # raw API responses (tracked) + MANIFEST.json
 scripts/
   generate_problems.py      # 21 parametric templates
+  audit_item_defects.py     # D1/D2/D3 item-construction audit over the corpus
+  repair_items.py           # regenerate flagged items into the v1.1 errata set
   validate.py               # schema + semantic validation
   split_data.py             # stratified splits
   generate_figures.py       # paper figures
@@ -346,8 +375,9 @@ scripts/
 paper/
   main.tex · main.pdf       # NeurIPS 2026 D&B submission
   figures/ · tables/        # generated; auto-included
+errata/v1.1/                # 280 repaired items + MANIFEST (v1.1 = v1.0 + these)
 results/schema.json         # JSON Schema for result archives (submission format)
-tests/                      # 51-case pytest suite
+tests/                      # 203-case pytest suite
 problem_schema.json         # JSON Schema for problems
 DATASHEET.md DATASET_CARD.md
 metadata/croissant.json     # Croissant 1.0 metadata
@@ -361,6 +391,7 @@ metadata/croissant.json     # Croissant 1.0 metadata
 |---|---|
 | `make test` | Run the full pytest suite |
 | `make validate` | Schema-validate all 3,000 problems |
+| `make audit` | Audit the corpus for item-construction defects (D1/D2/D3); non-zero exit if any |
 | `make baselines` | Run all five simulated baselines and save outputs |
 | `make reanalyze` | Rebuild every published number from the committed archives (no API key, no network) |
 | `make paper` | Compile the LaTeX paper with tectonic |

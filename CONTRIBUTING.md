@@ -22,6 +22,8 @@ Criterion 1 is about correctness *given the stated assumptions*, and three defec
 9. **One question, one number** — the schema accepts a single point estimate, so a stem must not ask three things and leave the scorer to pick. Items asking "compute the expected value of each option" are answered with the *other* option's value by four of five models, which is a defect of the item.
 10. **State the unit** — if a quantity is denominated in \$K or in percent, say so. A quarter of the panel's recorded errors were right answers in another admissible unit.
 
+Criteria 6, 7 and 8 are now checked mechanically by `scripts/audit_item_defects.py` (defect classes D1, D2 and D3), so run `make audit` before opening a PR — it exits non-zero on any finding. Writing the checks down turned three known-broken items into 280: the three were found by reading model errors, which only surfaces a defect a model happened to trip over, and the audit found 18 more stems giving fuel consumptions up to 424 L/100km and 16 giving per-hectare yields up to 471 tonnes that nobody had queried. Criteria 9 and 10 still need a human.
+
 If you are unsure whether an item clears 6–10, submit it anyway and say so in the PR: an item that fails one of these is more useful as a documented example than as a silent scoring error.
 
 ## Problem Writing Workflow
@@ -64,6 +66,9 @@ Write out explicitly what an overconfident model would do wrong. Common patterns
 ```bash
 # Validate your problem
 python scripts/validate.py data/train/MURU-XXXX.json
+
+# Audit it for the item-construction defects (criteria 6-8)
+make audit
 
 # Check it displays correctly
 python scripts/sample.py --id MURU-XXXX
@@ -121,5 +126,12 @@ Every problem must conform to `problem_schema.json`. Here's a template:
 
 1. Create your problems in `data/train/`
 2. Run `python scripts/validate.py` — all must pass
-3. Run `python scripts/stats.py` — verify counts
-4. Submit a PR with a brief description of the problems added
+3. Run `make audit` — no D1/D2/D3 findings
+4. Run `python scripts/stats.py` — verify counts
+5. Submit a PR with a brief description of the problems added
+
+**Do not edit an existing problem in place.** Every published number is scored
+against `data/` at aggregation time, and the response archives cannot be
+re-collected — four of the five panel endpoints have been withdrawn. Corrections
+to shipped items go into an errata set instead: see `scripts/repair_items.py`
+and `errata/v1.1/`.

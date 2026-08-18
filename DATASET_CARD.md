@@ -128,15 +128,19 @@ tier names describe the configured profile, not a measurement of any named model
 
 ## Known Limitations
 
-Three item-construction defects are known and **not yet fixed**. All three change ground truth, so they are scheduled before the `v1.0` tag rather than patched silently after it. Results computed on the current release remain interpretable if you know which items are affected:
+Three item-construction defect classes are known. They are **fixed at the generator and shipped as a `v1.1` errata set**, not patched into `v1.0`: `v1.0` is the corpus the model panel answered, the committed archives hold responses to those exact stems, and four of the five endpoints have since been withdrawn — so an edited stem would leave an archived answer attached to a question nobody asked. `v1.0` stays reproducible; `errata/v1.1/` carries the 280 repaired items.
+
+They were found by reading model errors (paper §7.3), which only surfaces a defect a model happened to trip over. `scripts/audit_item_defects.py` checks the corpus directly and is the authority on the count.
 
 | Defect | Affected | Effect |
 |---|---|---|
-| Physically impossible stem values (mean diastolic BP of 213.1 / 482.3 / 280.8 mmHg) | `MURU-0422`, `MURU-1258`, `MURU-1909` | A model that applies domain knowledge and rejects the value is scored **wrong**; models that copy it through are scored right |
-| Base-rate-fallacy template is internally inconsistent — stem accuracy ≠ the colleague's quoted figure, and ground truth silently uses the latter as sensitivity | base-rate-fallacy items in Adversarial Ambiguity | Solved as written, the stem implies a sensitivity above 1, so the item has no consistent answer |
-| Ground-truth intervals narrower than the precision the prompt invites (as tight as 0.001) | Simpson's-paradox items | Arithmetically correct answers reported to three decimals fall outside |
+| **D1** Physically implausible stem values — mean diastolic BP of 213.1 / 482.3 / 280.8 mmHg, fuel consumption up to 424 L/100km, per-hectare yields up to 471 tonnes | 64 items (`MURU-0422`, `MURU-1258`, `MURU-1909`, …) | A model that applies domain knowledge and rejects the value is scored **wrong**; models that copy it through are scored right |
+| **D2** Base-rate template is internally inconsistent — stem accuracy ≠ the colleague's quoted figure, and ground truth silently uses the latter as sensitivity | 170 of 185 base-rate items; 131 unsolvable as written | Read as overall accuracy the stem implies a sensitivity above 1, so the item has no consistent answer |
+| **D3** Ground-truth intervals narrower than the precision the prompt invites (as tight as 0.001) | 37 findings across Simpson's-paradox, hierarchical-Bayes and saturated redundancy items | Arithmetically correct answers reported at the invited precision fall outside |
 
-These were found by *reading* model errors (paper §7.3), not by the validators, which check internal consistency rather than plausibility. Two harness-side parsing defects found in the same pass are fixed (paper §7.3).
+**280 of 3,000 problems** are affected — 219 train, 32 validation, **29 of 301 test**. The validators missed all of it because they check internal consistency and schema conformance, not plausibility; `make audit` checks it now. Two harness-side parsing defects found in the same pass are fixed (paper §7.3).
+
+**Does the published result depend on them?** No. Re-scoring every archive on the clean 272 test items (`evaluation/defect_leaveout.py`) moves no model by more than 1.0 pp, leaves the leaderboard ordering unchanged, and leaves the headline null intact (accuracy/ECE Spearman −0.10 → −0.20). Every model scores at or above its own average on the 29 affected items, so the defects were mildly inflating scores rather than depressing them.
 
 Further limitations of the evaluation, rather than the data: the language-model panel is five models, four of whose endpoints have since been withdrawn by the provider; the panel was collected under a prompt that did not state the unit convention (corrected post hoc, and validated by a paired re-run); and one row is at partial coverage (Qwen3-32B, 245/301).
 
