@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "MURU-BENCH Problem",
-  "description": "Schema for a single MURU-BENCH problem — Mathematical Reasoning Under Uncertainty.",
+  "description": "Schema for a single MURU-BENCH problem \u2014 Mathematical Reasoning Under Uncertainty.",
   "type": "object",
   "required": [
     "id",
@@ -87,7 +87,9 @@
         },
         "confidence_interval": {
           "type": "array",
-          "items": { "type": "number" },
+          "items": {
+            "type": "number"
+          },
           "minItems": 2,
           "maxItems": 2,
           "description": "Lower and upper bounds of the confidence/credible interval."
@@ -102,19 +104,29 @@
     },
     "solution_steps": {
       "type": "array",
-      "items": { "type": "string", "minLength": 10 },
+      "items": {
+        "type": "string",
+        "minLength": 10
+      },
       "minItems": 2,
       "description": "Ordered list of reasoning steps to reach the ground truth."
     },
     "common_failure_modes": {
       "type": "array",
-      "items": { "type": "string", "minLength": 5 },
+      "items": {
+        "type": "string",
+        "minLength": 5
+      },
       "minItems": 1,
       "description": "Ways an overconfident or incorrect model would fail."
     },
     "metadata": {
       "type": "object",
-      "required": ["author", "reviewed", "source_inspiration"],
+      "required": [
+        "author",
+        "reviewed",
+        "source_inspiration"
+      ],
       "additionalProperties": false,
       "properties": {
         "author": {
@@ -128,8 +140,50 @@
         },
         "source_inspiration": {
           "type": "string",
-          "enum": ["original", "textbook", "paper", "real_world"],
+          "enum": [
+            "original",
+            "textbook",
+            "paper",
+            "real_world"
+          ],
           "description": "Inspiration source for the problem."
+        },
+        "errata": {
+          "type": "object",
+          "description": "Present only on a problem issued as a correction to an earlier dataset version. Written by scripts/repair_items.py; absent from the base corpus.",
+          "required": [
+            "version",
+            "replaces",
+            "defects"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "type": "string",
+              "pattern": "^v[0-9]+\\.[0-9]+$",
+              "description": "Dataset version this replacement belongs to, e.g. v1.1."
+            },
+            "replaces": {
+              "type": "string",
+              "pattern": "^v[0-9]+\\.[0-9]+$",
+              "description": "Dataset version whose problem of this id it replaces."
+            },
+            "defects": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "D1",
+                  "D2",
+                  "D3"
+                ],
+                "description": "D1 physically implausible stem value; D2 contradictory or ambiguous test accuracy; D3 ground-truth interval narrower than the precision it invites. See scripts/audit_item_defects.py."
+              },
+              "description": "Defect classes in the replaced problem."
+            }
+          }
         }
       }
     }

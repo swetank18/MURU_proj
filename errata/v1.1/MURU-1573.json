@@ -1,0 +1,41 @@
+{
+  "id": "MURU-1573",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A healthcare operations study measures the wait time (minutes) for a sample of 30 emergency room visitors. The sample mean is 20.4 min with a sample standard deviation of 8.4 min. However, 3 of the 30 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 27 observations have a mean of 19.1 min and standard deviation of 5.4 min. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 20.4, 95% CI = [17.3, 23.5]. Without outliers: mean = 19.1, 95% CI = [17.0, 21.2]. Combined interval accounting for analytic uncertainty: [17.0, 23.5]. Point estimate: 19.8 min.",
+    "point_estimate": 19.8,
+    "confidence_interval": [
+      17.0,
+      23.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=30): SE = 8.4/√30 = 1.53. Margin = t(29,0.025) × 1.53 = 2.045 × 1.53 ≈ 3.13.",
+    "Full sample 95% CI: 20.4 ± 3.13 = [17.3, 23.5].",
+    "With trimmed sample (n=27): SE = 5.4/√27 = 1.04. Margin = 2.0 × 1.04 ≈ 2.08.",
+    "Trimmed 95% CI: 19.1 ± 2.08 = [17.0, 21.2].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [17.0, 23.5]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D1"
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "MURU-0646",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A web performance study measures the response time (ms) for a sample of 25 website users. The sample mean is 128.3 ms with a sample standard deviation of 38.7 ms. However, 3 of the 25 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 22 observations have a mean of 125.2 ms and standard deviation of 24.8 ms. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 128.3, 95% CI = [112.3, 144.3]. Without outliers: mean = 125.2, 95% CI = [114.6, 135.8]. Combined interval accounting for analytic uncertainty: [112.3, 144.3]. Point estimate: 126.8 ms.",
+    "point_estimate": 126.8,
+    "confidence_interval": [
+      112.3,
+      144.3
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=25): SE = 38.7/√25 = 7.74. Margin = t(24,0.025) × 7.74 = 2.064 × 7.74 ≈ 15.98.",
+    "Full sample 95% CI: 128.3 ± 15.98 = [112.3, 144.3].",
+    "With trimmed sample (n=22): SE = 24.8/√22 = 5.29. Margin = 2.0 × 5.29 ≈ 10.58.",
+    "Trimmed 95% CI: 125.2 ± 10.58 = [114.6, 135.8].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [112.3, 144.3]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D1"
+      ]
+    }
+  }
+}

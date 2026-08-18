@@ -1,0 +1,43 @@
+{
+  "id": "MURU-1073",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "An agriculture study measures crop yield across 3 regions, each containing multiple farms. region A has 8 observations with mean 70.2 tonnes/hectare (within-region SD = 8.4). region B has 15 observations with mean 64.5 tonnes/hectare (within-region SD = 8.5). region C has 10 observations with mean 53.6 tonnes/hectare (within-region SD = 5.4). The between-region standard deviation is uncertain, estimated between 7.9 and 19.8 tonnes/hectare. Using a hierarchical Bayesian model, estimate the true crop yield for region A, accounting for shrinkage toward the grand mean and the uncertainty in the between-region variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for region A: 69.8 tonnes/hectare (shrunk from raw 70.2). Range [69.3, 70.0] as between-region SD varies from 7.9 to 19.8. Pooled mean: 62.6.",
+    "point_estimate": 69.8,
+    "confidence_interval": [
+      69.3,
+      70.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 62.6 tonnes/hectare (weighted average of 3 region means).",
+    "Shrinkage factor for region A: B = σ²_between / (σ²_between + σ²_within/8). At σ_between=13.2: B = 0.952.",
+    "Shrunk estimate = B × 70.2 + (1-B) × 62.6 = 69.8.",
+    "At σ_between=7.9: more shrinkage → estimate = 69.3.",
+    "At σ_between=19.8: less shrinkage → estimate = 70.0.",
+    "Interval [69.3, 70.0] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (70.2) without shrinkage",
+    "Using only the grand mean (62.6) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

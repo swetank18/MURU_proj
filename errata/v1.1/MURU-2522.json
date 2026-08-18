@@ -1,0 +1,43 @@
+{
+  "id": "MURU-2522",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A clinical research study measures treatment response rate across 5 trial sites, each containing multiple patient cohorts. trial site A has 5 observations with mean 54.4 % (within-trial site SD = 9.4). trial site B has 10 observations with mean 52.8 % (within-trial site SD = 7.5). trial site C has 20 observations with mean 66.9 % (within-trial site SD = 7.8). trial site D has 10 observations with mean 56.2 % (within-trial site SD = 7.5). trial site E has 5 observations with mean 59.8 % (within-trial site SD = 7.1). The between-trial site standard deviation is uncertain, estimated between 4.4 and 11.1 %. Using a hierarchical Bayesian model, estimate the true treatment response rate for trial site A, accounting for shrinkage toward the grand mean and the uncertainty in the between-trial site variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for trial site A: 55.8 % (shrunk from raw 54.4). Range [55.1, 57.1] as between-trial site SD varies from 4.4 to 11.1. Pooled mean: 60.0.",
+    "point_estimate": 55.8,
+    "confidence_interval": [
+      55.1,
+      57.1
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 60.0 % (weighted average of 5 trial site means).",
+    "Shrinkage factor for trial site A: B = σ²_between / (σ²_between + σ²_within/5). At σ_between=7.4: B = 0.756.",
+    "Shrunk estimate = B × 54.4 + (1-B) × 60.0 = 55.8.",
+    "At σ_between=4.4: more shrinkage → estimate = 57.1.",
+    "At σ_between=11.1: less shrinkage → estimate = 55.1.",
+    "Interval [55.1, 57.1] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (54.4) without shrinkage",
+    "Using only the grand mean (60.0) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

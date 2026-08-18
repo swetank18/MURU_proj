@@ -1,0 +1,41 @@
+{
+  "id": "MURU-2329",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "A network performance study measures the download speed (Mbps) for a sample of 30 subscribers. The sample mean is 261.9 Mbps with a sample standard deviation of 78.3 Mbps. However, 2 of the 30 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 28 observations have a mean of 246.7 Mbps and standard deviation of 58.2 Mbps. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 261.9, 95% CI = [232.7, 291.1]. Without outliers: mean = 246.7, 95% CI = [224.7, 268.7]. Combined interval accounting for analytic uncertainty: [224.7, 291.1]. Point estimate: 254.3 Mbps.",
+    "point_estimate": 254.3,
+    "confidence_interval": [
+      224.7,
+      291.1
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=30): SE = 78.3/√30 = 14.3. Margin = t(29,0.025) × 14.3 = 2.045 × 14.3 ≈ 29.24.",
+    "Full sample 95% CI: 261.9 ± 29.24 = [232.7, 291.1].",
+    "With trimmed sample (n=28): SE = 58.2/√28 = 11.0. Margin = 2.0 × 11.0 ≈ 22.0.",
+    "Trimmed 95% CI: 246.7 ± 22.0 = [224.7, 268.7].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [224.7, 291.1]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D1"
+      ]
+    }
+  }
+}

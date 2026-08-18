@@ -1,0 +1,43 @@
+{
+  "id": "MURU-1493",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A healthcare study measures average patient recovery rate across 4 hospitals, each containing multiple departments. hospital A has 15 observations with mean 66.3 % (within-hospital SD = 7.7). hospital B has 20 observations with mean 56.5 % (within-hospital SD = 7.2). hospital C has 5 observations with mean 57.3 % (within-hospital SD = 7.9). hospital D has 10 observations with mean 63.5 % (within-hospital SD = 4.5). The between-hospital standard deviation is uncertain, estimated between 8.7 and 21.8 %. Using a hierarchical Bayesian model, estimate the true average patient recovery rate for hospital C, accounting for shrinkage toward the grand mean and the uncertainty in the between-hospital variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for hospital C: 57.5 % (shrunk from raw 57.3). Range [57.4, 57.8] as between-hospital SD varies from 8.7 to 21.8. Pooled mean: 60.9.",
+    "point_estimate": 57.5,
+    "confidence_interval": [
+      57.4,
+      57.8
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 60.9 % (weighted average of 4 hospital means).",
+    "Shrinkage factor for hospital C: B = σ²_between / (σ²_between + σ²_within/5). At σ_between=14.5: B = 0.944.",
+    "Shrunk estimate = B × 57.3 + (1-B) × 60.9 = 57.5.",
+    "At σ_between=8.7: more shrinkage → estimate = 57.8.",
+    "At σ_between=21.8: less shrinkage → estimate = 57.4.",
+    "Interval [57.4, 57.8] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (57.3) without shrinkage",
+    "Using only the grand mean (60.9) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

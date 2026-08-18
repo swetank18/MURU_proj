@@ -26,6 +26,7 @@ import json
 import math
 import os
 import random
+import re
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -59,6 +60,42 @@ def round_sig(x: float, sig: int = 3) -> float:
     if x == 0:
         return 0
     return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
+
+
+# Letter names beginning with a vowel sound, for acronyms read letter by letter
+# ("an ISP analysis", "an FDA review").
+_VOWEL_SOUNDING_LETTERS = set("AEFHILMNORSX")
+
+# Words that start with a vowel letter but a consonant sound, and vice versa.
+_TAKES_A = {"university", "unit", "unique", "user", "uniform", "utility",
+            "european", "one", "useful", "usable", "ubiquitous"}
+_TAKES_AN = {"hour", "honest", "honour", "honor", "heir", "heirloom"}
+
+
+def indefinite_article(phrase: str) -> str:
+    """"a" or "an" for `phrase`, by the sound of its first word."""
+    word = re.split(r"[^A-Za-z0-9]", phrase.strip(), maxsplit=1)[0]
+    if not word:
+        return "a"
+    lower = word.lower()
+    if lower in _TAKES_A:
+        return "a"
+    if lower in _TAKES_AN:
+        return "an"
+    if word.isupper() and len(word) > 1:
+        return "an" if word[0] in _VOWEL_SOUNDING_LETTERS else "a"
+    return "an" if lower[0] in "aeiou" else "a"
+
+
+def with_article(phrase: str, capitalize: bool = False) -> str:
+    """`phrase` behind the right indefinite article.
+
+    Templates interpolate a context field straight after "A", which produced
+    "A agriculture study measures ..." and "A ISP analysis study ..." in 552
+    places across the corpus.
+    """
+    article = indefinite_article(phrase)
+    return f"{article.capitalize() if capitalize else article} {phrase}"
 
 
 def bayes(prior: float, sensitivity: float, specificity: float) -> float:
@@ -394,7 +431,7 @@ def generate_sequential_pipeline(problem_id: int, difficulty: int) -> dict:
     rate_descriptions = []
     for i, (stage, rate) in enumerate(zip(stages, rates)):
         if i == 0:
-            prefix = f"A {ctx['entity']} enters the {ctx['domain']} pipeline. The probability of passing {stage}"
+            prefix = f"{with_article(ctx['entity'], True)} enters the {ctx['domain']} pipeline. The probability of passing {stage}"
         else:
             prefix = f"If the previous stage is passed, the probability of passing {stage}"
 
@@ -508,7 +545,7 @@ def generate_search_detection(problem_id: int, difficulty: int) -> dict:
         ci[1] = round(ci[0] + 0.01, 3)
 
     stem = (
-        f"A {ctx['domain']} team is looking for {ctx['target']}. Based on initial analysis, "
+        f"{with_article(ctx['domain'], True)} team is looking for {ctx['target']}. Based on initial analysis, "
         f"they estimate a {prior_a*100:.0f}% probability that {ctx['target']} is in {ctx['area_a']} "
         f"and a {prior_b*100:.0f}% probability it is in {ctx['area_b']}. They search {ctx['area_a']} "
         f"first and do not find {ctx['target']}. However, their search effectiveness is uncertain "
@@ -772,7 +809,7 @@ def generate_sample_mean(problem_id: int, difficulty: int) -> dict:
         trim_mean = None
 
     stem_base = (
-        f"A {ctx['domain']} study measures the {ctx['measurement']} for a sample of "
+        f"{with_article(ctx['domain'], True)} study measures the {ctx['measurement']} for a sample of "
         f"{n} {ctx['entity']}. The sample mean is {mean} {ctx['unit']} with a sample "
         f"standard deviation of {std} {ctx['unit']}."
     )
@@ -1181,7 +1218,7 @@ def generate_sequential_updating(problem_id: int, difficulty: int) -> dict:
         )
 
     stem = (
-        f"In a {ctx['domain']} scenario, a researcher begins with a prior probability of "
+        f"In {with_article(ctx['domain'])} scenario, a researcher begins with a prior probability of "
         f"{prior*100:.0f}% that {ctx['hypothesis']}, based on {ctx['evidence']}. "
         + " ".join(obs_desc) +
         f" What is the posterior probability that {ctx['hypothesis']} after all "
@@ -1359,7 +1396,7 @@ def generate_hierarchical_bayes(problem_id: int, difficulty: int) -> dict:
     )
 
     stem = (
-        f"A {ctx['domain']} study measures {ctx['measure']} across {n_groups} "
+        f"{with_article(ctx['domain'], True)} study measures {ctx['measure']} across {n_groups} "
         f"{ctx['group']}s, each containing multiple {ctx['individual']}s. "
         f"{stem_groups}. "
         f"The between-{ctx['group']} standard deviation is uncertain, estimated between "
@@ -1532,7 +1569,7 @@ def generate_parallel_redundancy(problem_id: int, difficulty: int) -> dict:
             path_descs.append(f"{name} has a reliability of {p['mid']*100:.0f}%")
 
     stem = (
-        f"A {ctx['domain']} {ctx['system']} uses {n_paths} parallel {ctx['component']}s for redundancy. "
+        f"{with_article(ctx['domain'], True)} {ctx['system']} uses {n_paths} parallel {ctx['component']}s for redundancy. "
         f"The {ctx['outcome']} requires at least one {ctx['component']} to function. "
         + ". ".join(path_descs) + ". "
     )
@@ -1681,7 +1718,7 @@ def generate_conditional_cascade(problem_id: int, difficulty: int) -> dict:
         ci[1] = round(ci[0] + 0.01, 3)
 
     stem = (
-        f"In a {ctx['domain']}, a {ctx['entity']} begins at '{ctx['root']}'. "
+        f"In {with_article(ctx['domain'])}, {with_article(ctx['entity'])} begins at '{ctx['root']}'. "
         f"At the first stage, {branch_prob*100:.0f}% of cases take Path A (the {ctx['branch_type']} "
         f"fast track) and {complement*100:.0f}% take Path B (the standard route). "
         f"In Path A, the probability of advancing to the next stage is uncertain, estimated "
@@ -1828,7 +1865,7 @@ def generate_proportion_estimation(problem_id: int, difficulty: int) -> dict:
         point_est = round(center, 4)
 
     stem = (
-        f"A {ctx['domain']} study surveys {n} {ctx['population']} and observes "
+        f"{with_article(ctx['domain'], True)} study surveys {n} {ctx['population']} and observes "
         f"{successes} positive outcomes out of {n} ({p_hat*100:.1f}%). "
     )
 
@@ -1983,7 +2020,7 @@ def generate_mixture_distribution(problem_id: int, difficulty: int) -> dict:
     obs_sd = sd_mid
 
     stem = (
-        f"A {ctx['domain']} dataset contains {n_total} observations of {ctx['what']}. "
+        f"{with_article(ctx['domain'], True)} dataset contains {n_total} observations of {ctx['what']}. "
         f"The data is believed to come from a mixture of two populations: "
         f"{ctx['group_a']} (mean ≈ {mu_a} {ctx['unit']}, SD ≈ {sigma_a}) and "
         f"{ctx['group_b']} (mean ≈ {mu_b} {ctx['unit']}, SD ≈ {sigma_b}). "
@@ -2128,7 +2165,7 @@ def generate_variance_estimation(problem_id: int, difficulty: int) -> dict:
         combined_sd_upper = round(combined_sd_lower + 0.1, 2)
 
     stem = (
-        f"A {ctx['domain']} study measures {ctx['what']} for {n} samples to determine "
+        f"{with_article(ctx['domain'], True)} study measures {ctx['what']} for {n} samples to determine "
         f"if the process variability is {ctx['tolerance']}. "
         f"The sample standard deviation is {sample_sd} {ctx['unit']} "
         f"(sample variance = {sample_var})."
@@ -2443,7 +2480,7 @@ def generate_sequential_decision(problem_id: int, difficulty: int) -> dict:
         f"whether to proceed to {ctx['gate']}. The investment cost is ${invest_cost:.0f}K. "
         f"If the project succeeds (estimated probability {p_success_low*100:.0f}%-{p_success_high*100:.0f}%), "
         f"it yields ${payoff_success:.0f}K; if it fails, the investment is lost. "
-        f"Before deciding, the decision-maker can purchase a {ctx['info']} for ${info_cost:.0f}K. "
+        f"Before deciding, the decision-maker can purchase {with_article(ctx['info'])} for ${info_cost:.0f}K. "
         f"This {ctx['info']} correctly predicts success/failure with accuracy "
         f"{info_accuracy_low*100:.0f}%-{info_accuracy_high*100:.0f}%. "
         f"Should the decision-maker buy the information? What is the value of this "
@@ -2563,7 +2600,7 @@ def generate_insurance_pricing(problem_id: int, difficulty: int) -> dict:
     premium_mid = round(el_mid * (1 + risk_load), 1)
 
     stem = (
-        f"An insurer is pricing a {ctx['domain']} policy for {ctx['asset']} in {ctx['region']}. "
+        f"An insurer is pricing {with_article(ctx['domain'])} policy for {ctx['asset']} in {ctx['region']}. "
         f"Historical data suggests the annual frequency of {ctx['peril']} events follows a "
         f"Poisson distribution with rate λ estimated between {freq_low} and {freq_high} events/year. "
         f"Each event causes a loss estimated between ${sev_mean_low:.0f}K and ${sev_mean_high:.0f}K "
@@ -2769,7 +2806,7 @@ def generate_simpsons_paradox(problem_id: int, difficulty: int) -> dict:
         )
 
     stem = (
-        f"In a {ctx['domain']} study comparing {ctx['treatment']}: "
+        f"In {with_article(ctx['domain'])} study comparing {ctx['treatment']}: "
         f"Overall, Treatment Y has a higher {ctx['outcome']} ({overall_y*100:.1f}% vs "
         f"{overall_x*100:.1f}%). However, when stratified by {ctx['confounder']}: "
         f"In {ctx['group_a']} (n_X={n_a_x}, n_Y={n_a_y}): Treatment X achieves "

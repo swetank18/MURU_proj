@@ -1,0 +1,45 @@
+{
+  "id": "MURU-1880",
+  "category": "adversarial_ambiguity",
+  "difficulty": 5,
+  "stem": "In an advertising study comparing Platform A vs. Platform B: Overall, Treatment Y has a higher conversion rate (72.0% vs 53.1%). However, when stratified by product category: In low-consideration products (n_X=30, n_Y=80): Treatment X achieves 88% vs Treatment Y's 83%. In high-consideration products (n_X=100, n_Y=20): Treatment X achieves 43% vs Treatment Y's 26%. The true population proportion of low-consideration products is uncertain, estimated between 43% and 71%. Which treatment is actually better, and by how much? Report the adjusted difference in conversion rate (X - Y) as a proportion to three decimal places.",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "This is Simpson's Paradox. Treatment X is better in BOTH subgroups. The aggregate reversal occurs because X is disproportionately applied to high-consideration products (harder cases). Adjusted difference (X - Y): [0.085, 0.119], point estimate: 0.101. Treatment X is genuinely better by 10.1 percentage points.",
+    "point_estimate": 0.101,
+    "confidence_interval": [
+      0.085,
+      0.119
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Aggregate rates: X=53.1%, Y=72.0% (Y appears better).",
+    "Stratified: In low-consideration products: X=88% > Y=83%. In high-consideration products: X=43% > Y=26%.",
+    "X is better in BOTH subgroups — this is Simpson's Paradox.",
+    "The paradox arises because Platform A is applied more to high-consideration products (lower baseline rate), skewing the aggregate.",
+    "Population-adjusted rate for X: w_A×0.88 + (1-w_A)×0.43.",
+    "Population-adjusted rate for Y: w_A×0.83 + (1-w_A)×0.26.",
+    "Difference X-Y at w_A=0.57: 0.101. Range: [0.085, 0.119]."
+  ],
+  "common_failure_modes": [
+    "Using the aggregate rates and concluding Treatment Y is better",
+    "Not recognizing Simpson's Paradox despite seeing reversed trends in subgroups",
+    "Ignoring the confounding variable (unequal group composition between treatments)",
+    "Computing adjusted rates with a single population weight without uncertainty",
+    "Not considering that additional unobserved confounders could further modify the comparison"
+  ],
+  "metadata": {
+    "author": "generator_simpsons_paradox",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

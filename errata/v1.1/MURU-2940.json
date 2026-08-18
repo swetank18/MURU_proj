@@ -1,0 +1,43 @@
+{
+  "id": "MURU-2940",
+  "category": "adversarial_ambiguity",
+  "difficulty": 2,
+  "stem": "A self-driving car's pedestrian detection system correctly detects 87% of the pedestrians in its path. The test also has a specificity of 85% (correctly identifying negatives). A colleague presents this data and concludes: 'Since the test is 87% accurate, when it flags someone, there's a 87% chance they're actually a real pedestrian.' The base rate of detection events where a pedestrian is actually present in this detection events pool is estimated between 0.60% and 1.70%. Is your colleague's reasoning correct? What is the actual probability that a flagged detection event is truly a real pedestrian? How does the uncertain base rate affect your answer?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The colleague is wrong — this is the base rate fallacy. P(a real pedestrian | flagged) ranges from 0.0338 to 0.0912 (NOT 87%). The vast majority of flagged cases are false positives because the base rate is so low. Point estimate at 1.10%: 0.0606.",
+    "point_estimate": 0.0606,
+    "confidence_interval": [
+      0.0338,
+      0.0912
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The colleague confuses P(flagged | a real pedestrian) = 0.87 with P(a real pedestrian | flagged).",
+    "Apply Bayes' theorem: PPV = sensitivity × base_rate / (sensitivity × base_rate + (1-specificity) × (1-base_rate)).",
+    "At base rate 1.10%: PPV = 0.87×0.011 / (0.87×0.011 + 0.15×0.989) ≈ 0.0606.",
+    "At base rate 0.60%: PPV ≈ 0.0338.",
+    "At base rate 1.70%: PPV ≈ 0.0912.",
+    "The true PPV (0.0606) is dramatically lower than the naive estimate (0.87) because when the base rate is low, false positives dominate."
+  ],
+  "common_failure_modes": [
+    "Agreeing with the colleague that the probability is 87% (the base rate fallacy)",
+    "Confusing test accuracy (sensitivity) with positive predictive value (PPV)",
+    "Not recognizing that low base rates make most positive flags false positives",
+    "Providing a single PPV without accounting for uncertainty in the base rate"
+  ],
+  "metadata": {
+    "author": "generator_base_rate_trap",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D2"
+      ]
+    }
+  }
+}

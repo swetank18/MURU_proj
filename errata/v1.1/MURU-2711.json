@@ -1,0 +1,43 @@
+{
+  "id": "MURU-2711",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A healthcare study measures average patient recovery rate across 3 hospitals, each containing multiple departments. hospital A has 5 observations with mean 50.6 % (within-hospital SD = 4.8). hospital B has 8 observations with mean 32.8 % (within-hospital SD = 4.7). hospital C has 20 observations with mean 40.1 % (within-hospital SD = 5.7). The between-hospital standard deviation is uncertain, estimated between 6.0 and 15.0 %. Using a hierarchical Bayesian model, estimate the true average patient recovery rate for hospital A, accounting for shrinkage toward the grand mean and the uncertainty in the between-hospital variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for hospital A: 50.1 % (shrunk from raw 50.6). Range [49.4, 50.4] as between-hospital SD varies from 6.0 to 15.0. Pooled mean: 39.9.",
+    "point_estimate": 50.1,
+    "confidence_interval": [
+      49.4,
+      50.4
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 39.9 % (weighted average of 3 hospital means).",
+    "Shrinkage factor for hospital A: B = σ²_between / (σ²_between + σ²_within/5). At σ_between=10.0: B = 0.956.",
+    "Shrunk estimate = B × 50.6 + (1-B) × 39.9 = 50.1.",
+    "At σ_between=6.0: more shrinkage → estimate = 49.4.",
+    "At σ_between=15.0: less shrinkage → estimate = 50.4.",
+    "Interval [49.4, 50.4] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (50.6) without shrinkage",
+    "Using only the grand mean (39.9) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

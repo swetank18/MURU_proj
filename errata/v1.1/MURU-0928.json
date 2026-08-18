@@ -1,0 +1,43 @@
+{
+  "id": "MURU-0928",
+  "category": "adversarial_ambiguity",
+  "difficulty": 2,
+  "stem": "An airport security scanner correctly detects 89% of the prohibited items that pass through it. The test also has a specificity of 83% (correctly identifying negatives). A colleague presents this data and concludes: 'Since the test is 89% accurate, when it flags someone, there's a 89% chance they're actually carrying a prohibited item.' The base rate of passengers actually carrying prohibited items in this passengers pool is estimated between 0.60% and 1.80%. Is your colleague's reasoning correct? What is the actual probability that a flagged passenger is truly carrying a prohibited item? How does the uncertain base rate affect your answer?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The colleague is wrong — this is the base rate fallacy. P(carrying a prohibited item | flagged) ranges from 0.0306 to 0.0876 (NOT 89%). The vast majority of flagged cases are false positives because the base rate is so low. Point estimate at 1.20%: 0.0598.",
+    "point_estimate": 0.0598,
+    "confidence_interval": [
+      0.0306,
+      0.0876
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The colleague confuses P(flagged | carrying a prohibited item) = 0.89 with P(carrying a prohibited item | flagged).",
+    "Apply Bayes' theorem: PPV = sensitivity × base_rate / (sensitivity × base_rate + (1-specificity) × (1-base_rate)).",
+    "At base rate 1.20%: PPV = 0.89×0.012 / (0.89×0.012 + 0.17×0.988) ≈ 0.0598.",
+    "At base rate 0.60%: PPV ≈ 0.0306.",
+    "At base rate 1.80%: PPV ≈ 0.0876.",
+    "The true PPV (0.0598) is dramatically lower than the naive estimate (0.89) because when the base rate is low, false positives dominate."
+  ],
+  "common_failure_modes": [
+    "Agreeing with the colleague that the probability is 89% (the base rate fallacy)",
+    "Confusing test accuracy (sensitivity) with positive predictive value (PPV)",
+    "Not recognizing that low base rates make most positive flags false positives",
+    "Providing a single PPV without accounting for uncertainty in the base rate"
+  ],
+  "metadata": {
+    "author": "generator_base_rate_trap",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D2"
+      ]
+    }
+  }
+}

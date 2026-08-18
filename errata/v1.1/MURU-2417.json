@@ -1,0 +1,43 @@
+{
+  "id": "MURU-2417",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "An agriculture study measures crop yield across 4 regions, each containing multiple farms. region A has 15 observations with mean 70.3 tonnes/hectare (within-region SD = 8.9). region B has 10 observations with mean 82.4 tonnes/hectare (within-region SD = 8.6). region C has 10 observations with mean 48.0 tonnes/hectare (within-region SD = 6.4). region D has 8 observations with mean 74.3 tonnes/hectare (within-region SD = 3.4). The between-region standard deviation is uncertain, estimated between 7.4 and 18.5 tonnes/hectare. Using a hierarchical Bayesian model, estimate the true crop yield for region B, accounting for shrinkage toward the grand mean and the uncertainty in the between-region variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for region B: 81.8 tonnes/hectare (shrunk from raw 82.4). Range [80.8, 82.1] as between-region SD varies from 7.4 to 18.5. Pooled mean: 68.7.",
+    "point_estimate": 81.8,
+    "confidence_interval": [
+      80.8,
+      82.1
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 68.7 tonnes/hectare (weighted average of 4 region means).",
+    "Shrinkage factor for region B: B = σ²_between / (σ²_between + σ²_within/10). At σ_between=12.3: B = 0.953.",
+    "Shrunk estimate = B × 82.4 + (1-B) × 68.7 = 81.8.",
+    "At σ_between=7.4: more shrinkage → estimate = 80.8.",
+    "At σ_between=18.5: less shrinkage → estimate = 82.1.",
+    "Interval [80.8, 82.1] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (82.4) without shrinkage",
+    "Using only the grand mean (68.7) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

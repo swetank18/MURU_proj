@@ -1,0 +1,3789 @@
+{
+  "version": "v1.1",
+  "replaces": "v1.0",
+  "description": "v1.1 is v1.0 with each file listed here replacing the problem of the same id. v1.0 is the corpus the model panel answered and is left intact in data/ so the published numbers stay reproducible.",
+  "audit": "scripts/audit_item_defects.py",
+  "seed_salt": "muru-errata-v1.1",
+  "n_base": 3000,
+  "n_replaced": 280,
+  "by_split": {
+    "test": 29,
+    "train": 219,
+    "validation": 32
+  },
+  "by_defect_class": {
+    "D1": 64,
+    "D2": 301,
+    "D3": 37
+  },
+  "by_template": {
+    "base_rate_trap": 179,
+    "hierarchical_bayes": 19,
+    "sample_mean": 64,
+    "simpsons_paradox": 18
+  },
+  "items": [
+    {
+      "id": "MURU-0286",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 87.6 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "4460595b4cc64871a391262ddb9c189c4ca63982a1a066cb4d83e93f7c76c573",
+      "sha256_v1_1": "c5f506979020cc5e7c1b5a63e1d53705b6daf29aa290c911bc472c1652f5d59b"
+    },
+    {
+      "id": "MURU-0288",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.09 > 1 (accuracy 97%, specificity 0.87, prevalence 0.0450) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "bec564ca3d2347963435dca003568e32bb233ee5aa5606715f36e3de794650ca",
+      "sha256_v1_1": "756351555f7f4c23b6370330828a9a9d91c8c04ef16ce43aa47c71af124bfd40"
+    },
+    {
+      "id": "MURU-0296",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.99 > 1 (accuracy 92%, specificity 0.88, prevalence 0.0360) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "c8afce74e6842ac5695f2e227c4509d0e8ca42fb3e21cd8180b8811bc298b076",
+      "sha256_v1_1": "7c112df7608b2a9db7b4389a0d39d60732575666b833b9e733d22e1cdf7f75cb"
+    },
+    {
+      "id": "MURU-0304",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 98%"
+      ],
+      "sha256_v1_0": "6ec0f8ba33f2925e55cd51ef12592d11e9a9d43592b66b497c43930e115bc57f",
+      "sha256_v1_1": "7dc356abecafd5f9af853b7eabe968901009d7079cb3e056a10f98ae6fa4f581"
+    },
+    {
+      "id": "MURU-0310",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 190.4 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "9e402055bd41f353501fe89372a4300ead72d5b2c03511401778f4e02f8485dc",
+      "sha256_v1_1": "2d0be7144098f098c66267e6e450fc2c6e5983f7389896bce393c1182735d068"
+    },
+    {
+      "id": "MURU-0312",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 12.92 > 1 (accuracy 95%, specificity 0.92, prevalence 0.0025) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a8557c21ef33ec6fb5579ff3280c518c2a014fb7d7db9ef38d090caa577afb02",
+      "sha256_v1_1": "559c441f91c7c0a8e25668533bf17f245f347e116178a44af0faceade3057da0"
+    },
+    {
+      "id": "MURU-0318",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 231.7 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "8d0749560c936d7602635b277400b0ed18eaa3e889e6a6421315384536304437",
+      "sha256_v1_1": "e1ea96883728fd5ad2498f276641f75705a6d3926fbbad2597b010b38e5d97b4"
+    },
+    {
+      "id": "MURU-0320",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.99 > 1 (accuracy 88%, specificity 0.85, prevalence 0.0140) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ab0755d01c19a6c6c426b0ae603d401944336d39a9767727888cf57a2bfe9853",
+      "sha256_v1_1": "8e5aa1867031e377223fd6d0c048b1f0c594ac852e0da5f7901a6bd4396a2610"
+    },
+    {
+      "id": "MURU-0328",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 90%"
+      ],
+      "sha256_v1_0": "f1f600d289513a0c47b28b993e96e21af7d570ea227fe5b2020ab829a31f772b",
+      "sha256_v1_1": "f0c9f15194f953d92885aebb10bd30bb564014a8fdb00a05d8777e8d731a9c6b"
+    },
+    {
+      "id": "MURU-0334",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 359.0 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "5beab6caec20950d58b42a02dd9839b0d38f315bd7c72c93350c882618490963",
+      "sha256_v1_1": "3c01d15f2270bbd1a98f8749b0f987e3ce1b142984fbca98279271dd775cb479"
+    },
+    {
+      "id": "MURU-0336",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 97%"
+      ],
+      "sha256_v1_0": "c173e652bb0ba8e04d27d3b1b6f979ce02cc0a443318aa3ea927ae0fbbd40bf7",
+      "sha256_v1_1": "ce2f5dbc4217be417958526eee8ea8ad012d09523d8aa6b9a8b79ec87e27b827"
+    },
+    {
+      "id": "MURU-0344",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 93%"
+      ],
+      "sha256_v1_0": "3bad7fe7498bbe8f748a964f6017537b35beb4c3237834ba40e58973831e48bb",
+      "sha256_v1_1": "de156be5bd5d6fdacfbf8ac69d54fbc1c540f49980fbf39cd3bd87b5e629705f"
+    },
+    {
+      "id": "MURU-0350",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 424.1 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "2b975fc1c78309bf0ccc7b7cd357793f0878a78162b5e017c1c261c6efb9e7aa",
+      "sha256_v1_1": "7258d6839efaa48b4dc81d87d212a3ae17bcba5bb024bf2e8f8983877a3cab13"
+    },
+    {
+      "id": "MURU-0360",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.60 > 1 (accuracy 99%, specificity 0.85, prevalence 0.0295) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "d76e1531863910c625d0dab4620eca1bab7073b1547cba9772a2979c460cf6f3",
+      "sha256_v1_1": "4a99b7a40ee54e61aab25a9d09bacf73a1fc1867a57986d377b004eb5d382647"
+    },
+    {
+      "id": "MURU-0368",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.79 > 1 (accuracy 92%, specificity 0.87, prevalence 0.0260) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "0d75eefa6513f7a2700fd36a67b770ae606e8ea72f6bc938cb332a491ab17dd7",
+      "sha256_v1_1": "ec12b5449ef702f7c0f813823559ce8b887bc40180d3efcda6a78225a1b6d999"
+    },
+    {
+      "id": "MURU-0376",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 88%"
+      ],
+      "sha256_v1_0": "e658ee67bee1dfe3644a6788abf0807e73b59e3056409607ee8d7bc12f2ec26c",
+      "sha256_v1_1": "a9733bedc2c4ba8fa453e727405323832629f664e01db74f7a25295ae8aa1d67"
+    },
+    {
+      "id": "MURU-0382",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 471.7 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "62a3a06b477964436b38c6609538293db5eec7d4f06a075413f4a656bc130e12",
+      "sha256_v1_1": "cf6ba899baba2725a06a1e5d72c4cc02a4e2d151e793c07450d371996d48bb29"
+    },
+    {
+      "id": "MURU-0384",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 29.46 > 1 (accuracy 99%, specificity 0.89, prevalence 0.0035) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "f7814296a177e4295d991f53450c34a399747cdf052506028e678f83dc9197a8",
+      "sha256_v1_1": "6a972662f05656ee4b8bddaabcc1bcc1fb491f946500b3197f0553f8537dc456"
+    },
+    {
+      "id": "MURU-0392",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 91%"
+      ],
+      "sha256_v1_0": "fd458873a5404d920ee4606ad7197932ac83072910b82205f6995ee514cfc4b4",
+      "sha256_v1_1": "b345b99eab83e61543a47f4761d0bbfd3a29589d2e665eb9c15784ddef62aa69"
+    },
+    {
+      "id": "MURU-0400",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 15.11 > 1 (accuracy 92%, specificity 0.82, prevalence 0.0070) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "34c069f47d9a296c10edacda1e91e2818cb1dd3ee35cae16e0fa3b98d4cb9964",
+      "sha256_v1_1": "d7cf99af5928dbce9dbbb6b974ab3522293ec8e49940e051ff7b52313b420006"
+    },
+    {
+      "id": "MURU-0406",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 433.1 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "1aa648701be5801c598cdeef5a4649b1e8e6cc7305aebbe0810bec6a3d6fe544",
+      "sha256_v1_1": "21f1d7867a26e4b38fb4f3b6102c8748a67f924d5d49554e7e7db82c16a42996"
+    },
+    {
+      "id": "MURU-0408",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 11.50 > 1 (accuracy 99%, specificity 0.83, prevalence 0.0150) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b934bdf3fe6ed8f42987d55f19b3916f48d710ef158eeaf8015a9e54761f3ae5",
+      "sha256_v1_1": "e8a567ae4918c75823ecdb9319e5514b016563090482b6a7f42cd82ca7fb7a04"
+    },
+    {
+      "id": "MURU-0416",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.47 > 1 (accuracy 99%, specificity 0.91, prevalence 0.0225) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "da9d520524b7aaf8774c3d2f1a31532edcaeb2464b8306398487b6f527f956af",
+      "sha256_v1_1": "b9299d57444d1a4a8704c8967d1e046d4b83794346c941a6f7abbf9db9a43a44"
+    },
+    {
+      "id": "MURU-0422",
+      "split": "test",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 213.1 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "b5c7c87803cdbb2347cddcde3e5ec80f40aa7a347f200685625a4e71d2797565",
+      "sha256_v1_1": "a2ba99b3a31504f7ed152e5f81cbc6476519cd1aca979e9868f880c4f91ea681"
+    },
+    {
+      "id": "MURU-0424",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.96 > 1 (accuracy 88%, specificity 0.82, prevalence 0.0525) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "befda9431e7b156fef37bdbfccc142e692bd3cef1d7d0ba04fdc4c96d09dadb8",
+      "sha256_v1_1": "82f673c926be02add8655de2c886fe8b172ccaa887ca1aea0feea02ecbe9dba1"
+    },
+    {
+      "id": "MURU-0432",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 8.01 > 1 (accuracy 90%, specificity 0.81, prevalence 0.0125) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "952c53bf4a56da7d1b57b1b6c2bcfe60c30696cd229df789f7d4a68fdfea3738",
+      "sha256_v1_1": "d31fe6cacfbc66e42d5b80f594742f7e59e491009ec4a03e8759baad91f38199"
+    },
+    {
+      "id": "MURU-0438",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 339.5 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "6a5f972595428ccc995fc17643344f9f74d571f3ecf7df37990ad123352f47a8",
+      "sha256_v1_1": "0833095d86ad56b6377fa28626b2cc1ef59d74e843440283e8a1a1096340b1db"
+    },
+    {
+      "id": "MURU-0440",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.75 > 1 (accuracy 95%, specificity 0.86, prevalence 0.0475) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "dbc6eed8eba92000072c8d8c840b32aaa4c9434edd0fad9bcd5fc9f07848a97c",
+      "sha256_v1_1": "d4337d5a7941ed7f5e415b7ce66aaced3846eb2e60bfde1dc76fc8a2e2d385bc"
+    },
+    {
+      "id": "MURU-0446",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 183.6 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "2613daafc05b71414b03e871e0246aa05cd17e33d8db9f80f0236a5403a187d8",
+      "sha256_v1_1": "d878e0020d270ced42b2bf605ee0858eb60df13c8640215ffd82789fcb553e2c"
+    },
+    {
+      "id": "MURU-0448",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.03 > 1 (accuracy 95%, specificity 0.92, prevalence 0.0270) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ad44be0fd9992816d2f555927deb97876c6609acd7f887abd50df3592e3c489a",
+      "sha256_v1_1": "45c4a12d85c403d7a05bf32cfb8a62d5656c2a1c0c7cfca2654588e2052f569b"
+    },
+    {
+      "id": "MURU-0454",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 304.4 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "6314168801bc9d59726fecd7ddec4071df75179533bf1334c8f3dc6d809b7e18",
+      "sha256_v1_1": "e67b2be95ce776aa95285a6dc4031372f90e752f9d47a01eb4fc252271a7fcb9"
+    },
+    {
+      "id": "MURU-0456",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 91%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.92 > 1 (accuracy 99%, specificity 0.86, prevalence 0.0320) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "59473fceec1684280001fcb73cf89a6538a37ea4aef0bbe181523316eb0f5297",
+      "sha256_v1_1": "6009761475340233ad921175d743aafc780ca00172c911b05664fd4acdfb0967"
+    },
+    {
+      "id": "MURU-0464",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.93 > 1 (accuracy 95%, specificity 0.86, prevalence 0.0435) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "9a07365855cfe837ead49d4607fc6307397596fb002108e31836b5fddbfebe4e",
+      "sha256_v1_1": "ff5a96aacb70648e3651f30efeb465900f90b3a22bb6d53991f7b6fddfd99adb"
+    },
+    {
+      "id": "MURU-0472",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.37 > 1 (accuracy 97%, specificity 0.96, prevalence 0.0245) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "537447ce730f732679a4f483d2bb0302e9a6d5a44575dd0bd5af78ab486bc3c3",
+      "sha256_v1_1": "f3004a4e55a64630a058d1d86f4ee8a77b6a4beb2353a5b42772ffcf250315d0"
+    },
+    {
+      "id": "MURU-0478",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 174.4 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "18b94dcd6672b017cd0b0c59113232d7000f1d3f3e09ec820fc73f623963aa2f",
+      "sha256_v1_1": "9570a1e50642bcec925a68d8ad3cb8f514f7413340cf6f24bffc5a53e061fceb"
+    },
+    {
+      "id": "MURU-0480",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 99%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.68 > 1 (accuracy 90%, specificity 0.86, prevalence 0.0490) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "42b31120f8ae1da202a36817309a6f2d26ab6c8ddff72a84d852ff03e92dfda2",
+      "sha256_v1_1": "4331ee28e63c0f544c6ef7dd851d4e7d43b903b6a047ef58fc96071b43fea600"
+    },
+    {
+      "id": "MURU-0488",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.19 > 1 (accuracy 97%, specificity 0.81, prevalence 0.0365) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "6e6e097e3bcb16eb8601d3171215818fc754bc2d542854acb58b88664ca1813a",
+      "sha256_v1_1": "651bd325551a2d164f6cd8b18b218a1e193dc17886d939652fcd020c4f1e40ec"
+    },
+    {
+      "id": "MURU-0496",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.54 > 1 (accuracy 97%, specificity 0.95, prevalence 0.0340) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "decc70df8fb1f444947d6310382fc9e3e40121d1ae20b009bf87f3be37455d29",
+      "sha256_v1_1": "6bdaf8b345074bdc9086448590ba8451f9e1e7b9f984d459eb2d6ad05ec60e72"
+    },
+    {
+      "id": "MURU-0504",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.96 > 1 (accuracy 99%, specificity 0.96, prevalence 0.0150) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "13fa45d1f5dcb8890f02168741ca2776be542a5e7e508d547f33863196ad62cf",
+      "sha256_v1_1": "c16bbfa27a586adfd08550ef54989f4a2949def8d2cada7f933ba5de834dae38"
+    },
+    {
+      "id": "MURU-0512",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.96 > 1 (accuracy 99%, specificity 0.92, prevalence 0.0230) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "3e1a23abffacca594ba4329759d571528894c530a54d0ea60f7290108afe9267",
+      "sha256_v1_1": "94b569f63ba4cd0c3b725e9c42f854b3e5ef3f46097036cc715f9b50085bf3cb"
+    },
+    {
+      "id": "MURU-0520",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.76 > 1 (accuracy 95%, specificity 0.94, prevalence 0.0055) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "39e5073a98b162433ff2134f30d680f5007d20fc8cf180d41956ec1b6686b52f",
+      "sha256_v1_1": "59f1595398cc5aac6d7dd9cdb0cc13c2288532f2fe540934ec44b76e5417bc0f"
+    },
+    {
+      "id": "MURU-0528",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 88%"
+      ],
+      "sha256_v1_0": "589f1d72b94ec6e0a7e6e6ad2c761026b32ad8a1ebe202bc698bfde8ebda33d2",
+      "sha256_v1_1": "ad54f8592cbd7984386f05122046acbcae3d8cfc84bf5755f2a07fb56f111677"
+    },
+    {
+      "id": "MURU-0536",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 92%"
+      ],
+      "sha256_v1_0": "0bac92ad204e23e21dac851a0b344033a74ef4a678f092a834d55eec95149891",
+      "sha256_v1_1": "1878dc071bedc437d5f075f9c1ed61ab88493d05e3f1394369b9eb435f9066b9"
+    },
+    {
+      "id": "MURU-0544",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 90%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.41 > 1 (accuracy 88%, specificity 0.87, prevalence 0.0185) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "2bee6b5be915016273a53bf9400ff6efd7d7774b483d0b8d92bfcb786678adc6",
+      "sha256_v1_1": "a599b4d601d22d968f44799d103e5ae0031e050ab6f32a0990069ed453261fd6"
+    },
+    {
+      "id": "MURU-0552",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.91 > 1 (accuracy 88%, specificity 0.83, prevalence 0.0465) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "7123dd6d5a58d63ef9a7eb65783ab22b8c1d4c5794cd0bfa435b17eeea70319a",
+      "sha256_v1_1": "27790aa507bd0190e4f3a8e25e38f4d5391f63c0f70db93775fd38aa5099b2cf"
+    },
+    {
+      "id": "MURU-0560",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.95 > 1 (accuracy 99%, specificity 0.89, prevalence 0.0165) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b46e1f7f524b07fd74f4b35cbed6f95d8382c87554e7e52d93572d324f203eb1",
+      "sha256_v1_1": "11cf2db7deab3d902b7dc7f97ae4121cb555ec14bd5c7686b7160817a215e3da"
+    },
+    {
+      "id": "MURU-0568",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 85%"
+      ],
+      "sha256_v1_0": "8dac48b2fe4b541891500eeea9b892f4236ebb2f90a639f16a498992e199d5c1",
+      "sha256_v1_1": "2c5729e82642af70c8bf6de9429af7d4f9d084cdc5a01ecf79520a921bd0ce03"
+    },
+    {
+      "id": "MURU-0576",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 97%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.40 > 1 (accuracy 92%, specificity 0.81, prevalence 0.0425) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "dddba7b74f12c60864044577f85c5bd118267f274c476efe95afcf9c91cac3c2",
+      "sha256_v1_1": "c1fb9e13e75014b3a301a8c3adbf76f08f193eeb4c3735bdb7d4e5f4ff59c303"
+    },
+    {
+      "id": "MURU-0584",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 85%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.03 > 1 (accuracy 97%, specificity 0.95, prevalence 0.0185) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "10a67cb99e82970aa7d878545d648c9b13504a454dbd9d99f292afbb4336e716",
+      "sha256_v1_1": "f299f7d73c46687cf50393eca881e5ad3f1be62b87a2b5ac39475406109704fe"
+    },
+    {
+      "id": "MURU-0592",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.48 > 1 (accuracy 92%, specificity 0.84, prevalence 0.0220) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "6d48c26d5193d31860b2520906a66065c761a482a3665af02cd56eaec35bd07d",
+      "sha256_v1_1": "89db110a85db62bbdcb3bb6288005a07980e382fc600773137371a8386d0832c"
+    },
+    {
+      "id": "MURU-0598",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 241.5 is outside the plausible range [0.5, 200] for 'battery life (hours)'"
+      ],
+      "sha256_v1_0": "314d2a400e84afb3da2088df618f76f34da50a3b039f9c4d7fa7fd1fb7830626",
+      "sha256_v1_1": "17e964ca77718d4a5237c59fd44cb7999e8c75e610f90e7f8eaf69cb0d9124bf"
+    },
+    {
+      "id": "MURU-0600",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 98%"
+      ],
+      "sha256_v1_0": "3ae5fcd202520f8fe0e218f238acc523bbf0f0be8175a9d1424cb1c02a48f5f8",
+      "sha256_v1_1": "348d50ab5e05c2f825edcdbfa2cc5f3c364b5577eaa1e3e577c45f4034962129"
+    },
+    {
+      "id": "MURU-0606",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 271.6 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "555d8612305a223e9ed74bc89bdd404725bb903d9550463b329f9e464a2fb282",
+      "sha256_v1_1": "cdcdf930d40caa31434b9143b9c204b4158168d5767085bea80fb9265ac42a2f"
+    },
+    {
+      "id": "MURU-0608",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 99%"
+      ],
+      "sha256_v1_0": "ee0736bdc846b286148b6367af66b35e983bdeb1676975e34ff32e0258c06721",
+      "sha256_v1_1": "e162087c6a22c175cdf1b9132437e54846c52dc02c85d59da8e0640d7cf62b96"
+    },
+    {
+      "id": "MURU-0616",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 87%"
+      ],
+      "sha256_v1_0": "2f12c6ee12875f715b3faca8d44a7bb0bcda8544b3e33414e382d392e8ab40ac",
+      "sha256_v1_1": "d2de80f1c07ca90f4206f26f307b033e9616e91a52e10c2d8b406691b7a2696c"
+    },
+    {
+      "id": "MURU-0624",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 92%"
+      ],
+      "sha256_v1_0": "42c4924f794e6ed2132bfe35a5bd2772bc3f16aa19107d9af09406542b263731",
+      "sha256_v1_1": "df6a58706e0ad0fbe8a372ed52115d0ba392ac2fe0bad63e431da80f4ad3177e"
+    },
+    {
+      "id": "MURU-0630",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 58.0 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "0e6384961ae4214d74936789e9823de138f91b16f215916dd9e96d60aa6d3274",
+      "sha256_v1_1": "0fe3b3a95812c1c89f4b0138b4cf6d8b88a285b6b49ac22d2f37b5fa7bfb7a3a"
+    },
+    {
+      "id": "MURU-0632",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.00 > 1 (accuracy 95%, specificity 0.88, prevalence 0.0170) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "5292652433475bb81e8ba6aa88e969d426e8f16150bb7c45a9c41212561d8dee",
+      "sha256_v1_1": "8218e3a7dd8255a28bcdf39ca1d78ce76247bf9f1a678d4ee5d02e3d835df0a4"
+    },
+    {
+      "id": "MURU-0640",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 91%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.19 > 1 (accuracy 95%, specificity 0.94, prevalence 0.0400) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "7226c95be134a017fa2227c77d042dfa675e944ba3a3b9a39358ffeb88370b2e",
+      "sha256_v1_1": "a143952bc37499bfa6eef7231d474f276899bb7e9aace8496b8286805008cc4f"
+    },
+    {
+      "id": "MURU-0646",
+      "split": "test",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 376.1 is outside the plausible range [1, 300] for 'commute time (minutes)'"
+      ],
+      "sha256_v1_0": "d0b3f8caebada3747607d6702e91d94b0e30018fbe05fff2cf22d015348dc9a6",
+      "sha256_v1_1": "6991b883ae4bae21e2fef5457969e999e4c5b4c7c22253466cd56750e1938c12"
+    },
+    {
+      "id": "MURU-0648",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 96%"
+      ],
+      "sha256_v1_0": "93d463005ae4e934064714d632d1edf674c88bb8f5ae395579a0973e0417c1f5",
+      "sha256_v1_1": "daeacacab5b809e280b8a4155e8d46ec609aaafadf9593452d5b9c94d7d44cbb"
+    },
+    {
+      "id": "MURU-0654",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 171.6 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "7613aaa4c57c19c8628b237af071a02e5691d0a1880829f646bf947fcd713f18",
+      "sha256_v1_1": "8b75c1e8fbe9fe4290e046f0f4a23a620b2b6763ebadddecb30b20c59e87afb1"
+    },
+    {
+      "id": "MURU-0656",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.46 > 1 (accuracy 88%, specificity 0.82, prevalence 0.0165) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "72b1759149efbf5da729cf13a385ff2868ed9290a071030c8fa0dba470ad3f3d",
+      "sha256_v1_1": "5e0c3893b8562959f0b1373e7b3090db4bd3fcdc70c382f09c90ede64c11774e"
+    },
+    {
+      "id": "MURU-0664",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 94%"
+      ],
+      "sha256_v1_0": "e1e150c1c8367863dd81a9dbe880ded9d276de0a44a2edca2f6c4b47409f0747",
+      "sha256_v1_1": "33b4605f186fe5bf007c1ebd77ab1303d4f50fe6c61976beb3e644b825d4180a"
+    },
+    {
+      "id": "MURU-0672",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 90%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.75 > 1 (accuracy 88%, specificity 0.83, prevalence 0.0260) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b3359af7a22e613070b5e80f95decc86bdc05d2b1fa58d5bf0b1e038328845ea",
+      "sha256_v1_1": "23d4cb2b54b26b1d162fefd3d6334bfe59a271734388dc510487d99c4128855d"
+    },
+    {
+      "id": "MURU-0678",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 167.8 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "e112e554a9e9c9249dc4363ca8a8f4e53df83d0e463caa3a1da4d8698cbb301c",
+      "sha256_v1_1": "d22d86bc94e8ddd96c98799c10996f10ed66c4fc06965b01a388152d6ba4e6dd"
+    },
+    {
+      "id": "MURU-0680",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.28 > 1 (accuracy 97%, specificity 0.86, prevalence 0.0455) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ef47267f408e269a67a18bf3693ec7f76b7f60faae2cf1facf1341fd03e46605",
+      "sha256_v1_1": "dba19f042fa288b22527eed9311ab56ad721a0ef8a45fc750dc27b815e022818"
+    },
+    {
+      "id": "MURU-0688",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 14.61 > 1 (accuracy 97%, specificity 0.86, prevalence 0.0080) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "d0f2fab4e1bea6db86924d778923628cc9870688868274575af0246ae684d07a",
+      "sha256_v1_1": "1be3ed99605cfa22b573e7c2e09394b0fea9fef3327138355d27e2631d9627f4"
+    },
+    {
+      "id": "MURU-0694",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 352.1 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "54ac456a9f5740f13db287e1c6113f61719ab2d8a327ffda8d71b72e0e3ad2d7",
+      "sha256_v1_1": "18a7f242ad65475ff7ee1210e18834b39c19002ef16f1c273679214b3005ab75"
+    },
+    {
+      "id": "MURU-0696",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "4fe0a9c7341a4a3baac2d58731225a52054387c4f60997cfa6d07e3935f583d6",
+      "sha256_v1_1": "282de83e294de38c26fd651bef15fee30b8b532d42e9593f2cbe91c91a76039f"
+    },
+    {
+      "id": "MURU-0704",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 99%"
+      ],
+      "sha256_v1_0": "6187cadc38e3569d1e7dc27a626e3be60d63e8046b4090c982e83d9fab935d2f",
+      "sha256_v1_1": "a7921543e831a32e9537f1c09e5ec4675a606987e3d6f5cd645b8afc185a8c04"
+    },
+    {
+      "id": "MURU-0712",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 88%"
+      ],
+      "sha256_v1_0": "fea7b5bce9496e915b05981321bed846d994972f28c280ba92f967e900e7d041",
+      "sha256_v1_1": "308cc9772845a37eafa5822448fae818b8d4fdce404405d0d7ec6e61d157c219"
+    },
+    {
+      "id": "MURU-0720",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.36 > 1 (accuracy 95%, specificity 0.83, prevalence 0.0475) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "32095d42fa25affd87274232ceb19d484e9ffb3511b8113acd2a89239ad1e357",
+      "sha256_v1_1": "e82929b8f24d01bf31d844af542a379a3d90d349d35991a46d04dd4a32469f78"
+    },
+    {
+      "id": "MURU-0726",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 304.3 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "7a0a16a5ec22937f6d94c458eaceb227972eb8dfe08d4d6fac983af5eb4ac36d",
+      "sha256_v1_1": "a89edf19c82770dbc9b7b40f7bafebb3e61cf93a699de88a2c499cdfabcd150d"
+    },
+    {
+      "id": "MURU-0728",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.63 > 1 (accuracy 90%, specificity 0.87, prevalence 0.0170) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "66c790aa571617328c0c50a801ef85210c5be622cf6a3225ce0218fea073a93a",
+      "sha256_v1_1": "1fd6318bc407773458b1915556687d6541e441da4afbafc0c968823b365b787b"
+    },
+    {
+      "id": "MURU-0736",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 87%"
+      ],
+      "sha256_v1_0": "3b0d656daff69248c1551e0206c7af858c6301567b92817078d1a510fa20d950",
+      "sha256_v1_1": "15f22b289f03c518c91fa2a9909ef0cae890d4f4adb5c0b61f93206b5af7ac76"
+    },
+    {
+      "id": "MURU-0744",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 96%"
+      ],
+      "sha256_v1_0": "57e0aead4ff3c1a214dbfea74297a5ca5e559a45b360c8d57a27ebab47a6c28e",
+      "sha256_v1_1": "9516e5edd503b86dbd46f11c03d0821a9631f7ad7e5830bba656c2e2f75f1430"
+    },
+    {
+      "id": "MURU-0752",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.96 > 1 (accuracy 97%, specificity 0.92, prevalence 0.0245) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "f99f0347b7fcf5fac27699bf212ae288ff7e1aa88dd1195268fce602743cd639",
+      "sha256_v1_1": "7c579e38ba503857c3adbdb325dc7b0e3b38952aeaa2ed18aee274b38509653d"
+    },
+    {
+      "id": "MURU-0760",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 85%"
+      ],
+      "sha256_v1_0": "72f2dfa36629ca2a5d61bf6f6ba47ca82ae0335a37d90de083e076372361f0bf",
+      "sha256_v1_1": "b9aa3956a69c41e480dd2fe4e528364a5a9f4136863840f3e301a10af3bce8a6"
+    },
+    {
+      "id": "MURU-0768",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 90%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.21 > 1 (accuracy 88%, specificity 0.83, prevalence 0.0210) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "233098499fad1eec43c45c7779678ac97d22bdd76b09155b9154f7da25055e28",
+      "sha256_v1_1": "5819e5df88593474881f98863725f367253a24740e9efd15c2298b94446d17a5"
+    },
+    {
+      "id": "MURU-0776",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 87%"
+      ],
+      "sha256_v1_0": "05a3eb9d746415ab43a8c373801398a589d4b62de8c463d61436f6092de60006",
+      "sha256_v1_1": "fd304c70f5fa920239b6d3a7ca33b3d8edd2ea5c062ddc3ccfbbbf911cdb4207"
+    },
+    {
+      "id": "MURU-0784",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.91 > 1 (accuracy 95%, specificity 0.91, prevalence 0.0200) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "04a3e22c31805d19095f7c5908c55013a8b6174c742b372e9255948440bad262",
+      "sha256_v1_1": "be787692e0b2d49b61d4816f1e651668bdbe07247a26ca899fecfc4a30f96179"
+    },
+    {
+      "id": "MURU-0790",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 192.3 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "67872089e15ea3ef4681c1afa9e9e181053882afeab31e1ee4f3fbdabb42e425",
+      "sha256_v1_1": "ac3270a98b802fe6a1e88fcc566a266b6205fa54bbe7227a8c806bddda277d77"
+    },
+    {
+      "id": "MURU-0792",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "56e9aa10763d439948f1e4a3e9d621ab39dd0d64bac1ec7a3a3f371851597bb2",
+      "sha256_v1_1": "dfc180c13610259cb5b71916abe673e7774cb82bd04049276b494159fd669088"
+    },
+    {
+      "id": "MURU-0800",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 92%"
+      ],
+      "sha256_v1_0": "eec9ea9bf89906d83bbe2e73732260e62012958b7753f69cb0c54eb93db0364e",
+      "sha256_v1_1": "5463c29a95b139196a27986c6f99197e6c8602a10ea8ad6d54307f87f8718487"
+    },
+    {
+      "id": "MURU-0808",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 7.86 > 1 (accuracy 92%, specificity 0.80, prevalence 0.0170) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "71f9a758fe0c337c4500853f7d0471ba6cd72ca3f178ca08870f9064515cb203",
+      "sha256_v1_1": "664cd235dd470686b58d429113b955be5cad9383c2e5d4045dc5920a310b00a5"
+    },
+    {
+      "id": "MURU-0814",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 376.3 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "51d39b07aeaae0c33be624127dff2b5aa935b92c20344ac4f5ecdae8cab43966",
+      "sha256_v1_1": "7ce307e443849ecedbbcf945c255d4c714406102830545e33347b5e8316918d5"
+    },
+    {
+      "id": "MURU-0816",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.89 > 1 (accuracy 88%, specificity 0.84, prevalence 0.0380) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "26b19f64119bc2b4f7dddbfb7d0ae29ac0d8382fa5e086aa480ed5868b10d57b",
+      "sha256_v1_1": "4cfa452f25cbebac994f99cfa958b8730d901f9d5acf34cd0632945c51c88bdd"
+    },
+    {
+      "id": "MURU-0824",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 96%"
+      ],
+      "sha256_v1_0": "ec6384d43f59560323f146ace981a8b54f1bc0cef6b76226d5d6a824ed6230b7",
+      "sha256_v1_1": "3d55f0b9e3fd522f07e23cb453788be042c74585515286e8c0e586a1c7b525ee"
+    },
+    {
+      "id": "MURU-0832",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "872576e9f1d777895363e4776c2319077ddb59b9b78515f7a55167dbcb014a96",
+      "sha256_v1_1": "255df8a9c834a2ef8f17ae0e0928df58439a85fd2cee8d6af1d6c3b6128a997e"
+    },
+    {
+      "id": "MURU-0840",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 10.11 > 1 (accuracy 95%, specificity 0.82, prevalence 0.0140) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b9ea4976433155c3a7408d87778f999e18415bf14230bf4933f1ac3609cfee5a",
+      "sha256_v1_1": "84b4f2e9302648c5661fb8eed1a6b7e7a02fa4fb7386acdae5018e7da35ac986"
+    },
+    {
+      "id": "MURU-0848",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.79 > 1 (accuracy 95%, specificity 0.84, prevalence 0.0185) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "2f87b8d1ee2ca36174db936b7d6e311c344ff11a452df70fd7166461b164ab10",
+      "sha256_v1_1": "4c2775a5297b38733399d9f5c72875f4cd4481aff7328bbc48439436475db163"
+    },
+    {
+      "id": "MURU-0856",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.45 > 1 (accuracy 95%, specificity 0.81, prevalence 0.0385) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "cd9cd007dd22e08c271ebbeeaf6d63fe8f0f825f959862811631d63fa3e8d181",
+      "sha256_v1_1": "58c4457661d88cbba0f79f2ee4fa08f46f0f185aef6cb61ef417107b06deaf58"
+    },
+    {
+      "id": "MURU-0862",
+      "split": "test",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 377.7 is outside the plausible range [1, 300] for 'commute time (minutes)'"
+      ],
+      "sha256_v1_0": "ecbbc0e467cb4b418168f3adc6a20751dc3b18fed0b1ae9c857e537696c14534",
+      "sha256_v1_1": "395986779ae888ae43d54f6c1c63537306c910bc523ea50cd8c209b2c3a0c4d5"
+    },
+    {
+      "id": "MURU-0864",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.23 > 1 (accuracy 99%, specificity 0.83, prevalence 0.0470) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "4467dfca79743ef91f6d518b410714962ebbb130be79a5cc86537a47f33801b6",
+      "sha256_v1_1": "14e2b04ab5118d05dc9bc5bf3afac1fca6d406f0db73c8501827b85afdbb86f0"
+    },
+    {
+      "id": "MURU-0870",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 473.4 is outside the plausible range [1, 300] for 'commute time (minutes)'"
+      ],
+      "sha256_v1_0": "cdb972d04ba3e6e0a7da7506f8dcdf2684d3dcb6b119b2d487f612d88c4a71c8",
+      "sha256_v1_1": "88437a6018504225c0d6bf8a1c10ba9863870d0c7099b345f8215bf99afb7626"
+    },
+    {
+      "id": "MURU-0872",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 93%"
+      ],
+      "sha256_v1_0": "53317a39809185d973578b16205c6772e3a7b370c5e6fbfab20302696f71bdda",
+      "sha256_v1_1": "29bad2e38ea76015ec1817a896136cdc1db1af4773dda5df33e4afeed97c8966"
+    },
+    {
+      "id": "MURU-0878",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 220.1 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "18367421d2f3ff291b3b903536342a6eefcddddb02df80ed6d90ea1b8e222079",
+      "sha256_v1_1": "9373d6eb92c3e4c9e77d5bc9efc4770ab53c9d17e10ccf240793515afa778e32"
+    },
+    {
+      "id": "MURU-0880",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.29 > 1 (accuracy 99%, specificity 0.85, prevalence 0.0315) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a72e915b8846c16ea00f0c9459bdc158d669faa6ac9709f288bb6510b216e065",
+      "sha256_v1_1": "9153b5cc70532fadd4bd466223481087269a06fdac3e865fe64b392185d38da4"
+    },
+    {
+      "id": "MURU-0888",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.48 > 1 (accuracy 88%, specificity 0.86, prevalence 0.0325) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "77755fd0c3f0953fb63a832968188d7821cf8bc3beb22329c598abb941677bda",
+      "sha256_v1_1": "e37eb9676b2180909885d2ebc3c5fec33af51e0cce37757b73d5f707c76b1627"
+    },
+    {
+      "id": "MURU-0896",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 97%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.30 > 1 (accuracy 99%, specificity 0.82, prevalence 0.0310) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "1d0be0c79499bf9c4f66373996c55a792d762411c86e4f93876a74deab6f6257",
+      "sha256_v1_1": "4e781cb08952f37e37ef5836d9a5c47a3d38150e2aa4ffdad0fe996d52064ece"
+    },
+    {
+      "id": "MURU-0904",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 99%"
+      ],
+      "sha256_v1_0": "e0ac5f5c23dcc50b67c801d48d7414fe00772cbe84e6b0e2dc3d4c84a03dd77b",
+      "sha256_v1_1": "78cc5897e8282f0eac5d582984187a424e0d01a4d15dc9a58fdbe5ff715d8513"
+    },
+    {
+      "id": "MURU-0910",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 256.1 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "c166a9497d178fe08cf553246b178b3eff94ea5ff6f3f4f80904de4ecce9501f",
+      "sha256_v1_1": "76550b69f9dacfea03a746fe455d5eb35d50daef2125779d767226b475298be2"
+    },
+    {
+      "id": "MURU-0912",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.35 > 1 (accuracy 97%, specificity 0.83, prevalence 0.0310) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "fad372c7f244eb4119fbec4d9fe798b88643e9b6a4b269eda1f5f812dbebf5f1",
+      "sha256_v1_1": "9f56cab4e8ea835403d285a01ae592071f847518d59f0afbab1d9bc523636fb5"
+    },
+    {
+      "id": "MURU-0918",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 226.3 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "75f005199e904d04bfa7397c8e1682e791d2e51e3e45514813616b2b3f7f31d7",
+      "sha256_v1_1": "b4bec19b300559574f28d580595fa6a5c5dfa90f2f5f431ed24833a53ddb4d44"
+    },
+    {
+      "id": "MURU-0920",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 16.82 > 1 (accuracy 90%, specificity 0.82, prevalence 0.0050) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "42c7da939578ee4ff041e3bac5bc1da7b08169f6d7660f8dd4c86d72951f9d0d",
+      "sha256_v1_1": "e9123ef230ab5e9b268ee85465e4a0ecbe6dd311ffaf8cd680ebb631ab49e06a"
+    },
+    {
+      "id": "MURU-0928",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 90%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.42 > 1 (accuracy 99%, specificity 0.92, prevalence 0.0280) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "bb27a71b04cb7b4abe454ba65a7b43c63eb00544d52a735e9eb17d1d5bc33411",
+      "sha256_v1_1": "947bcb91a5380ac495826ffc1bda7be993f39aeffd77b988d0e278720ddeee21"
+    },
+    {
+      "id": "MURU-0934",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 496.0 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "d165487ba4520863e3aeb19904af00bea56da77e9482c1a2ecde8e1539143ba5",
+      "sha256_v1_1": "b04968d915ca87d9e5e9f0fddaa1b8a087259768707b1a7a2afa69d39e75c225"
+    },
+    {
+      "id": "MURU-0936",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.22 > 1 (accuracy 90%, specificity 0.89, prevalence 0.0075) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "beaaefa27f2afb65e07877e9a782e8540551cdb49cdd6e370b297eaf71833114",
+      "sha256_v1_1": "8f7419b5c9d6b7949dcff7fb3cc3bb3c213d55744ebeced6e2b7731a9d4b071d"
+    },
+    {
+      "id": "MURU-0942",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 199.4 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "95858a4d296558f882395a40ebab9b1c8ffc1d43e05a37260f2791fd6db1f004",
+      "sha256_v1_1": "8a3dfd294af7e7e59c8dd466e450663de2074c242171bc8a7f821f7c0cb9279d"
+    },
+    {
+      "id": "MURU-0944",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 97%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.10 > 1 (accuracy 95%, specificity 0.90, prevalence 0.0415) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "eb4beb8d1e55adf913a84b9ef6500551c99b33ce950651b8ac66b4ffec627440",
+      "sha256_v1_1": "3a0790c077334c06ec160cabfbea6f8599436fe9fa96248ac0e172ceef799ccd"
+    },
+    {
+      "id": "MURU-0952",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 90%"
+      ],
+      "sha256_v1_0": "254a943d3e75be49a7c6ac336b3a51d2325b723596b19dce089849a8d3ba1e7f",
+      "sha256_v1_1": "ce02c1facb410f5ac1b19dbc1010a94adc66b9161a49baa2412e52f15cc0a245"
+    },
+    {
+      "id": "MURU-0960",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 28.31 > 1 (accuracy 92%, specificity 0.81, prevalence 0.0040) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "8d68ff15a2c59d7460594ed78926fe70faa2c057f367eb19ae4832e50b235968",
+      "sha256_v1_1": "c7ebafbf06b6704905ebceb48523f61c60007ce38fbdbcd10ef283ff95ed4205"
+    },
+    {
+      "id": "MURU-0968",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 91%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.59 > 1 (accuracy 95%, specificity 0.87, prevalence 0.0215) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "33beb33fa0b8377ab4f141c81308cf0e40591250ad68e145e13fca99d354a9cf",
+      "sha256_v1_1": "e2f0bf090942acec3f5ce70b972a8ebf850656a7627242e352eee7c65b74733e"
+    },
+    {
+      "id": "MURU-0976",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 98%"
+      ],
+      "sha256_v1_0": "451c04854958fffeab92292c0e57010384f49051f7425d91932240dfff659899",
+      "sha256_v1_1": "80cf29fb69a7434904ed28903fc54abd8ba5f88267308c35463604c763c0cb4e"
+    },
+    {
+      "id": "MURU-0984",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 7.57 > 1 (accuracy 92%, specificity 0.90, prevalence 0.0030) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "13737fb6d5d699c077577def14313cada1c4eed238852a10a9e5e9376a1ce3eb",
+      "sha256_v1_1": "c3117697491132ea7b384fb15999ccfdee19caefab0a3e9fdb6955316d23f5c9"
+    },
+    {
+      "id": "MURU-0992",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 60.90 > 1 (accuracy 99%, specificity 0.90, prevalence 0.0015) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "e74b8fe3bff5ac9c12fcba5ec73142bd2203fcfa2221b6fcb5c972f17517f06b",
+      "sha256_v1_1": "cc41303a0618c04a321cf5648425f96ca2fdfbdd01097ed5b11265fd1603b071"
+    },
+    {
+      "id": "MURU-0998",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 94.8 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "cf0749df7b643bcea824400d3bb77c5a38aa524803d4c72570a4d05f7d91676d",
+      "sha256_v1_1": "2a435db1e43928ec80e122dc8ff4bb320a1b922f69e6d4794e8a2140d16201dd"
+    },
+    {
+      "id": "MURU-1000",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.31 > 1 (accuracy 99%, specificity 0.95, prevalence 0.0295) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "6bc939d97503fe6dd79461772ccfb94eb5ae7de23ecd6b9926f330f5a29d2a12",
+      "sha256_v1_1": "f3e46506a9328dc5149ebfc095b8644706f7ea523d1b1ee9dc08118f6e36e0c8"
+    },
+    {
+      "id": "MURU-1006",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 87.6 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "08f9e30bd1d7cf3d4c0b9de6ab21a229b233354ac829a439cc00a7cc1950f1d3",
+      "sha256_v1_1": "e160d056827df1c0cbaa66b74a2fa3c63c43996b5cf43cefcb7c4cdcaafcd377"
+    },
+    {
+      "id": "MURU-1008",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.09 > 1 (accuracy 97%, specificity 0.87, prevalence 0.0450) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ac2adca9e30fc619d17fcc3fb135e9fbd446dec22f58e1dd49f734c910bbcc39",
+      "sha256_v1_1": "3b33326c15d745955c7054375b18eecfd511d76de9d3ea50a5f0111125498096"
+    },
+    {
+      "id": "MURU-1027",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 343.7 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "58c5673625f304b40efae040d12b8bc02a68a13d3469dbe14e76775fc71aa92b",
+      "sha256_v1_1": "e35c93eecd44bff3732ec6b3149df7efa3ecb4fb62050a61c68be7dc2fb3ec73"
+    },
+    {
+      "id": "MURU-1029",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.44 > 1 (accuracy 99%, specificity 0.89, prevalence 0.0220) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "65aec827a43fa1ecba6ef4b74188e7c91c03a87f92d4dfac84fef146fa34eaff",
+      "sha256_v1_1": "87e34e73dc71dc588223643fe5140a2dc59fb518d7d8471cbf2372acdd07c9f9"
+    },
+    {
+      "id": "MURU-1040",
+      "split": "validation",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.083, 0.084] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "5847a9976aabff43011f9a59fcc3c6cf1a48423bc8745b8ca570b5e063302623",
+      "sha256_v1_1": "3a47347044b6c90787737318ed0926104bbc4092f6ed47edaee7bba3239309d7"
+    },
+    {
+      "id": "MURU-1050",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.45 > 1 (accuracy 97%, specificity 0.86, prevalence 0.0425) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ec6eb98b43ae84d5c644a2024d84e090443043eb2a0c802f363ec3ce2e5569c7",
+      "sha256_v1_1": "b258b13eaea02a4b8e6c28c192fef569b7ee7b26167c2b2418574380bc72a309"
+    },
+    {
+      "id": "MURU-1069",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 393.0 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "860e29d9003e5055ed4621de89e46246d1271dc3c8c56f9d7050a61a31845e2c",
+      "sha256_v1_1": "f30a62687735beb7ecd537753f878d7243e4b2970c5f4130a34fd72f46acfd37"
+    },
+    {
+      "id": "MURU-1071",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 97%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.33 > 1 (accuracy 99%, specificity 0.91, prevalence 0.0565) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ddd33b2b516fbae5ba9e4f58a2785c2300d8ef36a34e5d64990f7a6c7f0b735f",
+      "sha256_v1_1": "049be840fea95bc0e7544d3cae86c721edfb1945532fbee827aba40ef1f653e0"
+    },
+    {
+      "id": "MURU-1073",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [46.6, 46.7] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "9fa5fba19bdef96c16b2a52491d9ea25e3bb52bf998ea602d75adcb5b2cda064",
+      "sha256_v1_1": "e51470ca58d24a3ba0d52c1eb995de02f176a0993952a5069820f5680fde57e5"
+    },
+    {
+      "id": "MURU-1092",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.43 > 1 (accuracy 97%, specificity 0.85, prevalence 0.0335) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b7ce68a24f489e5e5ebe025b8e95ca4475192fccee521774d411237dbbf9ec06",
+      "sha256_v1_1": "76807963b2bf1de66409ea6758b671291e02be1382aa77230d4ac5baa818e8cc"
+    },
+    {
+      "id": "MURU-1113",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 93%"
+      ],
+      "sha256_v1_0": "a75ccec9d38fdda9165e07cc641929761041ee460b9611e70c1c88f82c4ec384",
+      "sha256_v1_1": "d98181959be1ff031aa866f5c2b4bb28f413a6e375c529360d1251500bb4ee94"
+    },
+    {
+      "id": "MURU-1124",
+      "split": "validation",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.074, 0.075] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "75d14ef68743a6b11df540ba4aa65bdb06f866ba945b3352abdb66e534317eb6",
+      "sha256_v1_1": "d5554dcc7b61fda57cbf4206a65f63dd6c9141ac01cf32383105baec9c381c0a"
+    },
+    {
+      "id": "MURU-1134",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 23.77 > 1 (accuracy 99%, specificity 0.91, prevalence 0.0035) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "766199a6f734a21bfd1c39b8fc160674be1cf2e95b2aa8e8b82de27870aa234e",
+      "sha256_v1_1": "c0ddfd0a90be8e156cd7378d8931f29711465ed9bd8f813e8dc375fdee070870"
+    },
+    {
+      "id": "MURU-1155",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.54 > 1 (accuracy 97%, specificity 0.95, prevalence 0.0340) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "3bff6599e3ed678dcdfb2d70848b9654f1c0577ce8a1f0a54bd147a80fb4d781",
+      "sha256_v1_1": "a8c2aee42323438fc320a1036c458a8b74941332813f7e2580b17409d9bd64e0"
+    },
+    {
+      "id": "MURU-1166",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.054, 0.055] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "f6da09cea49b5f5c2bea7a8a5ecda062e5ba66a66188307e154589cf74361cfb",
+      "sha256_v1_1": "5e5873a232ba7d340283202a75829a8dec7e777035f5e62ebe0828c75b33a63b"
+    },
+    {
+      "id": "MURU-1174",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 144.7 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "dd3fd96f9def4a561a255af3b31a93d836d6e2fd960298e855b876449d7acdf1",
+      "sha256_v1_1": "4db328269407cb068b297cff68d97dd8c2ab259006d3db43e5ef0330bc79d092"
+    },
+    {
+      "id": "MURU-1176",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 99%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.41 > 1 (accuracy 95%, specificity 0.94, prevalence 0.0215) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "c87a2cbec90adc665adc63849fb879168bf53e7c7cc1aafae40121908ac09edc",
+      "sha256_v1_1": "750a5be3ecf0405c57b138a6973d38430fecab62729b521574ed62f0afc52ea4"
+    },
+    {
+      "id": "MURU-1197",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.84 > 1 (accuracy 97%, specificity 0.95, prevalence 0.0225) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a66119f7be4a6ca80a8ab5069f0ce567e1c5d5c500a18eb58a0e07f422cceaab",
+      "sha256_v1_1": "eddf49cfab61568f5dbb7786e2c5576a40d666fd3eba764cdaf8f41043c01bd1"
+    },
+    {
+      "id": "MURU-1208",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.064, 0.065] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "27908b9e2ec6b8633439cc89ad2afef4284bbe52f768de115e9d1130e8ea5ff5",
+      "sha256_v1_1": "0e175133fc135df8ca3ed3557effad32dd09192633491e114bc175a6dc32e321"
+    },
+    {
+      "id": "MURU-1218",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 97%"
+      ],
+      "sha256_v1_0": "c1cd84b1f8ee9124a5a388bdc278c4003c3fc45ff8368e10871e2eee066e84ea",
+      "sha256_v1_1": "0bb57aa6cac3dc0df98fdb4eff7d57bb622322beb174e7725a687eee30e55ebd"
+    },
+    {
+      "id": "MURU-1237",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 421.1 is outside the plausible range [0.5, 200] for 'battery life (hours)'"
+      ],
+      "sha256_v1_0": "356be71e8fb9da759577a9bbebb785a23b44019efa16ce5cfbb5fffb0adcea82",
+      "sha256_v1_1": "d5755c0f742b64b40c2a1991c40e684a0aa7b3c86d82f2e74bf20afc2ab07f20"
+    },
+    {
+      "id": "MURU-1239",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.61 > 1 (accuracy 97%, specificity 0.94, prevalence 0.0180) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "bf136cc437a28f4f2cd48e200ee222ce3792abf2df137dde17875710348af160",
+      "sha256_v1_1": "7bae44b649409f96e533f2ae3b36b15ac109ad62565ceab47f05bb67305d9d6a"
+    },
+    {
+      "id": "MURU-1258",
+      "split": "test",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 482.3 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "a9451d37595fc6e48e8d7653e5f59698e94ad6c91ab91835bc614ee431e65493",
+      "sha256_v1_1": "bb5231d77943acc12fde19003c1df9dfdfb0b3198f20d4d4cdeb17ef8e4dca89"
+    },
+    {
+      "id": "MURU-1260",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 91%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.36 > 1 (accuracy 95%, specificity 0.86, prevalence 0.0200) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "4a11d6bd80f6ab35a4b75a6333911c2710afb5d3ca104cc2896ce081fba76c60",
+      "sha256_v1_1": "9484d63f9214309a7b5b369e358606dc96cc6e3b7dd37d555238a34862857c82"
+    },
+    {
+      "id": "MURU-1281",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.49 > 1 (accuracy 99%, specificity 0.82, prevalence 0.0300) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "c6f4679f503c63ce5917d667a994d60cb5f9ce3b53cbff37d014ab57362ad068",
+      "sha256_v1_1": "d317ccdfb4c849aaed122f19bf23eea62fbd41a8c28a36d7cccc17a4b384602e"
+    },
+    {
+      "id": "MURU-1302",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.49 > 1 (accuracy 99%, specificity 0.82, prevalence 0.0300) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "18084cf1fdda7568678ec1ad49dff111f773932ad2625a50e8a9ea8f0fdbce41",
+      "sha256_v1_1": "50cb8553fad3d07359e9728b7ba84d97e3348c57e05b4e0bb61e8044874893b8"
+    },
+    {
+      "id": "MURU-1321",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 493.8 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "a4a52abd69f4999c585934d91886c3d7d0c9cf760ba8aa11aa973b9bc683f3ff",
+      "sha256_v1_1": "c0d4c26c31380e2192c8d46ef2fbef2d8f2953360753f5b0442727c7b3f75c7e"
+    },
+    {
+      "id": "MURU-1323",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.78 > 1 (accuracy 88%, specificity 0.87, prevalence 0.0110) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "116fd493df40fb433130d523374a20dfe3083e9919f595900d0135b4c9f9bf53",
+      "sha256_v1_1": "d7f82cf7977cb7b5849bcf4303484aaadfae0ac58aff7a3fde1fd5b14eca9e3a"
+    },
+    {
+      "id": "MURU-1344",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 91%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.59 > 1 (accuracy 97%, specificity 0.96, prevalence 0.0160) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "13f9dfe1a413d451bfda77610228600251e4292fcf80579234b6c54b57f4b873",
+      "sha256_v1_1": "68e784f7a0c710713191c1e4377cac03b4c893ba25152d006bd03a3b42e06b86"
+    },
+    {
+      "id": "MURU-1363",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 364.4 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "045b4f339af17946b003f9353befb134305fbeb378a9563b8648378e91a5f9fa",
+      "sha256_v1_1": "7124873a0e4ca97f340133e86efad0643351f0d96048a99d4d9c811089e8fbb9"
+    },
+    {
+      "id": "MURU-1365",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.33 > 1 (accuracy 97%, specificity 0.93, prevalence 0.0285) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "f8cdfa9f1e5b54a72631ff06e732708c9bbad71471ffdc60137c295ab4d91d47",
+      "sha256_v1_1": "8106f00daae9660e809d98e5333cadec88687e1e1712f6505a33f30a88378762"
+    },
+    {
+      "id": "MURU-1384",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 376.3 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "c769c4bc8c0b99c8561d4bc9bcbb74852613c475201703ad619763bd2e5dd275",
+      "sha256_v1_1": "c91313f0d967a017a108abc31d91841c984d6167703493ad073bba94eda36f1b"
+    },
+    {
+      "id": "MURU-1386",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.89 > 1 (accuracy 88%, specificity 0.84, prevalence 0.0380) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "89ebae2a0cb9cb5a16bff70bcd2a98ee8e8572668abe2ee60415757181034145",
+      "sha256_v1_1": "3c6e1254980217782148a07d19d72cdaa84320dabda0e32802fc670defb4e73a"
+    },
+    {
+      "id": "MURU-1388",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [55.4, 55.5] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "fc306d88e8561d8a42e594f6e3f1200e0a5f633fdb0b1c9231f908a3295e5e1e",
+      "sha256_v1_1": "593e9d8be840216c2dae8a4bad31e4be32809256574e7d0f332668c004c907b2"
+    },
+    {
+      "id": "MURU-1405",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 87.2 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "1ce8b291902d6fe7782e6ff4169d79d2699ef51eb57cc78e89249ecd4ed9617e",
+      "sha256_v1_1": "4572f59dff1405d5620f0d55b07826eb80bd9fe62f370a5197c6dc0c333c0bf9"
+    },
+    {
+      "id": "MURU-1407",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.60 > 1 (accuracy 95%, specificity 0.93, prevalence 0.0120) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "68ebcb7021e4889384f16b8e229e44c91b17afe79c1376395740573e34381180",
+      "sha256_v1_1": "60f1d722ab3154918718a5aded973918b21d3417b3b71db6e81136cdf79bc3c9"
+    },
+    {
+      "id": "MURU-1428",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 91%"
+      ],
+      "sha256_v1_0": "72a020cca2a2c6c6dffebc84c3b2b03eaeb8fd2db897781f7a551409bbf9c93b",
+      "sha256_v1_1": "2c027770a7c50801d858ae6c78e6910bd4cb0d511a31597f4cb11d02396444b2"
+    },
+    {
+      "id": "MURU-1449",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 14.14 > 1 (accuracy 99%, specificity 0.81, prevalence 0.0135) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a48c0d293266310dcf32244347fe8ff4a7899c221ce42f4c2ea66062fd7fcadc",
+      "sha256_v1_1": "300e9297a10cb9f8f8a28adc28ec7f7b6b99bdeafb4b547dac95e64f92d602fb"
+    },
+    {
+      "id": "MURU-1470",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 23.69 > 1 (accuracy 99%, specificity 0.83, prevalence 0.0070) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "04920f0312bc21e4b50046ad5fdc82f49a120490a0f33fd1a479ba22850f9ccb",
+      "sha256_v1_1": "a2449d7fa33efd7875e7855947df129d17f4f8335639d0210e83e565bd94fd1b"
+    },
+    {
+      "id": "MURU-1481",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.065, 0.066] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "84af88234fb275992eee33a907851534c068eb3545862236a17251e5196f7e5c",
+      "sha256_v1_1": "90c451c1c79e7e595a1cd889f974c3601a37aec88e0af7ca1cf6995aa007a3da"
+    },
+    {
+      "id": "MURU-1489",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 438.5 is outside the plausible range [1, 300] for 'commute time (minutes)'"
+      ],
+      "sha256_v1_0": "e9d76288928e4000605e33becfb129d8368649879dcf3a8278c8f7c14993a2f5",
+      "sha256_v1_1": "ce10686570a603c9fcfab8e079883b6176479b351bf11bdbbae49abc6caaa8d8"
+    },
+    {
+      "id": "MURU-1491",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 98%"
+      ],
+      "sha256_v1_0": "407a9f6d6dd8c3739ec0dc47a8520eb34f4329bc6f72b2f872b1a28acf12ac07",
+      "sha256_v1_1": "89704a287670046acc67e15dd534c7567421511194e74cd583cba62b5cf03a3f"
+    },
+    {
+      "id": "MURU-1493",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [33.0, 33.1] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "659c8132d3745d086998ce4b45e43fefc44a3606f3dc8c5959553f90cd3dd11b",
+      "sha256_v1_1": "e5bedc77e613d39308be9e6c18047a289aed2cf07337e9406059deb979a63310"
+    },
+    {
+      "id": "MURU-1512",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 90%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 9.75 > 1 (accuracy 97%, specificity 0.80, prevalence 0.0190) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "37d9541e470e94aad61bfc6baadf25004cb3c3eb27c87026a4ff762da3f14f7d",
+      "sha256_v1_1": "8c0d867d51eb1b700e89790f054b0ee7f1f667dd260b99f71d8f74420630197a"
+    },
+    {
+      "id": "MURU-1552",
+      "split": "test",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 222.6 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "561925219276cd697c79de8fa29536f4c0e89e9eb6e32e007f7f9ceace1f1897",
+      "sha256_v1_1": "d166a78ea7df253f9211733552fb1dd18629e2c7c263c3167eb70e8a78da49e9"
+    },
+    {
+      "id": "MURU-1554",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 87%"
+      ],
+      "sha256_v1_0": "401a4cc2c62d271cc67bccca9f363e6f75df85365ff5596dedcbc5c8683d3043",
+      "sha256_v1_1": "f28e9f7cfacdf518ec8a2d4efddd150cf4118d9aa25382eefd51f7e2619b45c2"
+    },
+    {
+      "id": "MURU-1573",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 381.3 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "ebd2e21d87dff991152b94d0942d481e127a8bcb8db1927f55d19fc6709fcaf6",
+      "sha256_v1_1": "e593f68f94e7e749dec10b1e2b4dc3d6c51789889a07e065fb49fd06bb4af66e"
+    },
+    {
+      "id": "MURU-1575",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 7.24 > 1 (accuracy 95%, specificity 0.88, prevalence 0.0110) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "fe4c09cc76b5b9a4b9248bc992fb93052895c0c6b35c7abbf5c421a38599928f",
+      "sha256_v1_1": "d5267604c1d0e8789142c7b423a0f12a0206eaec8200c7f17f8368a571832960"
+    },
+    {
+      "id": "MURU-1596",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 7.87 > 1 (accuracy 97%, specificity 0.84, prevalence 0.0185) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "13f64b93c321d9efd452c4a87e8b0662791d9ffaf5a215e8656c637ef394ed1f",
+      "sha256_v1_1": "690d98458e710ff5942f0831bd6d204ff5906e9c84ee488f603225d58ae1c9d7"
+    },
+    {
+      "id": "MURU-1617",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "8358772a7c665f32f4bd6e8b44d0b8a2bf5ec53cce5a9e6f7da0b59194cea8c8",
+      "sha256_v1_1": "3f33d64edd65a48591d27953d2ce822216f591320a8e9ba9f2f83c63c7bf2553"
+    },
+    {
+      "id": "MURU-1638",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 91%"
+      ],
+      "sha256_v1_0": "46d8a79506dcce4ba95d902fc3bdd81a0b7f372fb1bbbe1ddb30667f5a8c576e",
+      "sha256_v1_1": "9dc457f869acc7295f1deb5b2f62d5a7f9a19463f0713ece5e2ff911726c4ab5"
+    },
+    {
+      "id": "MURU-1659",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.92 > 1 (accuracy 95%, specificity 0.81, prevalence 0.0450) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "6b9cae0b92edafc2022f5de014354ab233a9bf33d912744f5e57f773190e8668",
+      "sha256_v1_1": "bdcf5803034dd45bc2d8ae44116c4065ec17eec7a6271ef07cb987d7cdbd5ea5"
+    },
+    {
+      "id": "MURU-1701",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.69 > 1 (accuracy 99%, specificity 0.96, prevalence 0.0410) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "5acecd16bd0589f66f3431ca4e9264c62d24164d5df34d33d6a0e7db9653b5ca",
+      "sha256_v1_1": "0c184fb62ebf7437634fa7f4fa228daeedc0af6bfe25e9af38d0c7374bcd83bd"
+    },
+    {
+      "id": "MURU-1722",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 92%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.82 > 1 (accuracy 97%, specificity 0.90, prevalence 0.0365) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "0f3774c5934126db49f35b3720ba6f6ff5ddfbcca77d66f45ecb58d44840397e",
+      "sha256_v1_1": "2a77635033963b8135ae1416343114809e20d99eb17f0f2396874e03707c7894"
+    },
+    {
+      "id": "MURU-1724",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [77.3, 77.4] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "5d6433682c0838ffe10b6fdf4dea6c3618dfaf3c82398e083b2959d0ac60f67c",
+      "sha256_v1_1": "ef856ebff2bc5761166bf2900d85e94054701a8dd86b016b7517c7f8f0e08ae6"
+    },
+    {
+      "id": "MURU-1743",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 94%"
+      ],
+      "sha256_v1_0": "82ee38fe3b9e08894f8335fd1351d45877f182253c157a2c10c49ef803b300a3",
+      "sha256_v1_1": "cde36b28677e291f1bba20a24ed89e643b5278e54d1ef35a050e4df88c6762a3"
+    },
+    {
+      "id": "MURU-1745",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [56.0, 56.1] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "4d52aceb5c6ab36392d2c5e7544425fb2b9292b32fe3c719f7908e61abf2a786",
+      "sha256_v1_1": "830a60f8252d54b71559153cb2448debd31bd707e34388754d4bf2ae050ea5a5"
+    },
+    {
+      "id": "MURU-1764",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.41 > 1 (accuracy 90%, specificity 0.85, prevalence 0.0320) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "de2ae4d3d783f1f9eede0c7216c376a0f4cfd58ab39e385b40fbf2fbc78ebc8c",
+      "sha256_v1_1": "82290947a0da12147159bdcc2be2d3b171b69101fcb1e679dccb19168bc339ff"
+    },
+    {
+      "id": "MURU-1766",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [60.4, 60.5] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "3dfe5d5880b0f8e36cc3530009529a5b7612c93e3bfc19be2b09d4da1e016a57",
+      "sha256_v1_1": "4a4a95ab35d1daf1e740cce45c77cbbfb9ac09a5cf7c06a02fd8731773835083"
+    },
+    {
+      "id": "MURU-1783",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 211.9 is outside the plausible range [0.5, 200] for 'battery life (hours)'"
+      ],
+      "sha256_v1_0": "3d90265c4f280cfab3d3ddc1c8dd8d2d78b7f53a08c3d0d4172bd367339c40eb",
+      "sha256_v1_1": "b16f8f3b209e15309d47dabd562a5e9eb3bca2cf51a4ddf06a5fa49b16c1e10e"
+    },
+    {
+      "id": "MURU-1785",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.48 > 1 (accuracy 92%, specificity 0.81, prevalence 0.0300) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "e6c5776c6aced0d516262550e8885552cb317634bf12447bbc87496a94cb932d",
+      "sha256_v1_1": "047c8bbf4267debb7794c59799966a2c2fde29f1ea7cbec5b744d6fdf9696705"
+    },
+    {
+      "id": "MURU-1806",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.39 > 1 (accuracy 90%, specificity 0.89, prevalence 0.0200) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a68547ea7425bfbf7b08b0b07646bff09bc057384eecfc0c8c352fc8d4388b73",
+      "sha256_v1_1": "1d2071f7d7a7623a15a4d8870692e6f8410349de8d67db8620b1a6f96439a3a6"
+    },
+    {
+      "id": "MURU-1817",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.085, 0.086] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "370e65a5da4710718892fb00334f045a7abb85b57eaec5a7a735ad50424bb28a",
+      "sha256_v1_1": "2586824d579b46ed70641c6fbb16554152447f61e09a7a8ce86f04ded8b4b723"
+    },
+    {
+      "id": "MURU-1827",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.67 > 1 (accuracy 97%, specificity 0.93, prevalence 0.0230) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "98430a9d5886b67c0c8184d145a1d59f3cba6a10832e18bcdeb85629fc6eba8e",
+      "sha256_v1_1": "91d8f3b936ad3a5d103c4efd8de61838aabad6a0a2bc107705b16be33fe7a667"
+    },
+    {
+      "id": "MURU-1846",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 93.2 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "93d41e39191a5f4f8651a526d865fad4a4ecdac7ce0e8e865e8ef4cb475c3b21",
+      "sha256_v1_1": "73390c6480c8a5303665391792e649e52b1ef7494acaed225f95265368b0868a"
+    },
+    {
+      "id": "MURU-1848",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.87 > 1 (accuracy 99%, specificity 0.83, prevalence 0.0265) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "aa8fee04365a8a8a196ab95b0bac54bcfb379caa35cf9d5a16fe552b7e20f719",
+      "sha256_v1_1": "8186cdadd21a44df2cd89baaa514e4f8c7cc4465dd11d93f40973a80686806df"
+    },
+    {
+      "id": "MURU-1859",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.095, 0.096] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "afa9679a4a12a4b32c9ae859a20ca0b67df5a845de2eb845c7c9cab4e6d6480e",
+      "sha256_v1_1": "f7394c00841a3fa229faeb436304c528d5fd146009e34b356e5e4921236b4749"
+    },
+    {
+      "id": "MURU-1869",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.78 > 1 (accuracy 97%, specificity 0.85, prevalence 0.0305) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "976c52be8030a6cb6588c7079b7c12fdceb284bfe489a51fae569fdf0c1af48c",
+      "sha256_v1_1": "fb9534f713ed781907ceb37245cae02841e20ca32e0b9688d702b66d1eca56e0"
+    },
+    {
+      "id": "MURU-1880",
+      "split": "validation",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.08, 0.081] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "810e1dbc184c94a9bbad901206cb28d24eb2e70f2b04ae736b34d76f2dea906d",
+      "sha256_v1_1": "7727beb238de32f2cbe911c953b0eea385af4817f3068481e5aab5720c8ca625"
+    },
+    {
+      "id": "MURU-1890",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 7.90 > 1 (accuracy 99%, specificity 0.82, prevalence 0.0240) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "e1c0d570038c1725a90125f0bdaaf33402f41fa0fb35d71284bd97709ab06670",
+      "sha256_v1_1": "f003f3b927a75a887cf3dc2a8144ad7b5c5caff0a41421164514257ea67432b1"
+    },
+    {
+      "id": "MURU-1909",
+      "split": "test",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 280.8 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "602b65deff94bc20a5ffbe1e78b667dbbc000ebc8acffe05f4d5f53772bcb1da",
+      "sha256_v1_1": "2243312c7bdf4f6f7f99456aa341971d1afc784e82ff47128b9026d31f9a8705"
+    },
+    {
+      "id": "MURU-1911",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "31f4541a843ea5a32df199b18ffa6b5fb03864ad23610da9e89838c392ca182f",
+      "sha256_v1_1": "612850c8f02b9571129023b95f1677f09b7ebb9a2b9b478e0d8e617845c30754"
+    },
+    {
+      "id": "MURU-1930",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 203.2 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "be063dbe1e79cd44bf292974bc3ceb764b58c1aeaaf1c85c225df6a007791e45",
+      "sha256_v1_1": "b960ca41707f45e50d5195e1230e59b03f34892816db4824d9ff302cfdf03721"
+    },
+    {
+      "id": "MURU-1932",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 94%"
+      ],
+      "sha256_v1_0": "12d8c442c224947f4e3405a0c10f43be2df96e348e9b908b6ecce9cf714a51be",
+      "sha256_v1_1": "6741873167049e457cb2b9dcd2db6500d941d364d66c3cf893e038e6be918677"
+    },
+    {
+      "id": "MURU-1951",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 118.0 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "85901e3eeeed38cf966cf2935fcb4619ace4959313ecd218ebf0f5c98a8b75ee",
+      "sha256_v1_1": "48ab4920d6271c1fd0562317fefc937e5a11959f745457b0a7463a2ee499d7d7"
+    },
+    {
+      "id": "MURU-1953",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 85%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.83 > 1 (accuracy 99%, specificity 0.83, prevalence 0.0320) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "486864f1a5f6e9d5c98cfa191fec358e6771be83a98659afd97dcacdc53c4af7",
+      "sha256_v1_1": "4310a0d42accdd07ff2fe57e86309d9290aa190be27dda1fc1e586121f81d2a3"
+    },
+    {
+      "id": "MURU-1972",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 145.5 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "d27e5469d8bb2ab195f62e437fdc996c8c3fe339309346b8a33eeaa0828a4f6a",
+      "sha256_v1_1": "31b83885dbd17eacca13dcb0f6adc0f8da8d9510ac8b9315cab3b1dbcaa8e07e"
+    },
+    {
+      "id": "MURU-1974",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 85%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.91 > 1 (accuracy 88%, specificity 0.83, prevalence 0.0465) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "667f04cc841db97b3c67a4691ef4699a98d95a9b092e5fd72990409df7eb8459",
+      "sha256_v1_1": "994ce70b88f19d797e2dee2dc741399f0cc8cef558b27adcfe97bf7694f4214a"
+    },
+    {
+      "id": "MURU-1995",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.45 > 1 (accuracy 97%, specificity 0.81, prevalence 0.0345) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "fd1cf96df1b5eaf3868cf5a1f2cec71a7fd2be1487daae8278540c1bd5088d1e",
+      "sha256_v1_1": "d80a73a23827349cc901f03d3f80d0277dd0c8c8618ceeb89bb7af3765e5d872"
+    },
+    {
+      "id": "MURU-1997",
+      "split": "test",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [75.4, 75.5] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "7cbebdddefdb652a1438bb84fb8d3d75b1c70b59f257a232bb8648d792196815",
+      "sha256_v1_1": "e9332d9db04f92f088e0a7a15d7bdcd7e068b4d1c2351903e7a4ba82adfc47df"
+    },
+    {
+      "id": "MURU-2006",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.085, 0.086] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "a5745ac7b4d9abdde1f612e54ace31bab10e15f88923e4cb6db8dc791d26bbfd",
+      "sha256_v1_1": "56a0f213065800a5650a784d9ea8d8ce6caafaa1a919755a4af73758351a590e"
+    },
+    {
+      "id": "MURU-2014",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 342.8 is outside the plausible range [0.5, 200] for 'battery life (hours)'"
+      ],
+      "sha256_v1_0": "53a1eae5a3f39305f3df5704bdfef39ea89e0751d99b5134dca3a9f71d77f0a9",
+      "sha256_v1_1": "3c00ffdae6d9ba60b32be175f95294b25bc8272c0b02dda93fed991db8365081"
+    },
+    {
+      "id": "MURU-2016",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 8.63 > 1 (accuracy 99%, specificity 0.94, prevalence 0.0065) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "1f8717fb4c5450f1ff5b3a79eafa04b26c8b2184b898f55b6d2e722721a29df8",
+      "sha256_v1_1": "6e5805d07bb11d5aae679a22b6dae9041bb2b5c496ea602815128e415765e4bd"
+    },
+    {
+      "id": "MURU-2037",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 87%"
+      ],
+      "sha256_v1_0": "71a73e42627d6e675e1b31bce7eae71495657096ce8ccf54859f3a56b57ea1a9",
+      "sha256_v1_1": "41e0f573137ac4fbd82dfa0c1201f60edbe2c29d0271cc4044e6283226c17aff"
+    },
+    {
+      "id": "MURU-2056",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 354.7 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "a95b5da10124224f1aab9dfe2a603de385859c80484ab3b487284d00734400ca",
+      "sha256_v1_1": "3888e2fccf307ea019a6469396d4b5eb0c983e44ef915aed5bd01fc03db4c833"
+    },
+    {
+      "id": "MURU-2058",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 91%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.17 > 1 (accuracy 99%, specificity 0.84, prevalence 0.0450) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "9a019c27e3b539079cbb55d86f443917594fa10222c5fb41dc6f5511bc670f28",
+      "sha256_v1_1": "2862cacb728921d9fc9d967bbcec19c73f01cdcc10bd349fd7e47731deff5684"
+    },
+    {
+      "id": "MURU-2079",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 97%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.77 > 1 (accuracy 90%, specificity 0.86, prevalence 0.0440) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "258340f20be02dfcb59c8cd974666c600859cbcfce0f77c78d224515b9cde040",
+      "sha256_v1_1": "454b9bd58fc552f9c6f46706984530c62cd6a1b5b1cbc1ed973439c6f35193bd"
+    },
+    {
+      "id": "MURU-2081",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [58.9, 59.0] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "0c8aaccbe2df594d7d8e62e92481a1571c80d0767fefae158e78af09c4e85bee",
+      "sha256_v1_1": "b7e5d3657eaad795f347d25b8d92b9fb7d66df7739ac1fe4b9624fe2e2a5e4a6"
+    },
+    {
+      "id": "MURU-2090",
+      "split": "test",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.054, 0.055] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "c01fa13d019f4a6a1db56a47b1cee9ea4b9e081d3f16efc3ac263b9a712a40e9",
+      "sha256_v1_1": "d0967c5f1f98f775f114b2dde6861ba5b805f64732f35b5b6ab50213b1be0b19"
+    },
+    {
+      "id": "MURU-2100",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 93%"
+      ],
+      "sha256_v1_0": "2be7a1359ac386118d913dbd768f1b9a12dfef31c7b1d36197928c0a4967be4b",
+      "sha256_v1_1": "4dd85a23d74ef2b494108055644cc351bf32fdc0b4238f3da685c89864068991"
+    },
+    {
+      "id": "MURU-2121",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.66 > 1 (accuracy 99%, specificity 0.95, prevalence 0.0565) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "154cfdf8aec35eb378e29edbd599823d0a9a226dc2ddc9811276ac3a79c6d0b2",
+      "sha256_v1_1": "5e4943f0522989c0fa9acc7c1e5bd70420fce60ad3415a708b514c7b7e19c74d"
+    },
+    {
+      "id": "MURU-2142",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.36 > 1 (accuracy 95%, specificity 0.93, prevalence 0.0470) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "68236b8cab7e8ef47edf0d4aa6cf8da06dd8add11ce4ca2a554cb8abfa6f6812",
+      "sha256_v1_1": "ba4e075808ce6d4971a22fa5795b10809af247edf160ae8fff6d2b60c95c02b8"
+    },
+    {
+      "id": "MURU-2163",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.00 > 1 (accuracy 92%, specificity 0.87, prevalence 0.0235) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "34c7dabaf93aed869cfa530f90cc31af0b566c980b934caf6c34a34416c7a07b",
+      "sha256_v1_1": "03ccb5f1e79e840bf5f821fb7495d4b81768cd65e8d6adae3afa21495df30531"
+    },
+    {
+      "id": "MURU-2182",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 203.3 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "ec4ef0aad7168813c30b85cbdc6b2990e0475373d61209020f4d316023783c44",
+      "sha256_v1_1": "ef548a78d832b2e7c642d8eb101d673526bc3ab3497cf6b2a9b85d1ec10f71ef"
+    },
+    {
+      "id": "MURU-2184",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 7.92 > 1 (accuracy 92%, specificity 0.86, prevalence 0.0085) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "975b6094d9e3edde8441eb7a7e56548be9e7b1d6a1ae4cfa4c826857e9450597",
+      "sha256_v1_1": "060d36e3c919593a73fc6931d773a963cc7bd4c077856b354b9d7ba933ee7dcf"
+    },
+    {
+      "id": "MURU-2186",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [43.2, 43.3] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "76216413ffcd3fe0d750a8afdd976caa81e1d7e9781f8e6dc93b29d8d1e6ac46",
+      "sha256_v1_1": "6557cd97fe0e667c649656460b3fde79de878d1324ac8f167843949605ef3492"
+    },
+    {
+      "id": "MURU-2205",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 91%"
+      ],
+      "sha256_v1_0": "8d369077ad990b11f9850736bd39960d615dfe3b0ddfba900e2ce878554eaf12",
+      "sha256_v1_1": "14001d351720c5ce3224311f04f177369baac88bf7ea96bfed4e2b0eb233dd31"
+    },
+    {
+      "id": "MURU-2224",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 413.8 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "456fad7add11eaeab22753325e6d70495c90907924043e48d538d788b61716dd",
+      "sha256_v1_1": "2e5f3a7e6f6a5a7805e4c313da7d6d4922610c48cb7245a736e37f7a8797af50"
+    },
+    {
+      "id": "MURU-2226",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 8.37 > 1 (accuracy 90%, specificity 0.87, prevalence 0.0040) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "26b533558171a2ff1fb2d714690dd48f5b4e20a4200d35b70f52b0a640313e60",
+      "sha256_v1_1": "8732566602a2179f0ca917bd2e0b18e0181bbd3d11d6f9d2c6b32d8b877a0bb9"
+    },
+    {
+      "id": "MURU-2247",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.45 > 1 (accuracy 90%, specificity 0.88, prevalence 0.0350) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b6913c643b01f25475ae2c3b8bdda1414b1b9d46fa44de44dd2e1b52c9040bea",
+      "sha256_v1_1": "18bd24dc57cb6be4696367e3f00b71678287546f8126d675862e19d10600fa09"
+    },
+    {
+      "id": "MURU-2266",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 167.3 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "90cd96685fc63e00a83254cbdffaf469a01f21a2e597ad50e2e346c6ce6f765f",
+      "sha256_v1_1": "34eb133671e7ff4659e01df215f0d42177c1443133d070572ebd2bf78a52a926"
+    },
+    {
+      "id": "MURU-2268",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.57 > 1 (accuracy 88%, specificity 0.86, prevalence 0.0280) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a4c0bb2d445a98bd82a1376ebad5ebab2d0cb6e8e3bb8dc1975f55b70931e40d",
+      "sha256_v1_1": "3905563edf081127212645ecdf8fd15a57b058496ef13c0a35e6cfc6a90cfe7c"
+    },
+    {
+      "id": "MURU-2289",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.85 > 1 (accuracy 92%, specificity 0.85, prevalence 0.0140) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "4f6df86db482c248fd39b7cbf512d46a26267a8dec5fac64f2cfaaa19cad1a89",
+      "sha256_v1_1": "1dc6a8548e6d540e29267769be1fd16c93e8e66051d32d87763763da65fcbf49"
+    },
+    {
+      "id": "MURU-2291",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [52.4, 52.5] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "13d70f172afd5224afdf334983a0a30511d9a5cd210b46da6575a1e94adb523c",
+      "sha256_v1_1": "0a8ac1588acc030231f070834296a37d0af374c9a48b4dac61a6f26d073d6c23"
+    },
+    {
+      "id": "MURU-2310",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.65 > 1 (accuracy 99%, specificity 0.90, prevalence 0.0240) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "443c52a169da7691299c940ef409d308d9c692ab1ba89702f47294cd4fd08931",
+      "sha256_v1_1": "ed5906626ea0fd1fac1d6208f32c76368c3af47f3065d8cc9161ea062d39c091"
+    },
+    {
+      "id": "MURU-2329",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 261.1 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "c8cd0075e4fd8380da4a319fdffed4f0a946507d6417c7b93f59cfb8d8fd884d",
+      "sha256_v1_1": "a907961c8760ce1a4ac9ba926461e46114f24ed41553378427a516628929d13f"
+    },
+    {
+      "id": "MURU-2331",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 94%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 38.00 > 1 (accuracy 99%, specificity 0.86, prevalence 0.0035) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a9dfda158b3b7f309c8faf4d8168980594806190d1e624b8324650dcfd4163b5",
+      "sha256_v1_1": "a22ec33b9f4b82ef0023744fb7813cd8ced9e42fe2c448e1014bac580e90137c"
+    },
+    {
+      "id": "MURU-2342",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.084, 0.085] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "bdb3b5c2b112879ef955311f9f790ae773e34e0dd8824ded607f6ca75104ce8e",
+      "sha256_v1_1": "5f501e0112c133946f1e488ea37a48055033c39363cbb08f552245b0e1404386"
+    },
+    {
+      "id": "MURU-2350",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 251.6 is outside the plausible range [0.1, 50] for 'yield per hectare (tonnes)'"
+      ],
+      "sha256_v1_0": "017e06c971347eb393f60f5bc58cf57a04411293d469de4252775db12ce9dbf6",
+      "sha256_v1_1": "3f87c619589a7a4a84bd96d709f3cf63270a5c1a0c08f4192d5c38f9b521c569"
+    },
+    {
+      "id": "MURU-2352",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "1671bf8594ae1b70653133bd02f62e106c1c55a1c85b383158a59a4966ceee80",
+      "sha256_v1_1": "a7819a6dabc2ae58b55740738b5c154b121a171a12bcda80ea4544f1c2c65a7e"
+    },
+    {
+      "id": "MURU-2373",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.25 > 1 (accuracy 95%, specificity 0.90, prevalence 0.0115) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "997f3fb7b9528722f88939405d2265c003c35874ddfc98b3397d2df08449a97b",
+      "sha256_v1_1": "8c0465155f1622c8d7e3e82d63441b991959de69839b3dc743a198e9a4603b54"
+    },
+    {
+      "id": "MURU-2384",
+      "split": "test",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.056, 0.057] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "6d37dd444a12c5ef9059450bbe29fa5f93b496012318a6c6bc2d0c777fb980ea",
+      "sha256_v1_1": "76e6e2e41291d8b2c0fd6c97eb530243afcd1395f38e97a722fbd0d26e4815cb"
+    },
+    {
+      "id": "MURU-2392",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 292.1 is outside the plausible range [0.5, 200] for 'battery life (hours)'"
+      ],
+      "sha256_v1_0": "f26bed00c3eff5c818674ad0e2c4d070857b785199d57c1335f6a40ef2ba5f80",
+      "sha256_v1_1": "6025871c1bfc74e4159f28ed432e9a3c8ed77a702c447325a87d6921f04d9d33"
+    },
+    {
+      "id": "MURU-2394",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 97%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.47 > 1 (accuracy 99%, specificity 0.80, prevalence 0.0335) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "86ff79cd69533857242bd98f915128462ba9eaf1a90f65c169c9918465ac9007",
+      "sha256_v1_1": "2837b2d3571e6aa5bff209a4e7965b319516af1a78d79b51d9f2abc85b7a925c"
+    },
+    {
+      "id": "MURU-2415",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 86%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.78 > 1 (accuracy 99%, specificity 0.83, prevalence 0.0405) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "aa9cddfb331f3f053020c6640c029167cb515dabccf3bf58c916241e6c69c612",
+      "sha256_v1_1": "3df3c0233ec344eeedc802b751227a6a25dd9cd4da98d1e8a2c6615abf4510d4"
+    },
+    {
+      "id": "MURU-2417",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [62.1, 62.2] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "8306d1bb725b5aff8f43fcf3c8fe8c356e115df5199e29a6198be9421d605fff",
+      "sha256_v1_1": "230f6460d4d49d876ba2e48717740d40f5202abe1b3df5baf2573716bc53a23e"
+    },
+    {
+      "id": "MURU-2436",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 16.91 > 1 (accuracy 99%, specificity 0.91, prevalence 0.0050) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "c713d066b318a5ede7bc93986f784aa90de7c37d47d6702b95407d630e304147",
+      "sha256_v1_1": "02d9ba13bdd379e685002f3b55cbaad9d2c3e8b262769f8a9f16353f6792f752"
+    },
+    {
+      "id": "MURU-2457",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.37 > 1 (accuracy 95%, specificity 0.87, prevalence 0.0535) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "996d41fa859abcabcb0d3139fe366802597ea7e133ce9a9ca55263a5d4c1060b",
+      "sha256_v1_1": "b08217b60b30220c6f24d9452487f38c3ccf2e465ba35ededb891a5df7157015"
+    },
+    {
+      "id": "MURU-2459",
+      "split": "validation",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [62.8, 62.9] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "ec090f6d9016f2b401f6cc6152cb22cee712a8691196a2a8466188c95263c9ce",
+      "sha256_v1_1": "f18b306a566e218672c71a1ba38b953cb6e814130550ad5e50d9bfbfd3c53160"
+    },
+    {
+      "id": "MURU-2468",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.084, 0.085] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "0aed747ca824139f8908ae617943487bcaa5f2ddc4e426e190bb86fde7b9d110",
+      "sha256_v1_1": "43e8c8b339afd2ae34b7e212c3cbf4c46bce37ece3c1b2b92ccdc389bde402e2"
+    },
+    {
+      "id": "MURU-2478",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.37 > 1 (accuracy 97%, specificity 0.89, prevalence 0.0230) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "da2d41d6c2639365d91eb9e838f38da9244f5cd7696dafcd93a36fcb5b19a8d9",
+      "sha256_v1_1": "8fa00d4e91ec2c36e4f39272769f166618af5b7b72069c1512541d9fa140c838"
+    },
+    {
+      "id": "MURU-2480",
+      "split": "test",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [51.1, 51.2] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "00ed92b5c3cc3e551184278065e999b62b273460b68b5b04706d8cfd8c8ea5c4",
+      "sha256_v1_1": "b03fc8207da498a4697df6b414b3dc310498fa26fb381d3fce2712d3cb12629d"
+    },
+    {
+      "id": "MURU-2489",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.084, 0.085] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "0dc1d3514f893fc6143fc2f7f9023b5958c31a798acdf031d45ace43fb461992",
+      "sha256_v1_1": "6a49eb290d841cdad2ea00c21e5edae122ee2697623cbe55a3a7f283f9aa70cd"
+    },
+    {
+      "id": "MURU-2499",
+      "split": "validation",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 88%"
+      ],
+      "sha256_v1_0": "c7a925e83c0cea7889dfbec10efddf585b8340bd0fb4165d5e18d634a964924c",
+      "sha256_v1_1": "529e105c05d24a82c318990715fa095f42577f61c988b46b0897ba8e188551d8"
+    },
+    {
+      "id": "MURU-2501",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [31.6, 31.7] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "40d5c4b679cf603ef189c3dc0a741b184e4423dfdd7ea459af59d00b0224b681",
+      "sha256_v1_1": "83f1ec339676b768dbc89a77703b38cc55e1891e431acf02508224d97580e9df"
+    },
+    {
+      "id": "MURU-2520",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.72 > 1 (accuracy 88%, specificity 0.84, prevalence 0.0455) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ec47f6e25390fc40322ed442cf76d6e623cf7d64d1c92e8797111d597bb14894",
+      "sha256_v1_1": "9a46ada38b6f30b507a5163ca105b59102dac22e3c33cd7a0c1db5ad50e7b16e"
+    },
+    {
+      "id": "MURU-2522",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [45.5, 45.6] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "59a52f2d492a0a28a961bc3584ccdd7a34cedb2ac7066f57405652d7788c51e0",
+      "sha256_v1_1": "5edcbb51b894c052b1fd69ca2ff1a1e68a380d5828ff0796e5fd248a34dc3575"
+    },
+    {
+      "id": "MURU-2539",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 436.1 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "23849833db60f5784470a06facbb1b35a7edc979eb247db062512333de075edb",
+      "sha256_v1_1": "0d264f80aeaad08df90ca6b36e7617bfc131af220c9db715019a05bdedf140ed"
+    },
+    {
+      "id": "MURU-2541",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "2dafa9f94aa4da99578ef38d5f04cd60a666aeb9b1ca8c8115fc785a5555f0ff",
+      "sha256_v1_1": "42ca51bba51cd6001350abf78eebc23ddb93034eeed9ddc961a26a4432da7fb4"
+    },
+    {
+      "id": "MURU-2543",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [52.9, 53.0] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "16e153ee0f7d98f7c62762ced92161aea6ddbadde97f4e7ab0187f0430849ae9",
+      "sha256_v1_1": "4cf13c4ebf3179d59a03b3f116f279cb4ff121927e4dd3fb177b3b34cc1ef0ba"
+    },
+    {
+      "id": "MURU-2562",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.78 > 1 (accuracy 95%, specificity 0.93, prevalence 0.0235) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "465a0a323f1c5679741cf5e9f4be532cda5d7ebec3bd35422e4ec15e77cccad0",
+      "sha256_v1_1": "24e826e02984e96bc95f76f811b0e7df632193c098fb69284ff2a97aeb6e73e0"
+    },
+    {
+      "id": "MURU-2583",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 96%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.60 > 1 (accuracy 95%, specificity 0.89, prevalence 0.0350) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "746c0253ede6004b8c4538de495cb96406e39b25bcfd204893fafea880e55fe5",
+      "sha256_v1_1": "959fde21cca0f1bbe3fb8052b0a79da70b14d21a6294f47f9394f75bd7e9d6aa"
+    },
+    {
+      "id": "MURU-2602",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 393.2 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "61c488a6a16a4869eabe5d52891abcf0d06774d89925c2e835e7a4fc2054d78b",
+      "sha256_v1_1": "419bfda6c2e9988df5366d62c910b53e147eed42ddf6198fd6d244ea0fd63132"
+    },
+    {
+      "id": "MURU-2604",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 3.12 > 1 (accuracy 92%, specificity 0.90, prevalence 0.0090) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a9170a583ab9607228a7ab1a8982e8d971f1dfaf9ac4468986e83bd3e09aaefb",
+      "sha256_v1_1": "b444ce5c78fb15cf68a358db7350630f1e9e9874bf590860bebfe00a26bf11aa"
+    },
+    {
+      "id": "MURU-2625",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 98%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 27.50 > 1 (accuracy 99%, specificity 0.83, prevalence 0.0060) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "89c7dd4ad23846eb4721eb7cd91f4170b2874c329b0c158a2b66358c0a12289e",
+      "sha256_v1_1": "125aa6aee0a58db1ed8be6424489c60ed7a71cc44666add002f100ad788c4ac1"
+    },
+    {
+      "id": "MURU-2646",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 87%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.53 > 1 (accuracy 92%, specificity 0.86, prevalence 0.0360) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "8c950e42a9e8ebc003d4f1e47dd7262e0422edc1aa2b817bcc4acea4e9a60068",
+      "sha256_v1_1": "823f92dab36ce9d1f0d23938ddfb7769a24b8de74383aa7f9b2c01549c957221"
+    },
+    {
+      "id": "MURU-2657",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.094, 0.095] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "1513aa72267c86565b33f4ba659c71c0f5f591470a3aec2ba0e2b8cb5a4fd47b",
+      "sha256_v1_1": "945daa028fee442bf1bb823d8cd27c2a1e91aab59b0f523ef3946bc3f95e2192"
+    },
+    {
+      "id": "MURU-2667",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 95%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 4.89 > 1 (accuracy 99%, specificity 0.89, prevalence 0.0250) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "377c77ab7a1d0b6131f7fed6bb5248d5d94a29c2884aa744391a0426806f13e2",
+      "sha256_v1_1": "a28494b7188c34d8f3b8ce0600724cb72cc6d2e6782d0333d8be653de9a67ada"
+    },
+    {
+      "id": "MURU-2688",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 97%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.79 > 1 (accuracy 99%, specificity 0.90, prevalence 0.0475) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b561d5f0a1bff3906f1e48ae409753df31239bab27e1d3d0e92ebcfeb7ce8949",
+      "sha256_v1_1": "99f3e21cd4d680844b1a0421f153b5362629fc644b46e18ca3f9956672c02c91"
+    },
+    {
+      "id": "MURU-2709",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 92% but the colleague's quote uses 91%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.57 > 1 (accuracy 92%, specificity 0.86, prevalence 0.0105) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a6e7cc3b35ea2af2174433e7be20499bb76bb9111716966f9becfef7c9dbce7f",
+      "sha256_v1_1": "ab42bf86afce5d266134e1e7a57b5ec458e6d1bb2252bc4e6f9439ebea4d0f1f"
+    },
+    {
+      "id": "MURU-2711",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [55.6, 55.7] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "e8693ab3bf2c76b7c0c1d22419f48145f26d377348b0806bbcc4cf142138aeba",
+      "sha256_v1_1": "1e0dcd46459ad67847334f1dcf93ce0f698b89a9b2cf61ced0ab04dcddfd2f97"
+    },
+    {
+      "id": "MURU-2730",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 85%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 7.50 > 1 (accuracy 90%, specificity 0.83, prevalence 0.0105) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "a93545d786ece43f46f36c610c64892cd32adb7301be6548c9fa53e043bee423",
+      "sha256_v1_1": "87acfa9e234e3722179dc5ed45d094643626fe2656f4fa2a6c09d1e4639a0184"
+    },
+    {
+      "id": "MURU-2749",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 406.2 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "b7ea2395ef09119d7175334903873c15d27f6174f3caf864d14a21957bb70fd5",
+      "sha256_v1_1": "2429ec90cbb5868f0b95094582e9a1ff20399c244ef415625a6d7b82e1653ff5"
+    },
+    {
+      "id": "MURU-2753",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [42.8, 42.9] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "723d2b369d4d179c04341133889c51368b7492aab08ea92c225efc803226da46",
+      "sha256_v1_1": "b63717049c6d134e4c3f23ede8a1781912fc73f129bcc52c7df93f98bb56c5b4"
+    },
+    {
+      "id": "MURU-2762",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.065, 0.066] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "26f594c6398070a06a7baff653d2be3fb1ef02ab942a16457f4078fdcb6435e1",
+      "sha256_v1_1": "a72044e76c8dfa8cdcbb9e5aeae614d1c2f51d2e4a56a514f34cce90b51aa67f"
+    },
+    {
+      "id": "MURU-2772",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.63 > 1 (accuracy 95%, specificity 0.92, prevalence 0.0420) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "ff17d7d361bacd15307233608662c27597285b493425929b29a9d8d85a96b2f8",
+      "sha256_v1_1": "782c94d040871ef68cb4195ec0d6a8a72926c8d28a3e57089eb86dc3d1124a90"
+    },
+    {
+      "id": "MURU-2793",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 97% but the colleague's quote uses 99%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 6.75 > 1 (accuracy 97%, specificity 0.84, prevalence 0.0220) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "06e3d3a3760933e8bc4ac047f46b5c0e9bb1f79f62764fa591b6881a2bfd9b3d",
+      "sha256_v1_1": "76fc725895a09e7ff6433558d2bae8d0d7a231f951d5df5b8008630ab3ca1588"
+    },
+    {
+      "id": "MURU-2814",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 1.76 > 1 (accuracy 90%, specificity 0.85, prevalence 0.0550) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "bc974041a1592ff6a97ff4bff22f6cf0df0072e0c2f52d539e010144e81f6259",
+      "sha256_v1_1": "5a830d881f7c6895ff262f527e437b4059beffcacddf07302e79fe3ad0a2eb9d"
+    },
+    {
+      "id": "MURU-2835",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 88%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 11.84 > 1 (accuracy 99%, specificity 0.93, prevalence 0.0055) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "b17b400e1f801f2a68548a5484e05e8092f0bb87cd75f71731e5634f96a6e289",
+      "sha256_v1_1": "9f4ab66b66bb108851470e425ffa7675f097eded6aeeb6af841c10dbfca88ce0"
+    },
+    {
+      "id": "MURU-2846",
+      "split": "train",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.064, 0.065] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "1a1e605d6baca821d6a610f4670a5a60b59a9a4a4928648479737f641e646e34",
+      "sha256_v1_1": "f296ef98ba69308701fb1e3049111421313ee1c533a4b8cc06de209781be3621"
+    },
+    {
+      "id": "MURU-2854",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 365.5 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "52b8589c7c82c205db6095e0758d8a51c7472bfa3be77467ed71a5410735d5c0",
+      "sha256_v1_1": "a7ac83b221066a52b8bca7666f5e29ea0e5407e7b885de5af98a7c8591c559ae"
+    },
+    {
+      "id": "MURU-2856",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 88% but the colleague's quote uses 95%"
+      ],
+      "sha256_v1_0": "3cf470b0e2244f3721d4cf316663a5e43b3029e9a830d5cefeb4a82092bc8cc9",
+      "sha256_v1_1": "2b1560841c7d3120670227c04b4ff84dd3c30b66577939b4655ddb539a69af81"
+    },
+    {
+      "id": "MURU-2877",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 93%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 2.95 > 1 (accuracy 99%, specificity 0.92, prevalence 0.0345) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "736e0e1358746fd6d643908c240459ab44e8ba02b181f467199e53d4ff3d6985",
+      "sha256_v1_1": "f0169e32b9ffe20191aa71770adfbae60f930ef402c3398bf0683be8b29acd5b"
+    },
+    {
+      "id": "MURU-2879",
+      "split": "train",
+      "template": "hierarchical_bayes",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [73.4, 73.5] is 0.1 wide, under 2 units of the last published decimal (0.2) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "4bafc53de94366f2626f0942ec0e6e7b9ecb929d79f943d2ea427362c785894a",
+      "sha256_v1_1": "06dc7e0ff34086a609b85197398336defddf2004850451d5d29258b4b80f3298"
+    },
+    {
+      "id": "MURU-2896",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 471.2 is outside the plausible range [30, 130] for 'diastolic blood pressure (mmHg)'"
+      ],
+      "sha256_v1_0": "e31a32a887c852bfbc8a9a6f2493bb8caec5a50f5986375fd7966d6a78681a77",
+      "sha256_v1_1": "914691f1a9d0153c171243e051fd0fad730055d11f1d585072597ce70b2637f8"
+    },
+    {
+      "id": "MURU-2898",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 95% but the colleague's quote uses 89%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.66 > 1 (accuracy 95%, specificity 0.90, prevalence 0.0105) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "6ecf845054ba328483c4066e1d53270f37cbcfbfa03eaf09b30d5c2dd29d81e7",
+      "sha256_v1_1": "343a2979f4018d17e546754c0f0a7a4e165432849b52e2495376248d979fe3dc"
+    },
+    {
+      "id": "MURU-2917",
+      "split": "train",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 401.0 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "88cf499bda244321ba4ed63ce9b9e5a57ca9789f56cdd75e63c324c33d6e82da",
+      "sha256_v1_1": "2308fe22aabb4d65e52d6fe537f7e32c053d125deef2bd920c48df13199178a9"
+    },
+    {
+      "id": "MURU-2919",
+      "split": "train",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 99% but the colleague's quote uses 85%",
+        "D2: the figure is stated as bare accuracy; read as overall accuracy it implies sensitivity 5.46 > 1 (accuracy 99%, specificity 0.84, prevalence 0.0325) \u2014 unsolvable under that reading"
+      ],
+      "sha256_v1_0": "6a2288e4913d02571726e1db01230386e2d8832df70bcfab387d57779aaf1aaa",
+      "sha256_v1_1": "4515bcd90b4770dcb2e2a75323986e158c71437830770fc40948878ad36e9697"
+    },
+    {
+      "id": "MURU-2938",
+      "split": "validation",
+      "template": "sample_mean",
+      "defects": [
+        "D1"
+      ],
+      "messages": [
+        "D1: sample mean 324.9 is outside the plausible range [1, 60] for 'fuel consumption (L/100km)'"
+      ],
+      "sha256_v1_0": "ff235d063c0d06d23cb721355ca1d3c4a84a2fe7766010d5ad373a8db4b4b1b5",
+      "sha256_v1_1": "f23f10e0f200107175d51cd6b92158302cd94effe859f278f1981e14372e6674"
+    },
+    {
+      "id": "MURU-2940",
+      "split": "test",
+      "template": "base_rate_trap",
+      "defects": [
+        "D2"
+      ],
+      "messages": [
+        "D2: stem states 90% but the colleague's quote uses 86%"
+      ],
+      "sha256_v1_0": "b8d6f8ff6f5e618ce5a5367c5e7e2ad8de738b8b534c9967f6fd75bf8d67db78",
+      "sha256_v1_1": "b91fdddede5b70b9e0df163e41d7ac128c7880ef6c0fbb5d30e961433d761b18"
+    },
+    {
+      "id": "MURU-2972",
+      "split": "test",
+      "template": "simpsons_paradox",
+      "defects": [
+        "D3"
+      ],
+      "messages": [
+        "D3: ground-truth interval [0.094, 0.095] is 0.001 wide, under 2 units of the last published decimal (0.002) \u2014 correct arithmetic can fail on rounding alone"
+      ],
+      "sha256_v1_0": "457313b21854b16fb769ff77e4a0ca2ee247a187ce535f00c90872d8b945c639",
+      "sha256_v1_1": "e7ea6b73306b90f22ad1a50f330688982bf3f616872c3aec8b813f169126d0e0"
+    }
+  ]
+}

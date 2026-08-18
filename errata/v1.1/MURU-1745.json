@@ -1,0 +1,43 @@
+{
+  "id": "MURU-1745",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "A clinical research study measures treatment response rate across 4 trial sites, each containing multiple patient cohorts. trial site A has 15 observations with mean 48.4 % (within-trial site SD = 4.3). trial site B has 5 observations with mean 41.4 % (within-trial site SD = 9.4). trial site C has 5 observations with mean 75.6 % (within-trial site SD = 4.5). trial site D has 15 observations with mean 59.6 % (within-trial site SD = 8.2). The between-trial site standard deviation is uncertain, estimated between 7.1 and 17.7 %. Using a hierarchical Bayesian model, estimate the true treatment response rate for trial site B, accounting for shrinkage toward the grand mean and the uncertainty in the between-trial site variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for trial site B: 42.9 % (shrunk from raw 41.4). Range [42.1, 45.0] as between-trial site SD varies from 7.1 to 17.7. Pooled mean: 55.1.",
+    "point_estimate": 42.9,
+    "confidence_interval": [
+      42.1,
+      45.0
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 55.1 % (weighted average of 4 trial site means).",
+    "Shrinkage factor for trial site B: B = σ²_between / (σ²_between + σ²_within/5). At σ_between=11.8: B = 0.887.",
+    "Shrunk estimate = B × 41.4 + (1-B) × 55.1 = 42.9.",
+    "At σ_between=7.1: more shrinkage → estimate = 45.0.",
+    "At σ_between=17.7: less shrinkage → estimate = 42.1.",
+    "Interval [42.1, 45.0] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (41.4) without shrinkage",
+    "Using only the grand mean (55.1) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

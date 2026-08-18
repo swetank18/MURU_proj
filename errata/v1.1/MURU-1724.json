@@ -1,0 +1,43 @@
+{
+  "id": "MURU-1724",
+  "category": "bayesian_updating",
+  "difficulty": 5,
+  "stem": "An education study measures average test score improvement across 3 schools, each containing multiple classrooms. school A has 15 observations with mean 67.6 points (within-school SD = 3.8). school B has 10 observations with mean 55.9 points (within-school SD = 6.9). school C has 8 observations with mean 67.4 points (within-school SD = 4.4). The between-school standard deviation is uncertain, estimated between 4.6 and 11.6 points. Using a hierarchical Bayesian model, estimate the true average test score improvement for school B, accounting for shrinkage toward the grand mean and the uncertainty in the between-school variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for school B: 56.5 points (shrunk from raw 55.9). Range [56.2, 57.4] as between-school SD varies from 4.6 to 11.6. Pooled mean: 64.0.",
+    "point_estimate": 56.5,
+    "confidence_interval": [
+      56.2,
+      57.4
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 64.0 points (weighted average of 3 school means).",
+    "Shrinkage factor for school B: B = σ²_between / (σ²_between + σ²_within/10). At σ_between=7.7: B = 0.926.",
+    "Shrunk estimate = B × 55.9 + (1-B) × 64.0 = 56.5.",
+    "At σ_between=4.6: more shrinkage → estimate = 57.4.",
+    "At σ_between=11.6: less shrinkage → estimate = 56.2.",
+    "Interval [56.2, 57.4] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (55.9) without shrinkage",
+    "Using only the grand mean (64.0) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

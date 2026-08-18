@@ -1,0 +1,43 @@
+{
+  "id": "MURU-1638",
+  "category": "adversarial_ambiguity",
+  "difficulty": 2,
+  "stem": "A university's plagiarism detection software correctly flags 88% of the work that is genuinely plagiarized. The test also has a specificity of 87% (correctly identifying negatives). A colleague presents this data and concludes: 'Since the test is 88% accurate, when it flags someone, there's a 88% chance they're actually plagiarized.' The base rate of submissions that are actually plagiarized in this student submissions pool is estimated between 0.50% and 1.10%. Is your colleague's reasoning correct? What is the actual probability that a flagged student submission is truly plagiarized? How does the uncertain base rate affect your answer?",
+  "uncertainty_type": "structural_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "The colleague is wrong — this is the base rate fallacy. P(plagiarized | flagged) ranges from 0.0329 to 0.07 (NOT 88%). The vast majority of flagged cases are false positives because the base rate is so low. Point estimate at 0.80%: 0.0518.",
+    "point_estimate": 0.0518,
+    "confidence_interval": [
+      0.0329,
+      0.07
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "The colleague confuses P(flagged | plagiarized) = 0.88 with P(plagiarized | flagged).",
+    "Apply Bayes' theorem: PPV = sensitivity × base_rate / (sensitivity × base_rate + (1-specificity) × (1-base_rate)).",
+    "At base rate 0.80%: PPV = 0.88×0.008 / (0.88×0.008 + 0.13×0.992) ≈ 0.0518.",
+    "At base rate 0.50%: PPV ≈ 0.0329.",
+    "At base rate 1.10%: PPV ≈ 0.07.",
+    "The true PPV (0.0518) is dramatically lower than the naive estimate (0.88) because when the base rate is low, false positives dominate."
+  ],
+  "common_failure_modes": [
+    "Agreeing with the colleague that the probability is 88% (the base rate fallacy)",
+    "Confusing test accuracy (sensitivity) with positive predictive value (PPV)",
+    "Not recognizing that low base rates make most positive flags false positives",
+    "Providing a single PPV without accounting for uncertainty in the base rate"
+  ],
+  "metadata": {
+    "author": "generator_base_rate_trap",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D2"
+      ]
+    }
+  }
+}

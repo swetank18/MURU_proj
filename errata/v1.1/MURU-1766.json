@@ -1,0 +1,43 @@
+{
+  "id": "MURU-1766",
+  "category": "bayesian_updating",
+  "difficulty": 4,
+  "stem": "A manufacturing study measures defect rate across 3 factorys, each containing multiple production lines. factory A has 10 observations with mean 67.5 % (within-factory SD = 8.9). factory B has 8 observations with mean 89.9 % (within-factory SD = 7.9). factory C has 8 observations with mean 70.5 % (within-factory SD = 6.0). The between-factory standard deviation is uncertain, estimated between 8.8 and 22.0 %. Using a hierarchical Bayesian model, estimate the true defect rate for factory B, accounting for shrinkage toward the grand mean and the uncertainty in the between-factory variation.",
+  "uncertainty_type": "model_uncertainty",
+  "required_framework": "bayesian_inference",
+  "ground_truth": {
+    "answer": "Hierarchical estimate for factory B: 89.4 % (shrunk from raw 89.9). Range [88.6, 89.7] as between-factory SD varies from 8.8 to 22.0. Pooled mean: 75.3.",
+    "point_estimate": 89.4,
+    "confidence_interval": [
+      88.6,
+      89.7
+    ],
+    "ci_level": 0.9
+  },
+  "solution_steps": [
+    "Compute pooled (grand) mean: 75.3 % (weighted average of 3 factory means).",
+    "Shrinkage factor for factory B: B = σ²_between / (σ²_between + σ²_within/8). At σ_between=14.7: B = 0.965.",
+    "Shrunk estimate = B × 89.9 + (1-B) × 75.3 = 89.4.",
+    "At σ_between=8.8: more shrinkage → estimate = 88.6.",
+    "At σ_between=22.0: less shrinkage → estimate = 89.7.",
+    "Interval [88.6, 89.7] captures uncertainty from the unknown between-group variance."
+  ],
+  "common_failure_modes": [
+    "Using the raw observed mean (89.9) without shrinkage",
+    "Using only the grand mean (75.3) and ignoring group-specific data",
+    "Not recognizing that small-sample groups should be shrunk more toward the grand mean",
+    "Treating the between-group variance as known rather than uncertain"
+  ],
+  "metadata": {
+    "author": "generator_hierarchical_bayes",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D3"
+      ]
+    }
+  }
+}

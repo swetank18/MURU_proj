@@ -1,0 +1,41 @@
+{
+  "id": "MURU-1069",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "An urban planning study measures the commute time (minutes) for a sample of 30 city workers. The sample mean is 38.6 min with a sample standard deviation of 13.2 min. However, 2 of the 30 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 28 observations have a mean of 36.6 min and standard deviation of 8.0 min. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 38.6, 95% CI = [33.7, 43.5]. Without outliers: mean = 36.6, 95% CI = [33.6, 39.6]. Combined interval accounting for analytic uncertainty: [33.6, 43.5]. Point estimate: 37.6 min.",
+    "point_estimate": 37.6,
+    "confidence_interval": [
+      33.6,
+      43.5
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=30): SE = 13.2/√30 = 2.41. Margin = t(29,0.025) × 2.41 = 2.045 × 2.41 ≈ 4.93.",
+    "Full sample 95% CI: 38.6 ± 4.93 = [33.7, 43.5].",
+    "With trimmed sample (n=28): SE = 8.0/√28 = 1.51. Margin = 2.0 × 1.51 ≈ 3.02.",
+    "Trimmed 95% CI: 36.6 ± 3.02 = [33.6, 39.6].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [33.6, 43.5]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D1"
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "MURU-0678",
+  "category": "distribution_estimation",
+  "difficulty": 3,
+  "stem": "An urban planning study measures the commute time (minutes) for a sample of 20 city workers. The sample mean is 33.0 min with a sample standard deviation of 6.9 min. However, 2 of the 20 observations appear to be outliers (values more than 2.5 standard deviations from the mean). If these outliers are removed, the remaining 18 observations have a mean of 30.9 min and standard deviation of 5.1 min. Estimate the true population mean and provide a 95% confidence interval that accounts for the uncertainty about whether outliers should be included.",
+  "uncertainty_type": "data_uncertainty",
+  "required_framework": "frequentist_inference",
+  "ground_truth": {
+    "answer": "With all data: mean = 33.0, 95% CI = [29.8, 36.2]. Without outliers: mean = 30.9, 95% CI = [28.5, 33.3]. Combined interval accounting for analytic uncertainty: [28.5, 36.2]. Point estimate: 31.9 min.",
+    "point_estimate": 31.9,
+    "confidence_interval": [
+      28.5,
+      36.2
+    ],
+    "ci_level": 0.95
+  },
+  "solution_steps": [
+    "With full sample (n=20): SE = 6.9/√20 = 1.54. Margin = t(19,0.025) × 1.54 = 2.093 × 1.54 ≈ 3.22.",
+    "Full sample 95% CI: 33.0 ± 3.22 = [29.8, 36.2].",
+    "With trimmed sample (n=18): SE = 5.1/√18 = 1.2. Margin = 2.0 × 1.2 ≈ 2.4.",
+    "Trimmed 95% CI: 30.9 ± 2.4 = [28.5, 33.3].",
+    "The outlier treatment choice creates structural uncertainty. Combined interval: [28.5, 36.2]."
+  ],
+  "common_failure_modes": [
+    "Using only the full sample without considering outlier impact",
+    "Removing outliers without reporting both analyses",
+    "Not recognizing that the choice of analysis method is itself a source of uncertainty"
+  ],
+  "metadata": {
+    "author": "generator_sample_mean",
+    "reviewed": false,
+    "source_inspiration": "original",
+    "errata": {
+      "version": "v1.1",
+      "replaces": "v1.0",
+      "defects": [
+        "D1"
+      ]
+    }
+  }
+}
