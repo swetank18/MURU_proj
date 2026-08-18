@@ -688,33 +688,52 @@ register_template(ProblemTemplate(
 # Template: Sample Mean with Uncertainty (Distribution Estimation)
 # ──────────────────────────────────────────────────────────────
 
+# Each context carries the physically admissible range of the *population mean*
+# for the quantity it names, and the largest coefficient of variation that is
+# credible for it. Sampling the mean from a single global range (the pre-errata
+# behaviour) produced stems such as a diastolic blood pressure of 482.3 mmHg —
+# physically impossible, and a model that noticed was the only one scored wrong
+# for it. See `scripts/audit_item_defects.py` (defect class D1).
 SAMPLE_MEAN_CONTEXTS = [
-    {"measurement": "response time (ms)", "entity": "website users", "domain": "web performance", "unit": "ms"},
-    {"measurement": "weight (grams)", "entity": "cereal boxes", "domain": "food manufacturing", "unit": "g"},
-    {"measurement": "battery life (hours)", "entity": "smartphone models", "domain": "electronics testing", "unit": "hours"},
-    {"measurement": "commute time (minutes)", "entity": "city workers", "domain": "urban planning", "unit": "min"},
-    {"measurement": "yield per hectare (tonnes)", "entity": "farms", "domain": "agriculture", "unit": "tonnes"},
-    {"measurement": "diastolic blood pressure (mmHg)", "entity": "patients", "domain": "clinical study", "unit": "mmHg"},
-    {"measurement": "download speed (Mbps)", "entity": "subscribers", "domain": "ISP analysis", "unit": "Mbps"},
-    {"measurement": "assembly time (seconds)", "entity": "factory workers", "domain": "industrial engineering", "unit": "sec"},
-    {"measurement": "fuel consumption (L/100km)", "entity": "vehicles", "domain": "automotive testing", "unit": "L/100km"},
-    {"measurement": "wait time (minutes)", "entity": "emergency room visitors", "domain": "healthcare operations", "unit": "min"},
+    {"measurement": "response time (ms)", "entity": "website users", "domain": "web performance",
+     "unit": "ms", "mean_range": (80, 1200), "cv_max": 0.40},
+    {"measurement": "weight (grams)", "entity": "cereal boxes", "domain": "food manufacturing",
+     "unit": "g", "mean_range": (250, 800), "cv_max": 0.10},
+    {"measurement": "battery life (hours)", "entity": "smartphone models", "domain": "electronics testing",
+     "unit": "hours", "mean_range": (8, 40), "cv_max": 0.30},
+    {"measurement": "commute time (minutes)", "entity": "city workers", "domain": "urban planning",
+     "unit": "min", "mean_range": (15, 75), "cv_max": 0.40},
+    {"measurement": "yield per hectare (tonnes)", "entity": "farms", "domain": "agriculture",
+     "unit": "tonnes", "mean_range": (2, 12), "cv_max": 0.35},
+    {"measurement": "diastolic blood pressure (mmHg)", "entity": "patients", "domain": "clinical",
+     "unit": "mmHg", "mean_range": (65, 95), "cv_max": 0.18},
+    {"measurement": "download speed (Mbps)", "entity": "subscribers", "domain": "network performance",
+     "unit": "Mbps", "mean_range": (20, 500), "cv_max": 0.40},
+    {"measurement": "assembly time (seconds)", "entity": "factory workers", "domain": "industrial engineering",
+     "unit": "sec", "mean_range": (30, 600), "cv_max": 0.35},
+    {"measurement": "fuel consumption (L/100km)", "entity": "vehicles", "domain": "automotive testing",
+     "unit": "L/100km", "mean_range": (4, 14), "cv_max": 0.25},
+    {"measurement": "wait time (minutes)", "entity": "emergency room visitors", "domain": "healthcare operations",
+     "unit": "min", "mean_range": (20, 180), "cv_max": 0.50},
 ]
 
 
 def generate_sample_mean(problem_id: int, difficulty: int) -> dict:
     ctx = random.choice(SAMPLE_MEAN_CONTEXTS)
 
-    # Generate sample statistics
+    # Sample statistics, drawn inside the physically admissible range for the
+    # quantity this context names rather than from a single global range.
+    lo, hi = ctx["mean_range"]
+    cv_max = ctx["cv_max"]
     if difficulty <= 2:
         n = random.choice([20, 25, 30, 40, 50])
-        mean = round(random.uniform(20, 500), 1)
-        std = round(mean * random.uniform(0.10, 0.30), 1)
+        mean = round(random.uniform(lo, hi), 1)
+        std = round(mean * random.uniform(min(0.10, cv_max), cv_max), 1)
         n_outliers = 0
     else:
         n = random.choice([15, 20, 25, 30])
-        mean = round(random.uniform(30, 400), 1)
-        std = round(mean * random.uniform(0.15, 0.40), 1)
+        mean = round(random.uniform(lo, hi), 1)
+        std = round(mean * random.uniform(min(0.15, cv_max), cv_max), 1)
         n_outliers = random.randint(2, max(3, n // 8))
 
     # Compute CI using t-distribution approximation
@@ -958,23 +977,31 @@ register_template(ProblemTemplate(
 # Template: Base Rate Trap (Adversarial Ambiguity)
 # ──────────────────────────────────────────────────────────────
 
+# `setup` is a format string taking `acc`, the sensitivity actually drawn for
+# the item. Pre-errata these strings hard-coded their own accuracy figure, which
+# the drawn value then contradicted — the stem said 92% while the colleague's
+# quote (and the ground truth) used 95%. Worse, "accuracy" left it ambiguous
+# whether the figure was sensitivity or overall accuracy; read as the latter it
+# implied a sensitivity above 1 on most items, making them unsolvable as
+# written. The wording below states P(flag | condition) unambiguously.
+# See `scripts/audit_item_defects.py` (defect class D2).
 TRAP_CONTEXTS = [
-    {"scenario": "A company claims its employee screening test identifies high performers with 90% accuracy",
-     "test": "screening test", "condition": "high performer", "population": "job applicants",
+    {"setup": "A company's employee screening test correctly identifies {acc}% of the high performers it evaluates",
+     "test": "screening test", "condition": "a high performer", "population": "job applicants",
      "base_rate_desc": "high performers among applicants"},
-    {"scenario": "An airport security scanner detects prohibited items with 95% accuracy",
+    {"setup": "An airport security scanner correctly detects {acc}% of the prohibited items that pass through it",
      "test": "security scanner", "condition": "carrying a prohibited item", "population": "passengers",
      "base_rate_desc": "passengers actually carrying prohibited items"},
-    {"scenario": "A university's plagiarism detection software flags plagiarized work with 92% accuracy",
+    {"setup": "A university's plagiarism detection software correctly flags {acc}% of the work that is genuinely plagiarized",
      "test": "plagiarism detector", "condition": "plagiarized", "population": "student submissions",
      "base_rate_desc": "submissions that are actually plagiarized"},
-    {"scenario": "A fraud detection algorithm identifies fraudulent transactions with 97% accuracy",
+    {"setup": "A fraud detection algorithm correctly identifies {acc}% of the transactions that are genuinely fraudulent",
      "test": "fraud detector", "condition": "fraudulent", "population": "credit card transactions",
      "base_rate_desc": "transactions that are actually fraudulent"},
-    {"scenario": "A self-driving car's pedestrian detection system identifies pedestrians with 99% accuracy",
-     "test": "pedestrian detector", "condition": "a pedestrian present", "population": "detection events",
+    {"setup": "A self-driving car's pedestrian detection system correctly detects {acc}% of the pedestrians in its path",
+     "test": "pedestrian detector", "condition": "a real pedestrian", "population": "detection events",
      "base_rate_desc": "detection events where a pedestrian is actually present"},
-    {"scenario": "A soil test predicts the presence of contaminants with 88% accuracy",
+    {"setup": "A soil test correctly detects contamination in {acc}% of the samples that are genuinely contaminated",
      "test": "soil test", "condition": "contaminated", "population": "soil samples",
      "base_rate_desc": "samples from actually contaminated sites"},
 ]
@@ -983,7 +1010,8 @@ TRAP_CONTEXTS = [
 def generate_base_rate_trap(problem_id: int, difficulty: int) -> dict:
     ctx = random.choice(TRAP_CONTEXTS)
 
-    # High accuracy but low base rate → most positives are false positives
+    # High sensitivity but low base rate → most positives are false positives.
+    # `accuracy` is the sensitivity P(flag | condition); the stem now says so.
     accuracy = round(random.uniform(0.85, 0.99), 2)
     specificity = round(random.uniform(0.80, 0.97), 2)
     base_rate_low = round(random.uniform(0.001, 0.02), 3)
@@ -1002,10 +1030,10 @@ def generate_base_rate_trap(problem_id: int, difficulty: int) -> dict:
     naive_answer = accuracy
 
     stem = (
-        f"{ctx['scenario']}. The test also has a specificity of {specificity*100:.0f}% "
-        f"(correctly identifying negatives). A colleague presents this data and concludes: "
-        f"'Since the test is {accuracy*100:.0f}% accurate, when it flags someone, there's a "
-        f"{accuracy*100:.0f}% chance they're actually {ctx['condition']}.' "
+        f"{ctx['setup'].format(acc=f'{accuracy*100:.0f}')}. The test also has a specificity of "
+        f"{specificity*100:.0f}% (correctly identifying negatives). A colleague presents this data "
+        f"and concludes: 'Since the test is {accuracy*100:.0f}% accurate, when it flags someone, "
+        f"there's a {accuracy*100:.0f}% chance they're actually {ctx['condition']}.' "
         f"The base rate of {ctx['base_rate_desc']} in this {ctx['population']} pool is "
         f"estimated between {base_rate_low*100:.2f}% and {base_rate_high*100:.2f}%. "
         f"Is your colleague's reasoning correct? What is the actual probability that "
@@ -1240,6 +1268,12 @@ HIERARCHICAL_CONTEXTS = [
 ]
 
 
+# Minimum ground-truth interval width, expressed in units of the last decimal
+# place the template publishes. Anything narrower can be missed by an answer
+# that is arithmetically correct and merely rounded to the invited precision.
+MIN_ESTIMATE_CI_UNITS = 3
+
+
 def generate_hierarchical_bayes(problem_id: int, difficulty: int) -> dict:
     ctx = random.choice(HIERARCHICAL_CONTEXTS)
 
@@ -1282,23 +1316,41 @@ def generate_hierarchical_bayes(problem_id: int, difficulty: int) -> dict:
     between_sd_low = round(between_sd * 0.6, 1)
     between_sd_high = round(between_sd * 1.5, 1)
 
-    # Re-compute shrinkage at extremes for a target group
-    target = random.choice(groups)
+    # Re-compute shrinkage at extremes for a target group. The target used to be
+    # drawn at random, which often landed on a group already sitting on the
+    # pooled mean — its estimate then barely moves with the between-group SD and
+    # the ground-truth interval collapses to one unit in the last decimal, so
+    # correct arithmetic fails on rounding alone. Pick the group the uncertainty
+    # actually bites on, which is also the more interesting question to ask.
+    # See `scripts/audit_item_defects.py` (defect class D3).
+    def shrunk_estimate_for(group, bsd):
+        bv = bsd ** 2
+        wv = group["within_sd"] ** 2 / group["n_obs"]
+        sf = bv / (bv + wv)
+        return round(sf * group["obs_mean"] + (1 - sf) * pooled_mean, 1)
+
+    def estimate_spread(group):
+        return abs(
+            shrunk_estimate_for(group, between_sd_high)
+            - shrunk_estimate_for(group, between_sd_low)
+        )
+
+    target = max(groups, key=estimate_spread)
     target_idx = groups.index(target)
 
     def shrunk_estimate(bsd):
-        bv = bsd ** 2
-        wv = target["within_sd"] ** 2 / target["n_obs"]
-        sf = bv / (bv + wv)
-        return round(sf * target["obs_mean"] + (1 - sf) * pooled_mean, 1)
+        return shrunk_estimate_for(target, bsd)
 
     est_low = shrunk_estimate(between_sd_low)
     est_mid = shrunk_estimate(between_sd)
     est_high = shrunk_estimate(between_sd_high)
 
     ci = sorted([est_low, est_high])
-    if ci[0] >= ci[1]:
-        ci[1] = ci[0] + 0.1
+    # The estimates are published to one decimal, so the interval has to be at
+    # least two units of that decimal wide to be answerable at that precision.
+    if round(ci[1] - ci[0], 6) < MIN_ESTIMATE_CI_UNITS * 0.1:
+        ci = [round(est_mid - MIN_ESTIMATE_CI_UNITS * 0.05, 1),
+              round(est_mid + MIN_ESTIMATE_CI_UNITS * 0.05, 1)]
 
     stem_groups = ". ".join(
         f"{g['name']} has {g['n_obs']} observations with mean {g['obs_mean']} {ctx['unit']} "
@@ -1458,6 +1510,16 @@ def generate_parallel_redundancy(problem_id: int, difficulty: int) -> dict:
         adj_mid = rel_mid
         adj_high = rel_high
 
+    # A parallel system with several high-reliability paths saturates: the
+    # ground-truth interval can come out one unit in the fourth decimal wide, or
+    # touch 1.0 outright. Widen to the answerable floor rather than publishing an
+    # interval no rounded answer can land in (defect class D3).
+    if round(ci[1] - ci[0], 8) < MIN_ESTIMATE_CI_UNITS * 0.0001:
+        half = MIN_ESTIMATE_CI_UNITS * 0.00005
+        ci = [round(max(0.0, adj_mid - half), 4), round(min(1.0, adj_mid + half), 4)]
+        if ci[0] >= ci[1]:
+            ci = [round(ci[1] - MIN_ESTIMATE_CI_UNITS * 0.0001, 4), ci[1]]
+
     path_descs = []
     for i, p in enumerate(paths):
         name = f"{ctx['component']} {i+1}"
@@ -1482,7 +1544,13 @@ def generate_parallel_redundancy(problem_id: int, difficulty: int) -> dict:
             f"estimated between {common_cause_low*100:.1f}% and {common_cause_high*100:.1f}%. "
         )
 
-    stem += f"What is the overall probability that the {ctx['outcome']}?"
+    # Near-saturated parallel systems put the ground-truth interval a few units
+    # in the fourth decimal wide, so the required precision has to be stated or
+    # correct arithmetic fails on rounding alone (defect class D3).
+    stem += (
+        f"What is the overall probability that the {ctx['outcome']}? "
+        f"Report the probability to four decimal places."
+    )
 
     answer = (
         f"P({ctx['outcome']}) ranges from {ci[0]} to {ci[1]}. "
@@ -2611,64 +2679,94 @@ SIMPSONS_CONTEXTS = [
 ]
 
 
+# The adjusted difference is w·(gap in group A) + (1-w)·(gap in group B), so the
+# ground-truth interval is only as wide as |gap_A - gap_B| times the spread in w.
+# Pre-errata both gaps were drawn from U(0.05, 0.10) and rounded to 2 dp, which
+# made them near-identical and collapsed the interval to as little as 0.001 —
+# narrower than the three-decimal precision the answer format invites, so an
+# arithmetically correct 0.0579 reported as 0.058 fell outside. The bands below
+# are separated, the weight spread is wider, and the draw is rejected outright
+# if the interval still comes out under MIN_SIMPSONS_CI_WIDTH.
+# See `scripts/audit_item_defects.py` (defect class D3).
+MIN_SIMPSONS_CI_WIDTH = 0.01
+_SIMPSONS_MAX_DRAWS = 200
+
+
 def generate_simpsons_paradox(problem_id: int, difficulty: int) -> dict:
     ctx = random.choice(SIMPSONS_CONTEXTS)
 
     # Design rates so Simpson's paradox occurs:
     # Treatment X is better in BOTH subgroups, but worse overall due to composition
+    for _attempt in range(_SIMPSONS_MAX_DRAWS):
+        # Group A (larger population)
+        n_a_x = random.choice([80, 100, 120, 150])
+        n_a_y = random.choice([20, 30, 40])
+        # One subgroup gets a narrow X-over-Y gap and the other a wide one, in a
+        # random order, so the adjusted difference genuinely moves with the
+        # uncertain population weight.
+        gap_narrow = random.uniform(0.04, 0.08)
+        gap_wide = random.uniform(0.16, 0.26)
+        gap_a, gap_b = (gap_narrow, gap_wide) if random.random() < 0.5 else (gap_wide, gap_narrow)
 
-    # Group A (larger population)
-    n_a_x = random.choice([80, 100, 120, 150])
-    n_a_y = random.choice([20, 30, 40])
-    rate_a_x = round(random.uniform(0.75, 0.90), 2)  # X is better in group A
-    rate_a_y = round(rate_a_x - random.uniform(0.05, 0.10), 2)  # Y is worse in group A
+        rate_a_x = round(random.uniform(0.75, 0.90), 2)  # X is better in group A
+        rate_a_y = round(rate_a_x - gap_a, 2)            # Y is worse in group A
 
-    # Group B (smaller for X, larger for Y)
-    n_b_x = random.choice([20, 30, 40])
-    n_b_y = random.choice([80, 100, 120])
-    rate_b_x = round(random.uniform(0.40, 0.60), 2)  # X is better in group B
-    rate_b_y = round(rate_b_x - random.uniform(0.05, 0.10), 2)  # Y is worse in group B
+        # Group B (smaller for X, larger for Y)
+        n_b_x = random.choice([20, 30, 40])
+        n_b_y = random.choice([80, 100, 120])
+        rate_b_x = round(random.uniform(0.40, 0.60), 2)  # X is better in group B
+        rate_b_y = round(rate_b_x - gap_b, 2)            # Y is worse in group B
 
-    # Aggregate rates (paradox: Y appears better overall)
-    succ_x = round(rate_a_x * n_a_x + rate_b_x * n_b_x)
-    total_x = n_a_x + n_b_x
-    overall_x = round(succ_x / total_x, 3)
+        if rate_a_y <= 0 or rate_b_y <= 0:
+            continue
 
-    succ_y = round(rate_a_y * n_a_y + rate_b_y * n_b_y)
-    total_y = n_a_y + n_b_y
-    overall_y = round(succ_y / total_y, 3)
-
-    # Ensure paradox exists (overall Y > overall X even though X > Y in both subgroups)
-    # If not, swap group sizes to force it
-    if overall_x >= overall_y:
-        n_a_x, n_a_y = n_a_y, n_a_x
-        n_b_x, n_b_y = n_b_y, n_b_x
+        # Aggregate rates (paradox: Y appears better overall)
         succ_x = round(rate_a_x * n_a_x + rate_b_x * n_b_x)
         total_x = n_a_x + n_b_x
         overall_x = round(succ_x / total_x, 3)
+
         succ_y = round(rate_a_y * n_a_y + rate_b_y * n_b_y)
         total_y = n_a_y + n_b_y
         overall_y = round(succ_y / total_y, 3)
 
-    # Uncertain group sizes in the population
-    w_a_low = round(random.uniform(0.30, 0.45), 2)
-    w_a_high = round(w_a_low + random.uniform(0.10, 0.20), 2)
-    w_a_mid = round((w_a_low + w_a_high) / 2, 2)
+        # Ensure paradox exists (overall Y > overall X even though X > Y in both
+        # subgroups). If not, swap group sizes to force it.
+        if overall_x >= overall_y:
+            n_a_x, n_a_y = n_a_y, n_a_x
+            n_b_x, n_b_y = n_b_y, n_b_x
+            succ_x = round(rate_a_x * n_a_x + rate_b_x * n_b_x)
+            total_x = n_a_x + n_b_x
+            overall_x = round(succ_x / total_x, 3)
+            succ_y = round(rate_a_y * n_a_y + rate_b_y * n_b_y)
+            total_y = n_a_y + n_b_y
+            overall_y = round(succ_y / total_y, 3)
+        if overall_x >= overall_y:
+            continue  # the paradox did not survive the swap either
 
-    # Adjusted rate for Treatment X with population weighting
-    def adj_rate_x(w_a):
-        return round(w_a * rate_a_x + (1 - w_a) * rate_b_x, 3)
+        # Uncertain group sizes in the population
+        w_a_low = round(random.uniform(0.25, 0.45), 2)
+        w_a_high = round(w_a_low + random.uniform(0.15, 0.30), 2)
+        w_a_mid = round((w_a_low + w_a_high) / 2, 2)
 
-    def adj_rate_y(w_a):
-        return round(w_a * rate_a_y + (1 - w_a) * rate_b_y, 3)
+        # Adjusted rate for Treatment X with population weighting
+        def adj_rate_x(w_a):
+            return round(w_a * rate_a_x + (1 - w_a) * rate_b_x, 3)
 
-    diff_low = round(adj_rate_x(w_a_low) - adj_rate_y(w_a_low), 3)
-    diff_mid = round(adj_rate_x(w_a_mid) - adj_rate_y(w_a_mid), 3)
-    diff_high = round(adj_rate_x(w_a_high) - adj_rate_y(w_a_high), 3)
+        def adj_rate_y(w_a):
+            return round(w_a * rate_a_y + (1 - w_a) * rate_b_y, 3)
 
-    ci = sorted([diff_low, diff_high])
-    if ci[0] >= ci[1]:
-        ci[1] = round(ci[0] + 0.005, 3)
+        diff_low = round(adj_rate_x(w_a_low) - adj_rate_y(w_a_low), 3)
+        diff_mid = round(adj_rate_x(w_a_mid) - adj_rate_y(w_a_mid), 3)
+        diff_high = round(adj_rate_x(w_a_high) - adj_rate_y(w_a_high), 3)
+
+        ci = sorted([diff_low, diff_high])
+        if round(ci[1] - ci[0], 4) >= MIN_SIMPSONS_CI_WIDTH:
+            break
+    else:
+        raise RuntimeError(
+            f"simpsons_paradox: no draw in {_SIMPSONS_MAX_DRAWS} attempts produced a "
+            f"ground-truth interval at least {MIN_SIMPSONS_CI_WIDTH} wide"
+        )
 
     stem = (
         f"In a {ctx['domain']} study comparing {ctx['treatment']}: "
@@ -2680,7 +2778,8 @@ def generate_simpsons_paradox(problem_id: int, difficulty: int) -> dict:
         f"{rate_b_x*100:.0f}% vs Treatment Y's {rate_b_y*100:.0f}%. "
         f"The true population proportion of {ctx['group_a']} is uncertain, estimated "
         f"between {w_a_low*100:.0f}% and {w_a_high*100:.0f}%. "
-        f"Which treatment is actually better, and by how much?"
+        f"Which treatment is actually better, and by how much? Report the adjusted "
+        f"difference in {ctx['outcome']} (X - Y) as a proportion to three decimal places."
     )
 
     answer = (
